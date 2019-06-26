@@ -37,12 +37,7 @@
 </div>
 
 <nav class="row">
-  <div class="col-md-4">
-    <button *ngIf="settings&&settings.Response" class="page-link {{settings.Response.Page.Number > 1 ? '' : 'disabled'}}" (click)="privPage()">
-      <span aria-hidden="true">&laquo;</span>
-    </button>
-  </div>
-  <div class="col-md-4">
+  <div class="col-md-4 offset-md-4">
     <div *ngIf="settings&&settings.Response&&settings.Params" class="input-group input-group-sm page-param mx-auto">
       <input type="number" class="form-control form-control-sm" [(ngModel)]="settings.Params.Page" (change)="validatePage()" (wheel)="$event.currentTarget.blur()">
       <div class="input-group-append">
@@ -51,7 +46,16 @@
       <input type="number" class="form-control form-control-sm ml-1" [(ngModel)]="settings.Params.Length" (change)="validateLength()" (wheel)="$event.currentTarget.blur()">
     </div>
   </div>
-  <div class="col-md-4">
+</nav>
+
+<nav class="row mt-2 mt-sm-n3">
+  <div class="col-6 mt-sm-n3">
+    <button *ngIf="settings&&settings.Response" class="page-link {{settings.Response.Page.Number > 1 ? '' : 'disabled'}}" (click)="privPage()">
+      <span aria-hidden="true">&laquo;</span>
+    </button>
+  </div>
+
+  <div class="col-6 mt-sm-n3">
     <button *ngIf="settings&&settings.Response" class="page-link pull-right {{settings.Response.Page.Number < settings.Response.Page.Count ? '' : 'disabled'}}" (click)="nextPage()">
       <span aria-hidden="true">&raquo;</span>
     </button>
