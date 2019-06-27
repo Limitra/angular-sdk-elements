@@ -15,6 +15,7 @@ export class DatatableComponent implements OnInit {
 
   ngOnInit() {
     this.settings.Texts = {};
+
     if (this.settings.Params.Lang) {
       this.providers.Http.Get('assets/limitra/datatable.' + this.settings.Params.Lang + '.json').subscribe(response => {
         this.settings.TextSource = response;
@@ -30,6 +31,18 @@ export class DatatableComponent implements OnInit {
     this.initTable();
   }
 
+  @HostListener('window:keyup', ['$event'])
+  private keyEvent(event: KeyboardEvent) {
+    if (!this.settings.HasProcess) {
+      switch (event.keyCode) {
+        case 37: this.privPage(); break;
+        case 38: this.settings.Params.Length++; this.validateLength(); break;
+        case 39: this.nextPage(); break;
+        case 40: this.settings.Params.Length--; this.validateLength(); break;
+      }
+    }
+  }
+
   private initTexts() {
     for(const text in this.settings.TextSource) {
       this.settings.Texts[text] = this.settings.TextSource[text]
@@ -38,33 +51,53 @@ export class DatatableComponent implements OnInit {
     }
   }
 
-  private validatePage() {
-    const len = parseInt(this.settings.Params.Page, 0);
-    if (!this.settings.Params.Page || this.settings.Params.Page < 0 || !len) {
-      this.settings.Params.Page = 1;
+  private validateSearch() {
+    if (!this.settings.HasProcess) {
+      if (this.settings && this.settings.Params) { this.settings.Params.Page = 1; }
+      this.initTable();
     }
+  }
 
-    this.initTable();
+  private validatePage() {
+    if (!this.settings.HasProcess) {
+      const len = parseInt(this.settings.Params.Page, 0);
+      if (!this.settings.Params.Page || this.settings.Params.Page < 0 || !len) {
+        this.settings.Params.Page = 1;
+      }
+
+      this.initTable();
+    }
   }
 
   private validateLength() {
-    const len = parseInt(this.settings.Params.Length, 0);
-    if (!this.settings.Params.Length || this.settings.Params.Length < 0 || !len) {
-      this.settings.Params.Length = 1;
-    }
+    if (this.settings && !this.settings.HasProcess) {
+      const len = parseInt(this.settings.Params.Length, 0);
+      if (!this.settings.Params.Length || this.settings.Params.Length < 0 || !len) {
+        this.settings.Params.Length = 1;
+      }
 
-    this.initTable();
+      if (this.settings.Params.MaxLength <= this.settings.Params.Length) {
+        this.settings.Params.Length = this.settings.Params.MaxLength;
+      }
+
+      this.initTable();
+    }
   }
 
   private initTable() {
     if (this.settings && this.settings.Params && this.settings.Columns) {
+      this.settings.Params.MaxLength = this.settings.Params.MaxLength || 500;
+
       this.resetColumns();
       const params: any = {};
       params.length = this.settings.Params.Length || 10;
       params.page = this.settings.Params.Page || 1;
+      params.sort = this.settings.Params.Sort || [];
+      params.search = this.settings.Params.Search || '';
       this.settings.Params.Page = params.page;
 
       const qs = '?' + this.providers.Url.Serialize(params);
+      this.settings.HasProcess = true;
       this.providers.Http.Get(this.settings.Params.Source + qs).subscribe(response => {
         this.settings.Response = response;
         this.settings.Response.Data.Source = this.settings.Response.Data.Source.map(data => {
@@ -77,9 +110,11 @@ export class DatatableComponent implements OnInit {
           return data;
         });
         this.resizeColumns();
-        this.initPages();
         this.initTexts();
-      });
+
+        this.settings.HasProcess = false;
+        this.reCalcPage();
+      }, () => { this.settings.HasProcess = false; });
     }
   }
 
@@ -88,28 +123,32 @@ export class DatatableComponent implements OnInit {
     if (field.includes('.')) {
       const partials = field.split('.');
       partials.forEach(partial => {
-        obj = obj[partial];
+        if (obj) {
+          obj = obj[partial];
+        }
       });
     } else {
       obj = obj[field];
     }
-    this.pushColumnLen(column, obj.toString().length);
+    this.pushColumnLen(column, (obj ? obj.toString().length : 0));
     return obj;
   }
 
   private goToPage(page: number) {
-    this.settings.Params.Page = page;
-    this.initTable();
+    if (!this.settings.HasProcess) {
+      this.settings.Params.Page = page;
+      this.initTable();
+    }
   }
 
   private nextPage() {
-    if (this.settings.Response.Page.Number < this.settings.Response.Page.Count) {
+    if (!this.settings.HasProcess && this.settings.Response.Page.Number < this.settings.Response.Page.Count) {
       this.goToPage(this.settings.Response.Page.Number + 1);
     }
   }
 
   private privPage() {
-    if (this.settings.Response.Page.Number > 1) {
+    if (!this.settings.HasProcess && this.settings.Response.Page.Number > 1) {
       this.goToPage(this.settings.Response.Page.Number - 1);
     }
   }
@@ -157,39 +196,12 @@ export class DatatableComponent implements OnInit {
     }
   }
 
-  private initPages() {
-    this.settings.Pages = [];
-    if (this.settings.Response.Page.Number !== 2 ? true : this.settings.Response.Page.Number === this.settings.Response.Page.Count) {
-      this.addPage(1, 1, this.settings.Response.Page.Number);
-    }
-
-    if (this.settings.Response.Page.Number - 1 > 2) {
-      this.addPage(this.settings.Response.Page.Number - 2, 1, this.settings.Response.Page.Number, '...');
-    }
-
-    if (this.settings.Response.Page.Number > 1 && this.settings.Response.Page.Number < this.settings.Response.Page.Count - 1) {
-      this.addPage(this.settings.Response.Page.Number - 1, 3, this.settings.Response.Page.Number);
-    } else if (this.settings.Response.Page.Number > 0 && this.settings.Response.Page.Number < 3 && this.settings.Response.Page.Count > 3) {
-      this.addPage(this.settings.Response.Page.Number + 1, 1, this.settings.Response.Page.Number);
-    } else if (this.settings.Response.Page.Count > 3) {
-      this.addPage(this.settings.Response.Page.Number - 1, 2, this.settings.Response.Page.Number);
-    }
-
-    if (this.settings.Response.Page.Number + 1 < this.settings.Response.Page.Count - 1) {
-      this.addPage(this.settings.Response.Page.Number + 2, 1, this.settings.Response.Page.Number, '...');
-    }
-
-    if (this.settings.Response.Page.Count === 3) {
-      if (this.settings.Response.Page.Number > 1) {
-        this.addPage(this.settings.Response.Page.Number - 1, 2, this.settings.Response.Page.Number);
-      } else {
-        this.addPage(this.settings.Response.Page.Number + 1, 1, this.settings.Response.Page.Number);
+  private reCalcPage() {
+    if (this.settings && this.settings.Response && this.settings.Params) {
+      if (this.settings.Response.Page.Length === 0 && this.settings.Params.Page > 1) {
+        this.settings.Params.Page--;
+        this.validatePage();
       }
-    }
-
-    if (this.settings.Response.Page.Number !== this.settings.Response.Page.Count
-      || (this.settings.Response.Page.Count < 3 && this.settings.Response.Page.Count !== 1)) {
-      this.addPage(this.settings.Response.Page.Count, 1, this.settings.Response.Page.Number);
     }
   }
 
