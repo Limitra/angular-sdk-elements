@@ -265,3 +265,11 @@ button.search {
 .input-group.page-param input {
   width: 60px;
 }
+
+.page-section {
+  z-index: 1;
+}
+
+.page-button {
+  z-index: 0;
+}
