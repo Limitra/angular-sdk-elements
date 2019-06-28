@@ -20,26 +20,65 @@ export class DatatableComponent implements OnInit {
       this.providers.Http.Get('assets/limitra/datatable.' + this.settings.Params.Lang + '.json').subscribe(response => {
         this.settings.TextSource = response;
         this.initTexts();
+        this.initIntervals();
       });
     } else {
       this.settings.TextSource = {
         SearchPlaceHolder: 'Type to search from [$DataLength] data..',
-        SearchButton: 'Search..'
+        Disabled: 'Disabled',
+        Seconds: 'seconds',
+        Minutes: 'minutes'
       };
+      this.initTexts();
+      this.initIntervals();
     }
-    this.initTexts();
     this.initTable();
   }
 
-  @HostListener('window:keyup', ['$event'])
-  private keyEvent(event: KeyboardEvent) {
-    if (!this.settings.HasProcess) {
-      switch (event.keyCode) {
-        case 37: this.privPage(); break;
-        case 38: this.settings.Params.Length++; this.validateLength(); break;
-        case 39: this.nextPage(); break;
-        case 40: this.settings.Params.Length--; this.validateLength(); break;
-      }
+  private initTable() {
+    if (this.settings && this.settings.Params && this.settings.Columns) {
+      this.settings.Params.MaxLength = this.settings.Params.MaxLength || 500;
+      this.settings.Params.Sort = this.settings.Params.Sort || [];
+
+      this.resetColumns();
+      const params: any = {};
+      params.sort = this.settings.Params.Sort;
+      params.length = this.settings.Params.Length || 10;
+      params.page = this.settings.Params.Page || 1;
+      params.search = this.settings.Params.Search || '';
+      this.settings.Params.Page = params.page;
+
+      const qs = '?' + this.providers.Url.Serialize(params);
+      this.settings.HasProcess = true;
+      this.providers.Http.Get(this.settings.Params.Source + qs).subscribe(response => {
+        this.settings.Response = response;
+        this.settings.Response.Data.Source = this.settings.Response.Data.Source.map(data => {
+          data.PrimaryKey = this.valOfObj(data, this.settings.PrimaryKey, false);
+          data.Columns = [];
+          this.settings.Columns.forEach(column => {
+            const colObj: any = { Nested: [] };
+            this.pushColumnLen(column, column.Title.toString().length);
+            colObj.Value = this.valOfObj(data, column);
+
+            if (column.Nested) {
+              column.Nested.forEach(nest => {
+                const nestObj = { Title: nest.Title, Value: this.valOfObj(data, nest, false) };
+                colObj.Nested.push(nestObj);
+                this.pushColumnLen(column, (nest.Title.toString().length + nestObj.Value.length));
+              });
+            }
+
+            data.Columns.push(colObj);
+          });
+
+          return data;
+        });
+        this.resizeColumns();
+        this.initTexts();
+
+        this.settings.HasProcess = false;
+        this.reCalcPage();
+      }, () => { this.settings.HasProcess = false; });
     }
   }
 
@@ -49,6 +88,16 @@ export class DatatableComponent implements OnInit {
         .replace('[$DataLength]', ((this.settings && this.settings.Response) ? this.settings.Response.Data.Length.toLocaleString() : 0))
         .replace('[$PageLength]', ((this.settings && this.settings.Response) ? this.settings.Response.Page.Length.toLocaleString() : 0));
     }
+  }
+
+  private initIntervals() {
+    this.settings.Intervals = [
+      { Interval: 0, Text: this.settings.TextSource.Disabled, Checked: true },
+      { Interval: 10, Text: '10 ' + this.settings.TextSource.Seconds },
+      { Interval: 30, Text: '30 ' + this.settings.TextSource.Seconds },
+      { Interval: 60, Text: '60 ' + this.settings.TextSource.Seconds },
+      { Interval: 300, Text: '5 ' + this.settings.TextSource.Minutes },
+    ];
   }
 
   private validateSearch() {
@@ -84,54 +133,13 @@ export class DatatableComponent implements OnInit {
     }
   }
 
-  private initTable() {
-    if (this.settings && this.settings.Params && this.settings.Columns) {
-      this.settings.Params.MaxLength = this.settings.Params.MaxLength || 500;
-
-      this.resetColumns();
-      const params: any = {};
-      params.length = this.settings.Params.Length || 10;
-      params.page = this.settings.Params.Page || 1;
-      params.sort = this.settings.Params.Sort || [];
-      params.search = this.settings.Params.Search || '';
-      this.settings.Params.Page = params.page;
-
-      const qs = '?' + this.providers.Url.Serialize(params);
-      this.settings.HasProcess = true;
-      this.providers.Http.Get(this.settings.Params.Source + qs).subscribe(response => {
-        this.settings.Response = response;
-        this.settings.Response.Data.Source = this.settings.Response.Data.Source.map(data => {
-          data.Columns = [];
-          this.settings.Columns.forEach(column => {
-            this.pushColumnLen(column, column.Title.toString().length);
-            data.Columns.push(this.valOfObj(data, column));
-          });
-
-          return data;
-        });
-        this.resizeColumns();
-        this.initTexts();
-
-        this.settings.HasProcess = false;
-        this.reCalcPage();
-      }, () => { this.settings.HasProcess = false; });
+  private reCalcPage() {
+    if (this.settings && this.settings.Response && this.settings.Params) {
+      if (this.settings.Response.Page.Length === 0 && this.settings.Params.Page > 1) {
+        this.settings.Params.Page--;
+        this.validatePage();
+      }
     }
-  }
-
-  private valOfObj(obj: any, column: any): any {
-    const field = column.Field || '';
-    if (field.includes('.')) {
-      const partials = field.split('.');
-      partials.forEach(partial => {
-        if (obj) {
-          obj = obj[partial];
-        }
-      });
-    } else {
-      obj = obj[field];
-    }
-    this.pushColumnLen(column, (obj ? obj.toString().length : 0));
-    return obj;
   }
 
   private goToPage(page: number) {
@@ -153,11 +161,6 @@ export class DatatableComponent implements OnInit {
     }
   }
 
-  private setChecked(obj: any, $event) {
-    $event.stopPropagation();
-    obj.Checked = !obj.Checked;
-  }
-
   private pushColumnLen(column: any, len: number) {
     if (!column.MaxChar || column.MaxChar < len) {
       column.MaxChar = len;
@@ -172,6 +175,24 @@ export class DatatableComponent implements OnInit {
         nwCol.Width = undefined;
         return nwCol;
       });
+    }
+  }
+
+  private sortColumn(column: any) {
+    if (this.settings && this.settings.Params && column) {
+      column.Direction = column.Direction || '';
+      column.Direction = column.Direction === 'asc' ? 'desc' : (column.Direction === 'desc' ? '' : 'asc');
+
+      const current = this.settings.Params.Sort.filter(x => x.includes(column.Field))[0];
+      if (current) {
+        const index = this.settings.Params.Sort.indexOf(current);
+        this.settings.Params.Sort.splice(index, 1);
+      }
+
+      if (column.Direction === 'asc' || column.Direction === 'desc') {
+        this.settings.Params.Sort.push(column.Field + ',' + column.Direction);
+      }
+      this.initTable();
     }
   }
 
@@ -196,18 +217,53 @@ export class DatatableComponent implements OnInit {
     }
   }
 
-  private reCalcPage() {
-    if (this.settings && this.settings.Response && this.settings.Params) {
-      if (this.settings.Response.Page.Length === 0 && this.settings.Params.Page > 1) {
-        this.settings.Params.Page--;
-        this.validatePage();
+  @HostListener('window:keyup', ['$event'])
+  private keyEvent(event: KeyboardEvent) {
+    if (!this.settings.HasProcess) {
+      switch (event.keyCode) {
+        case 37: this.privPage(); break;
+        case 38: this.settings.Params.Length++; this.validateLength(); break;
+        case 39: this.nextPage(); break;
+        case 40: this.settings.Params.Length--; this.validateLength(); break;
       }
     }
   }
 
-  private addPage(num: number, length: number, page: number, text: string = null) {
-    for (let p = num; p <= num + (length - 1); p++) {
-      this.settings.Pages.push({Text: text || p, Number: p, Active: p === page});
+  private valOfObj(obj: any, column: any, effect: boolean = true): any {
+    const field = column.Field || '';
+    if (field.includes('.')) {
+      const partials = field.split('.');
+      partials.forEach(partial => {
+        if (obj) {
+          obj = obj[partial];
+        }
+      });
+    } else {
+      obj = obj[field];
+    }
+    if (effect) {
+      this.pushColumnLen(column, (obj ? obj.toString().length : 0));
+    }
+    return obj;
+  }
+
+  private setInterval(interval: any, $event) {
+    $event.stopPropagation();
+    if (this.settings && this.settings.Interval) {
+      clearInterval(this.settings.Interval);
+    }
+
+    if (interval && this.settings) {
+      this.settings.Intervals = this.settings.Intervals.map(x => {
+        x.Checked = false;
+        return x;
+      });
+      interval.Checked = true;
+      if (interval.Interval > 0) {
+        this.settings.Interval = setInterval(() => {
+          this.initTable();
+        }, (interval.Interval * 1000));
+      }
     }
   }
 }
