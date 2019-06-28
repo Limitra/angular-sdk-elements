@@ -19,8 +19,11 @@
         <span class="sr-only"></span>
       </button>
       <div *ngIf="settings" class="dropdown-menu dropdown-menu-right">
-        <button class="dropdown-item" (click)="setInterval(null, $event)"><i class="fa fa-square"></i> Düzenle</button>
         <div class="dropdown-divider"></div>
+        <h6 class="dropdown-header">{{settings && settings.Texts ? settings.Texts.FixedOperations : ''}}</h6>
+        <button class="dropdown-item" (click)="setBulkChoice()"><i class="fa fa-align-justify"></i> {{settings && settings.Texts ? settings.Texts.BulkChoice : ''}}</button>
+        <div class="dropdown-divider"></div>
+        <h6 class="dropdown-header">{{settings && settings.Texts ? settings.Texts.AutoRefresh : ''}}</h6>
         <button *ngFor="let interval of settings.Intervals" class="dropdown-item" (click)="setInterval(interval, $event)"><i class="fa {{interval.Checked ? 'fa-check-circle' : 'fa-circle'}}"></i> {{interval.Text}}</button>
       </div>
     </div>
@@ -35,8 +38,8 @@
           title="{{column.Title}}" (click)="sortColumn(column)"><i class="fa {{column.Direction==='asc' ? 'fa-sort-up' : (column.Direction==='desc' ? 'fa-sort-down' :'fa-sort')}} text-secondary"></i> {{column.Title}}</th>
     </tr>
     </thead>
-    <tbody *ngIf="settings&&settings.Columns&&settings.Response&&settings.Response.Data&&settings.Response.Data.Source">
-    <tr *ngFor="let data of settings.Response.Data.Source">
+    <tbody *ngIf="settings&&settings.Columns&&settings.Response&&settings.Response.Data&&settings.Response.Data.Source" class="{{settings.BulkChoice?'bulk-choice':''}}">
+    <tr *ngFor="let data of settings.Response.Data.Source" (click)="selectRow(data)" class="{{data.Selected ? 'row-selected' : ''}}">
       <td *ngFor="let column of data.Columns" title="{{column.Value}}">
         {{column.Value}}<br>
         <small *ngFor="let nest of column.Nested"><strong>{{nest.Title}} :</strong> {{nest.Value}} <br></small>
