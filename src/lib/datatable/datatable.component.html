@@ -1,21 +1,27 @@
 <div class="row">
-  <div class="col-md-9 pr-md-0">
+  <div class="col-12 col-sm-2 col-lg-1 pr-sm-0">
+    <button class="btn btn-block btn-outline-secondary text-nowrap">
+      <i class="fa fa-filter"></i>
+    </button>
+  </div>
+  <div class="col-12 col-sm-10 col-md-7 col-lg-9 mt-2 mt-sm-0 pr-md-0">
     <input *ngIf="settings&&settings.Params" type="text" class="form-control" [(ngModel)]="settings.Params.Search"
            (change)="validateSearch()" (keyup)="$event.stopPropagation()"
            placeholder="{{settings && settings.Texts ? settings.Texts.SearchPlaceHolder : ''}}">
   </div>
-  <div class="col-md-3 mt-2 mt-md-0">
+  <div class="col-md-3 col-lg-2 mt-2 mt-md-0">
     <div class="btn-group btn-block">
-      <button class="btn btn-secondary btn-block text-nowrap search" type="button" (click)="validateSearch()">
-        <i class="fa fa-search"></i> {{settings && settings.Texts ? settings.Texts.SearchButton : '' }}
+      <button *ngIf="settings" class="btn btn-secondary text-nowrap search" type="button" (click)="validateSearch()">
+          <span class="fa fa-refresh {{settings.HasProcess ? 'fa-spin' : ''}}"></span>
       </button>
-      <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
+      <button type="button" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+        <i class="fa fa-cogs"></i>
         <span class="sr-only"></span>
       </button>
-      <div *ngIf="settings&&settings.Filters&&settings.Filters.length > 0" class="dropdown-menu dropdown-menu-right">
-        <button *ngFor="let filter of settings.Filters" class="dropdown-item" (click)="setChecked(filter, $event)"><i
-          [ngClass]="'fa '+(filter.Checked?'fa-check-square':'fa-square')"></i> {{filter.Name}}</button>
+      <div *ngIf="settings" class="dropdown-menu dropdown-menu-right">
+        <button class="dropdown-item" (click)="setInterval(null, $event)"><i class="fa fa-square"></i> Düzenle</button>
+        <div class="dropdown-divider"></div>
+        <button *ngFor="let interval of settings.Intervals" class="dropdown-item" (click)="setInterval(interval, $event)"><i class="fa {{interval.Checked ? 'fa-check-circle' : 'fa-circle'}}"></i> {{interval.Text}}</button>
       </div>
     </div>
   </div>
@@ -26,12 +32,15 @@
     <thead *ngIf="settings&&settings.Columns">
     <tr>
       <th *ngFor="let column of settings.Columns" [style.width.%]="column.Width"
-          title="{{column.Title}}">{{column.Title}}</th>
+          title="{{column.Title}}" (click)="sortColumn(column)"><i class="fa {{column.Direction==='asc' ? 'fa-sort-up' : (column.Direction==='desc' ? 'fa-sort-down' :'fa-sort')}} text-secondary"></i> &#8203;{{column.Title}}</th>
     </tr>
     </thead>
     <tbody *ngIf="settings&&settings.Columns&&settings.Response&&settings.Response.Data&&settings.Response.Data.Source">
     <tr *ngFor="let data of settings.Response.Data.Source">
-      <td *ngFor="let column of data.Columns" title="column">{{column}}</td>
+      <td *ngFor="let column of data.Columns" title="column">
+        {{column.Value}}<br>
+        <small *ngFor="let nest of column.Nested"><strong>{{nest.Title}} :</strong> {{nest.Value}} <br></small>
+      </td>
     </tr>
     </tbody>
   </table>
