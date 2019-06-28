@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-12 col-sm-2 col-lg-1 pr-sm-0">
-    <button class="btn btn-block btn-outline-secondary text-nowrap">
+    <button *ngIf="settings&&settings.Definition" class="btn btn-block btn-outline-secondary text-nowrap" attr.data-toggle="{{'modal'}}" attr.data-target="#filter_{{settings.Definition}}">
       <i class="fa fa-filter"></i>
     </button>
   </div>
@@ -11,7 +11,7 @@
   </div>
   <div class="col-md-3 col-lg-2 mt-2 mt-md-0">
     <div class="btn-group btn-block">
-      <button *ngIf="settings" class="btn btn-secondary text-nowrap search" type="button" (click)="validateSearch()">
+      <button *ngIf="settings" class="btn btn-secondary text-nowrap search" type="button" (click)="validateSearch(); $event.stopPropagation();">
           <span class="fa fa-refresh {{settings.HasProcess ? 'fa-spin' : ''}}"></span>
       </button>
       <button type="button" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown">
@@ -32,12 +32,12 @@
     <thead *ngIf="settings&&settings.Columns">
     <tr>
       <th *ngFor="let column of settings.Columns" [style.width.%]="column.Width"
-          title="{{column.Title}}" (click)="sortColumn(column)"><i class="fa {{column.Direction==='asc' ? 'fa-sort-up' : (column.Direction==='desc' ? 'fa-sort-down' :'fa-sort')}} text-secondary"></i> &#8203;{{column.Title}}</th>
+          title="{{column.Title}}" (click)="sortColumn(column)"><i class="fa {{column.Direction==='asc' ? 'fa-sort-up' : (column.Direction==='desc' ? 'fa-sort-down' :'fa-sort')}} text-secondary"></i> {{column.Title}}</th>
     </tr>
     </thead>
     <tbody *ngIf="settings&&settings.Columns&&settings.Response&&settings.Response.Data&&settings.Response.Data.Source">
     <tr *ngFor="let data of settings.Response.Data.Source">
-      <td *ngFor="let column of data.Columns" title="column">
+      <td *ngFor="let column of data.Columns" title="{{column.Value}}">
         {{column.Value}}<br>
         <small *ngFor="let nest of column.Nested"><strong>{{nest.Title}} :</strong> {{nest.Value}} <br></small>
       </td>
@@ -73,3 +73,23 @@
     </button>
   </div>
 </nav>
+
+<div *ngIf="settings&&settings.Definition" class="modal fade" role="dialog" id="filter_{{settings.Definition}}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-secondary"><i class="fa fa-filter"></i> {{settings && settings.Texts ? settings.Texts.FilterTitle : ''}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary"><i class="fa fa-filter"></i> {{settings && settings.Texts ? settings.Texts.FilterAccept : ''}}</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle"></i> {{settings && settings.Texts ? settings.Texts.FilterClose : ''}}</button>
+      </div>
+    </div>
+  </div>
+</div>
