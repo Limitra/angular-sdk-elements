@@ -30,7 +30,10 @@ export class DatatableComponent implements OnInit {
         FilterClose: 'Close',
         Disabled: 'Disabled',
         Seconds: 'seconds',
-        Minutes: 'minutes'
+        Minutes: 'minutes',
+        BulkChoice: 'Bulk Choice',
+        AutoRefresh: 'Auto Refresh',
+        FixedOperations: 'Fixed Operations'
       };
       this.initTexts();
       this.initIntervals();
@@ -56,16 +59,16 @@ export class DatatableComponent implements OnInit {
       this.providers.Http.Get(this.settings.Params.Source + qs).subscribe(response => {
         this.settings.Response = response;
         this.settings.Response.Data.Source = this.settings.Response.Data.Source.map(data => {
-          data.PrimaryKey = this.valOfObj(data, this.settings.PrimaryKey, false);
+          data.PrimaryKey = this.valOfObj(data, {Field: this.settings.PrimaryKey}, false);
           data.Columns = [];
           this.settings.Columns.forEach(column => {
-            const colObj: any = { Nested: [] };
+            const colObj: any = {Nested: []};
             this.pushColumnLen(column, column.Title.toString().length);
             colObj.Value = this.valOfObj(data, column);
 
             if (column.Nested) {
               column.Nested.forEach(nest => {
-                const nestObj = { Title: nest.Title, Value: this.valOfObj(data, nest, false) };
+                const nestObj = {Title: nest.Title, Value: this.valOfObj(data, nest, false)};
                 colObj.Nested.push(nestObj);
                 this.pushColumnLen(column, (nest.Title.toString().length + nestObj.Value.length));
               });
@@ -78,15 +81,17 @@ export class DatatableComponent implements OnInit {
         });
         this.resizeColumns();
         this.initTexts();
-
+        this.setBulkChoice(false);
         this.settings.HasProcess = false;
         this.reCalcPage();
-      }, () => { this.settings.HasProcess = false; });
+      }, () => {
+        this.settings.HasProcess = false;
+      });
     }
   }
 
   private initTexts() {
-    for(const text in this.settings.TextSource) {
+    for (const text in this.settings.TextSource) {
       this.settings.Texts[text] = this.settings.TextSource[text]
         .replace('[$DataLength]', ((this.settings && this.settings.Response) ? this.settings.Response.Data.Length.toLocaleString() : 0))
         .replace('[$PageLength]', ((this.settings && this.settings.Response) ? this.settings.Response.Page.Length.toLocaleString() : 0));
@@ -95,17 +100,19 @@ export class DatatableComponent implements OnInit {
 
   private initIntervals() {
     this.settings.Intervals = [
-      { Interval: 0, Text: this.settings.TextSource.Disabled, Checked: true },
-      { Interval: 10, Text: '10 ' + this.settings.TextSource.Seconds },
-      { Interval: 30, Text: '30 ' + this.settings.TextSource.Seconds },
-      { Interval: 60, Text: '60 ' + this.settings.TextSource.Seconds },
-      { Interval: 300, Text: '5 ' + this.settings.TextSource.Minutes },
+      {Interval: 0, Text: this.settings.TextSource.Disabled, Checked: true},
+      {Interval: 10, Text: '10 ' + this.settings.TextSource.Seconds},
+      {Interval: 30, Text: '30 ' + this.settings.TextSource.Seconds},
+      {Interval: 60, Text: '60 ' + this.settings.TextSource.Seconds},
+      {Interval: 300, Text: '5 ' + this.settings.TextSource.Minutes},
     ];
   }
 
   private validateSearch() {
     if (!this.settings.HasProcess) {
-      if (this.settings && this.settings.Params) { this.settings.Params.Page = 1; }
+      if (this.settings && this.settings.Params) {
+        this.settings.Params.Page = 1;
+      }
       this.initTable();
     }
   }
@@ -224,10 +231,23 @@ export class DatatableComponent implements OnInit {
   private keyEvent(event: KeyboardEvent) {
     if (!this.settings.HasProcess) {
       switch (event.keyCode) {
-        case 37: this.privPage(); break;
-        case 39: this.nextPage(); break;
-        case 107: this.settings.Params.Length++; this.validateLength(); break;
-        case 109: this.settings.Params.Length--; this.validateLength(); break;
+        case 37:
+          this.privPage();
+          break;
+        case 39:
+          this.nextPage();
+          break;
+        case 107:
+          this.settings.Params.Length++;
+          this.validateLength();
+          break;
+        case 109:
+          this.settings.Params.Length--;
+          this.validateLength();
+          break;
+        case 27:
+          this.setBulkChoice();
+          break;
       }
     }
   }
@@ -267,6 +287,26 @@ export class DatatableComponent implements OnInit {
           this.initTable();
         }, (interval.Interval * 1000));
       }
+    }
+  }
+
+  private setBulkChoice(enabled: boolean = null) {
+    this.settings.BulkChoice = enabled === false ? enabled : (enabled || !this.settings.BulkChoice);
+    if (this.settings && this.settings.Response && this.settings.Response.Data && this.settings.Response.Data.Source) {
+      this.settings.Response.Data.Source = this.settings.Response.Data.Source.map(x => {
+        x.Selected = false;
+        return x;
+      });
+    }
+  }
+
+  private selectRow(row: any) {
+    if (this.settings.BulkChoice) {
+      if (row.Selected !== false && !row.Selected) {
+        row.Selected = false;
+      }
+
+      row.Selected = !row.Selected;
     }
   }
 }
