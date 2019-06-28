@@ -217,6 +217,7 @@ thead tr th {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 }
 
 tbody tr td {
@@ -251,11 +252,6 @@ table.table-bordered.dataTable td:first-child {
 
 table.table-bordered.dataTable td:last-child {
   border-right-width: 1px;
-}
-
-button.search {
-  overflow: hidden;
-  white-space: pre;
 }
 
 .input-group.page-param {
