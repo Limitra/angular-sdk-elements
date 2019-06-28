@@ -25,6 +25,9 @@ export class DatatableComponent implements OnInit {
     } else {
       this.settings.TextSource = {
         SearchPlaceHolder: 'Type to search from [$DataLength] data..',
+        FilterTitle: 'Filter your data..',
+        FilterAccept: 'Filter',
+        FilterClose: 'Close',
         Disabled: 'Disabled',
         Seconds: 'seconds',
         Minutes: 'minutes'
@@ -222,9 +225,9 @@ export class DatatableComponent implements OnInit {
     if (!this.settings.HasProcess) {
       switch (event.keyCode) {
         case 37: this.privPage(); break;
-        case 38: this.settings.Params.Length++; this.validateLength(); break;
         case 39: this.nextPage(); break;
-        case 40: this.settings.Params.Length--; this.validateLength(); break;
+        case 107: this.settings.Params.Length++; this.validateLength(); break;
+        case 109: this.settings.Params.Length--; this.validateLength(); break;
       }
     }
   }
