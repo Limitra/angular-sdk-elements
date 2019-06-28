@@ -220,10 +220,22 @@ thead tr th {
   cursor: pointer;
 }
 
+tbody tr {
+  cursor: pointer;
+}
+
 tbody tr td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+tbody.bulk-choice tr td:first-child {
+  border-left-width: 10px;
+}
+
+tbody.bulk-choice tr td:last-child {
+  border-right-width: 10px;
 }
 
 .table-bordered thead th, .table-bordered thead td {
@@ -252,6 +264,11 @@ table.table-bordered.dataTable td:first-child {
 
 table.table-bordered.dataTable td:last-child {
   border-right-width: 1px;
+}
+
+tr.row-selected {
+  background-color: #6c757d !important;
+  color: #fff;
 }
 
 .input-group.page-param {
