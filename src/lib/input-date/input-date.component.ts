@@ -44,7 +44,6 @@ export class InputDateComponent implements AfterViewInit {
     } else {
       this.validationMessages = {
         InvalidTemplate: 'You have entered data in an invalid format.',
-        CompleteData: 'You have entered incomplete data, please complete.',
         GreaterThan: 'You must enter a value greater than or equal to [$Min].',
         LessThan: 'You must enter a value less than or equal to [$Max].'
       };
@@ -135,6 +134,9 @@ export class InputDateComponent implements AfterViewInit {
           }
 
           this.value = new Date(getYear().Value, getMonth().Value, getDay().Value).getTime();
+          this.valueChange.emit(this.value);
+        } else {
+          this.value = undefined;
           this.valueChange.emit(this.value);
         }
       };
@@ -259,31 +261,31 @@ export class InputDateComponent implements AfterViewInit {
     value = this.providers.String.Replace(value, ' ', '');
 
     if (value.length !== 0 || this.required) {
-      if (isNaN(value) || isNaN(parseInt(value))) {
+      if (isNaN(value) || isNaN(parseInt(value)) || value.length !== mask.length) {
         this.addFormError(this.name, 'InvalidTemplate');
       } else {
         this.removeFormError(this.name, 'InvalidTemplate');
       }
 
-      if (value.length !== mask.length) {
-        this.addFormError(this.name, 'CompleteData');
-      } else {
-        this.removeFormError(this.name, 'CompleteData');
-      }
-
-      if ((this.min && new Date(this.min)) ? this.value <= this.min : false) {
+      if ((this.min && (new Date(this.min))) ? (this.value <= this.min || value.length !== mask.length) : false) {
         this.addFormError(this.name, 'GreaterThan');
       } else {
         this.removeFormError(this.name, 'GreaterThan');
       }
 
-      if ((this.max && new Date(this.max)) ? this.value >= this.max : false) {
+      if ((this.max && (new Date(this.max))) ? (this.value >= this.max || value.length !== mask.length) : false) {
         this.addFormError(this.name, 'LessThan');
       } else {
         this.removeFormError(this.name, 'LessThan');
       }
     } else {
       this.removeFormError(this.name, null, true);
+    }
+
+    if (value.length === 0) {
+      this.form.Errors.filter(x => x.Name === this.name && x.Solved).forEach(error => {
+        this.form.Errors.splice(this.form.Errors.indexOf(error), 1);
+      });
     }
 
     this.errors = this.form.Errors.filter(x => x.Name === this.name);
