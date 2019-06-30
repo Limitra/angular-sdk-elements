@@ -292,8 +292,6 @@ export class InputDateComponent implements AfterViewInit {
 
     this.errors = this.form.Errors.filter(x => x.Name === this.name);
     this.hasError = this.errors.filter(x => !x.Solved).length > 0;
-
-    console.log(this.value)
   }
 
   private addFormError(name: string, key: string) {
