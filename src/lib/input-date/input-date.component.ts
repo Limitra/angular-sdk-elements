@@ -135,9 +135,6 @@ export class InputDateComponent implements AfterViewInit {
 
           this.value = new Date(getYear().Value, getMonth().Value, getDay().Value).getTime();
           this.valueChange.emit(this.value);
-        } else {
-          this.value = undefined;
-          this.valueChange.emit(this.value);
         }
       };
 
@@ -260,6 +257,11 @@ export class InputDateComponent implements AfterViewInit {
     let value: any = this.providers.String.Replace(this.input.nativeElement.value, maskChar, '');
     value = this.providers.String.Replace(value, ' ', '');
 
+    if (value.length !== mask.length) {
+      this.value = undefined;
+      this.valueChange.emit(this.value);
+    }
+
     if (value.length !== 0 || this.required) {
       if (isNaN(value) || isNaN(parseInt(value)) || value.length !== mask.length) {
         this.addFormError(this.name, 'InvalidTemplate');
@@ -290,6 +292,8 @@ export class InputDateComponent implements AfterViewInit {
 
     this.errors = this.form.Errors.filter(x => x.Name === this.name);
     this.hasError = this.errors.filter(x => !x.Solved).length > 0;
+
+    console.log(this.value)
   }
 
   private addFormError(name: string, key: string) {
