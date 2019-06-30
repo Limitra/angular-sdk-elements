@@ -4,6 +4,10 @@ label {
   white-space: nowrap;
 }
 
+input {
+  padding-left: 24px !important;
+}
+
 .validation-message {
   display: block;
 }
@@ -22,7 +26,7 @@ label {
 
 .valid-status {
   position: absolute;
-  z-index: 1;
+  z-index: 4;
   top: 7px;
-  left: -20px;
+  left: 6px;
 }
