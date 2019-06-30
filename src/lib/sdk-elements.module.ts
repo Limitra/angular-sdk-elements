@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import {InputComponent} from './input/input.component';
+import {InputDateComponent} from './input-date/input-date.component';
 import { DatatableComponent } from './datatable/datatable.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpClientModule} from '@angular/common/http';
@@ -12,11 +12,10 @@ import {FormsModule} from '@angular/forms';
     BrowserModule,
     HttpClientModule,
     SdkCoreModule,
-    SdkCoreModule,
     FormsModule
   ],
   providers: [SdkProviders],
-  declarations: [InputComponent, DatatableComponent],
-  exports: [InputComponent, DatatableComponent]
+  declarations: [InputDateComponent, DatatableComponent],
+  exports: [InputDateComponent, DatatableComponent]
 })
 export class SdkElementsModule { }
