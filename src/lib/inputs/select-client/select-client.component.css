@@ -1,0 +1,87 @@
+label {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+input.show {
+  white-space: nowrap;
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  
+  background-color: #fff !important;
+  padding-left: 25px !important;
+  padding-right: 27px !important;
+  cursor: pointer !important;
+}
+
+.select-search {
+  padding: 10px 10px 5px 10px;
+}
+
+input.search {
+
+}
+
+.validation-messages.seperate {
+  border-top: solid 1px #cccccc;
+}
+
+.validation-messages {
+  width: 100%;
+  padding: 2px 5px 5px 10px;
+}
+
+.validation-message {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.select-options {
+  max-height: 200px;
+  overflow-y: scroll;
+  padding: 2px 5px 5px 10px;
+}
+
+.select-option {
+  cursor: pointer;
+  color: #4b545c;
+  font-size: 0.890rem;
+  margin-top:3px;
+  margin-bottom: 3px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}
+
+.select-focus-wrapper {
+  z-index: 1000;
+  width: 100%;
+  border: 1px solid #cccccc;
+  background-color: #fff;
+  position: absolute;
+  margin-top: 33px;
+  margin-left:auto;
+  margin-right: auto;
+}
+
+.valid-status {
+  position: absolute;
+  z-index: 4;
+  top: 7px;
+  left: 6px;
+}
+
+.remove-value {
+  cursor: pointer;
+  color: #8f8f8f;
+  position: absolute;
+  z-index: 4;
+  top: 7px;
+  right: 37px;
+}
