@@ -1,0 +1,31 @@
+<div class="form-group row">
+  <label *ngIf="label" class="col-md-2 col-form-label col-form-label-sm">{{label}}</label>
+  <div class="{{label?'col-md-10':'col-md-12'}}">
+    <div class="input-group input-group-sm mb-2 {{hasError?'has-error':''}}">
+      <i *ngIf="validationMessages" class="fa fa-{{hasError?'exclamation-triangle text-danger':'check-circle text-success'}} valid-status"></i>
+      <input #input type="hidden">
+      <input class="form-control form-control-sm show" attr.placeholder="{{placeholder}}" value="{{selected&&selected.Text?selected.Text:''}}" (keyup)="$event.stopPropagation()" (focusin)="focus=true" readonly>
+      <i *ngIf="value" class="fa fa-times remove-value" (click)="removeValue()"></i>
+      <div *ngIf="focus" class="select-focus-wrapper">
+        <div class="select-search">
+          <input class="form-control form-control-sm search">
+        </div>
+
+        <div *ngIf="source&&source.length>0" class="select-options">
+          <div *ngFor="let option of source" class="select-option" (mousedown)="checkOption(option)">
+            <i class="fa fa-{{option.Value == value?'check-circle':'circle'}}"></i><span class="text-nowrap"> {{option.Text}}</span>
+          </div>
+        </div>
+
+        <div *ngIf="form&&errors.length>0" class="validation-messages {{source&&source.length>0?'seperate': ''}}">
+          <div *ngFor="let error of errors" class="validation-message">
+            <small class="text-nowrap {{error.Solved?'text-success':'text-danger'}}"><i class="fa fa-{{error.Solved?'check-circle':'exclamation-triangle'}}"></i> {{error.Message}}</small>
+          </div>
+        </div>
+      </div>
+      <div class="input-group-append">
+        <div class="input-group-text"><i class="fa fa-hand-pointer-o"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
