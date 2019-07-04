@@ -9,7 +9,7 @@ input.show {
   overflow: hidden;
   -ms-text-overflow: ellipsis;
   text-overflow: ellipsis;
-  
+
   background-color: #fff !important;
   padding-left: 25px !important;
   padding-right: 27px !important;
@@ -20,8 +20,10 @@ input.show {
   padding: 10px 10px 5px 10px;
 }
 
-input.search {
-
+.empty-result {
+  color: #4b545c;
+  font-size: 0.890rem;
+  padding: 10px;
 }
 
 .validation-messages.seperate {
