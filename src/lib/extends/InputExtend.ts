@@ -48,7 +48,13 @@ export class InputExtend {
         Digit: 'You must enter at least [$Digit] digits.',
         Special: 'You must enter at least [$Special] special characters.',
         UpperCase: 'You must enter at least [$Uppercase] uppercase characters.',
-        LowerCase: 'You must enter at least [$Lowercase] lowercase characters.'
+        LowerCase: 'You must enter at least [$Lowercase] lowercase characters.',
+        SelectDefaultText: 'Choose.',
+        SelectSearchText: 'Search.',
+        SelectEmptyText: 'No data found.',
+        SelectMultiText: 'You have selected [$Length] data.',
+        SelectMinLength: 'You must select at least [$MinLength] data.',
+        SelectMaxLength: 'You can select up to [$MaxLength] data.',
       };
       this.validate();
     }
@@ -227,14 +233,16 @@ export class InputExtend {
       this.removeFormError(null, true);
     }
 
-    if (!value) {
-      this.form.Errors.filter(x => x.Name === this.name && x.Solved).forEach(error => {
-        this.form.Errors.splice(this.form.Errors.indexOf(error), 1);
-      });
-    }
+    if (this.form) {
+      if (!value) {
+        this.form.Errors.filter(x => x.Name === this.name && x.Solved).forEach(error => {
+          this.form.Errors.splice(this.form.Errors.indexOf(error), 1);
+        });
+      }
 
-    this.errors = this.form.Errors.filter(x => x.Name === this.name);
-    this.hasError = this.errors.filter(x => !x.Solved).length > 0;
+      this.errors = this.form.Errors.filter(x => x.Name === this.name);
+      this.hasError = this.errors.filter(x => !x.Solved).length > 0;
+    }
   }
 
   protected validation(value: any, mask: any) {
@@ -242,18 +250,20 @@ export class InputExtend {
   }
 
   protected addFormError(key: string) {
-    const error = this.form.Errors.filter(x => x.Name === this.name && x.Key === key && !x.Solved)[0];
-    if (this.form && this.validationMessages && !error) {
-      const solved = this.form.Errors.filter(x => x.Name === this.name && x.Key === key)[0];
-      if (solved) {
-        this.form.Errors.splice(this.form.Errors.indexOf(solved), 1);
+    if (this.form) {
+      const error = this.form.Errors.filter(x => x.Name === this.name && x.Key === key && !x.Solved)[0];
+      if (this.form && this.validationMessages && !error) {
+        const solved = this.form.Errors.filter(x => x.Name === this.name && x.Key === key)[0];
+        if (solved) {
+          this.form.Errors.splice(this.form.Errors.indexOf(solved), 1);
+        }
+
+        let message = this.validationMessages[key];
+        message = this.localizeReplace(message) || message;
+
+        this.form.Errors.push({Name: this.name, Key: key, Message: message, Solved: false});
+        this.formChange.emit(this.form);
       }
-
-      let message = this.validationMessages[key];
-      message = this.localizeReplace(message) || message;
-
-      this.form.Errors.push({Name: this.name, Key: key, Message: message, Solved: false});
-      this.formChange.emit(this.form);
     }
   }
 
