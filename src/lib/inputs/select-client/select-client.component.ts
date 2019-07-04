@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {InputExtend} from '../../extends/InputExtend';
 import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
 
@@ -11,31 +11,92 @@ export class SelectClientComponent extends InputExtend implements AfterViewInit 
   constructor(protected providers: SdkProviders) { super(providers); }
 
   @Input() source: Array<any>;
+  @Input() multiple = false;
+  @Input() minlength: number;
+  @Input() maxlength: number;
+
+  @ViewChild('search', {static: false}) search: ElementRef;
 
   private selected: any;
+  private selecteds: Array<any> = [];
+  private searchText: string;
+  private filteredSource: Array<any> = [];
 
   ngAfterViewInit() {
     this.init();
+    this.filteredSource = this.source;
   }
 
   forceValue() {
     if (this.input.nativeElement.value) {
-      this.value = this.input.nativeElement.value;
+      if (this.multiple) {
+        const values: Array<any> = this.input.nativeElement.value.split(',') || [];
+        this.value = values;
+      } else  {
+        this.value = this.input.nativeElement.value;
+      }
       this.valueChange.emit(this.value);
+    } else {
+      this.value = (this.multiple ? [] : undefined);
+      this.valueChange.emit(this.value);
+    }
+    console.log(this.value);
+  }
+
+  validation(value: any) {
+    if (this.multiple) {
+      const values: Array<any> = this.input.nativeElement.value.split(',') || [];
+      if (this.minlength && values.length < this.minlength) {
+        this.addFormError('SelectMinLength');
+      } else {
+        this.removeFormError('SelectMinLength');
+      }
+
+      if (this.maxlength && values.length > this.maxlength) {
+        this.addFormError('SelectMaxLength');
+      } else {
+        this.removeFormError('SelectMaxLength');
+      }
     }
   }
 
   removeValue() {
     this.input.nativeElement.value = '';
     this.selected = undefined;
+    this.selecteds = [];
     this.validate();
   }
 
+  searchValue() {
+    const search = this.searchText;
+    if (this.source) {
+      this.filteredSource = this.source.filter(x => (x && x.Text ? x.Text.toLowerCase().includes(search.toLowerCase()) : false));
+    }
+  }
+
   checkOption(option: any) {
+    this.search.nativeElement.focus();
     if (option && option.Value) {
-      this.selected = option;
-      this.input.nativeElement.value = option.Value;
+      if (this.multiple) {
+        const selected = this.selecteds.filter(x => x.Value === option.Value)[0];
+        if (!selected) {
+          this.selecteds.push(option);
+        } else {
+          this.selecteds.splice(this.selecteds.indexOf(selected), 1);
+        }
+        this.input.nativeElement.value = this.selecteds.map(x => x.Value);
+      } else {
+        this.selected = option;
+        this.input.nativeElement.value = option.Value;
+      }
+
       this.validate();
     }
+  }
+
+  localizeReplace(message: string): string {
+    message = this.providers.String.Replace(message, '[$MinLength]', this.minlength ? this.minlength.toString() : '');
+    message = this.providers.String.Replace(message, '[$MaxLength]', this.maxlength ? this.maxlength.toString() : '');
+    return message;
   }
 }
