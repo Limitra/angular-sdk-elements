@@ -1,20 +1,26 @@
 <div class="form-group row">
   <label *ngIf="label" class="col-md-2 col-form-label col-form-label-sm">{{label}}</label>
   <div class="{{label?'col-md-10':'col-md-12'}}">
-    <div class="input-group input-group-sm mb-2 {{hasError?'has-error':''}}">
+    <div class="input-group input-group-sm mb-2 {{hasError?'has-error':''}}" (lim-os-click)="focus=false">
       <i *ngIf="validationMessages" class="fa fa-{{hasError?'exclamation-triangle text-danger':'check-circle text-success'}} valid-status"></i>
       <input #input type="hidden">
-      <input class="form-control form-control-sm show" attr.placeholder="{{placeholder}}" value="{{selected&&selected.Text?selected.Text:''}}" (keyup)="$event.stopPropagation()" (focusin)="focus=true" readonly>
+      <input class="form-control form-control-sm show" attr.placeholder="{{placeholder||(validationMessages?validationMessages.SelectDefaultText:'')}}"
+             value="{{multiple?(validationMessages&&selecteds?validationMessages.SelectMultiText.replace('[$Length]', selecteds.length):''):(selected&&selected.Text?selected.Text:'')}}" (keyup)="$event.stopPropagation();" (click)="search?search.nativeElement.focus():''" (focusin)="focus=true;" readonly>
       <i *ngIf="value" class="fa fa-times remove-value" (click)="removeValue()"></i>
       <div *ngIf="focus" class="select-focus-wrapper">
         <div class="select-search">
-          <input class="form-control form-control-sm search">
+          <input #search [(ngModel)]="searchText" (input)="searchValue()" class="form-control form-control-sm search" placeholder="{{(validationMessages?validationMessages.SelectSearchText:'')}}">
         </div>
 
-        <div *ngIf="source&&source.length>0" class="select-options">
-          <div *ngFor="let option of source" class="select-option" (mousedown)="checkOption(option)">
-            <i class="fa fa-{{option.Value == value?'check-circle':'circle'}}"></i><span class="text-nowrap"> {{option.Text}}</span>
+        <div *ngIf="filteredSource&&filteredSource.length>0" class="select-options">
+          <div *ngFor="let option of filteredSource" class="select-option" (mousedown)="focus = true; checkOption(option)">
+            <i class="fa fa-{{(multiple?(selecteds.includes(option)):(option==selected))?'check-circle':'circle'}}"></i>
+            <span class="text-nowrap"> {{option.Text}}</span>
           </div>
+        </div>
+
+        <div *ngIf="!filteredSource||filteredSource.length==0" class="empty-result">
+          <i class="fa fa-battery-empty"></i><span class="text-nowrap"> {{validationMessages?validationMessages.SelectEmptyText:''}}</span>
         </div>
 
         <div *ngIf="form&&errors.length>0" class="validation-messages {{source&&source.length>0?'seperate': ''}}">
