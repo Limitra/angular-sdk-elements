@@ -11,6 +11,7 @@ import { InputPasswordComponent } from './inputs/input-password/input-password.c
 import { InputPhoneComponent } from './inputs/input-phone/input-phone.component';
 import { InputEmailComponent } from './inputs/input-email/input-email.component';
 import { SelectClientComponent } from './inputs/select-client/select-client.component';
+import {OutsideClickDirective} from './directives/outside-click/outside-click.directive';
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import { SelectClientComponent } from './inputs/select-client/select-client.comp
     FormsModule
   ],
   providers: [SdkProviders],
-  declarations: [InputDateComponent, DatatableComponent, InputTextComponent, InputPasswordComponent, InputPhoneComponent, InputEmailComponent, SelectClientComponent],
-  exports: [InputDateComponent, DatatableComponent, InputTextComponent, InputPasswordComponent, InputPhoneComponent, InputEmailComponent, SelectClientComponent]
+  declarations: [OutsideClickDirective, InputDateComponent, DatatableComponent, InputTextComponent, InputPasswordComponent, InputPhoneComponent, InputEmailComponent, SelectClientComponent],
+  exports: [OutsideClickDirective, InputDateComponent, DatatableComponent, InputTextComponent, InputPasswordComponent, InputPhoneComponent, InputEmailComponent, SelectClientComponent]
 })
 export class SdkElementsModule { }
