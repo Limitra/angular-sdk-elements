@@ -1,0 +1,37 @@
+<div class="form-group row">
+  <label *ngIf="label" class="col-md-2 col-form-label col-form-label-sm">{{label}}</label>
+  <div class="{{label?'col-md-10':'col-md-12'}}">
+    <div class="input-group input-group-sm mb-2 {{hasError?'has-error':''}}" (lim-os-click)="focus=false">
+      <i *ngIf="validationMessages" class="fa fa-{{hasError?'exclamation-triangle text-danger':'check-circle text-success'}} valid-status"></i>
+      <input #input type="hidden">
+      <input class="form-control form-control-sm show" attr.placeholder="{{placeholder||(validationMessages?validationMessages.SelectDefaultText:'')}}" (mousedown)="focus?focus=false:''"
+             value="{{multiple?(validationMessages&&selecteds?validationMessages.SelectMultiText.replace('[$Length]', selecteds.length):''):(selected&&selected[textkey]?selected[textkey]:'')}}" (keyup)="$event.stopPropagation();" (click)="search?search.nativeElement.focus():''" (focusin)="focus=true;" readonly>
+      <i *ngIf="value" class="fa fa-times remove-value" (click)="removeValue()"></i>
+      <div *ngIf="focus" class="select-focus-wrapper">
+        <div class="select-search">
+          <input #search [(ngModel)]="searchText" (input)="searchValue()" class="form-control form-control-sm search" placeholder="{{(validationMessages?validationMessages.SelectSearchText:'')}}">
+        </div>
+
+        <div *ngIf="filteredSource&&filteredSource.length>0" class="select-options" (scroll)="scroll($event)">
+          <div *ngFor="let option of filteredSource" class="select-option" (mousedown)="focus = true; checkOption(option)">
+            <i class="fa fa-{{(multiple?(selecteds.includes(option[valuekey])):(selected?option[valuekey]==selected[valuekey]:false))?'check-circle':'circle'}}"></i>
+            <span class="text-nowrap"> {{option[textkey]}}</span>
+          </div>
+        </div>
+
+        <div *ngIf="!filteredSource||filteredSource.length==0" class="empty-result">
+          <i class="fa fa-battery-empty"></i><span class="text-nowrap"> {{validationMessages?validationMessages.SelectEmptyText:''}}</span>
+        </div>
+
+        <div *ngIf="form&&errors.length>0" class="validation-messages {{source&&source.length>0?'seperate': ''}}">
+          <div *ngFor="let error of errors" class="validation-message">
+            <small class="text-nowrap {{error.Solved?'text-success':'text-danger'}}"><i class="fa fa-{{error.Solved?'check-circle':'exclamation-triangle'}}"></i> {{error.Message}}</small>
+          </div>
+        </div>
+      </div>
+      <div class="input-group-append">
+        <div class="input-group-text"><i class="fa fa-hand-pointer-o"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
