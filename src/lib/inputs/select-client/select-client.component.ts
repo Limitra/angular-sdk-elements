@@ -23,8 +23,13 @@ export class SelectClientComponent extends InputExtend implements AfterViewInit 
   private filteredSource: Array<any> = [];
 
   ngAfterViewInit() {
-    this.init();
     this.filteredSource = this.source;
+    if (this.multiple) {
+      this.selecteds = this.filteredSource.filter(x => this.value ? this.value.includes(x.Value) : false);
+    } else {
+      this.selected = this.filteredSource.filter(x => this.value ? this.value === x.Value : false)[0];
+    }
+    this.init();
   }
 
   forceValue() {
@@ -40,7 +45,6 @@ export class SelectClientComponent extends InputExtend implements AfterViewInit 
       this.value = (this.multiple ? [] : undefined);
       this.valueChange.emit(this.value);
     }
-    console.log(this.value);
   }
 
   validation(value: any) {
