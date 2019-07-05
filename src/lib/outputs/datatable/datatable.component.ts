@@ -51,7 +51,9 @@ export class DatatableComponent implements OnInit {
       params.sort = this.settings.Params.Sort;
       params.length = this.settings.Params.Length || 10;
       params.page = this.settings.Params.Page || 1;
-      params.search = this.settings.Params.Search || '';
+      if (this.settings.Params.Search) {
+        params.search = this.settings.Params.Search;
+      }
       this.settings.Params.Page = params.page;
 
       const qs = '?' + this.providers.Url.Serialize(params);
