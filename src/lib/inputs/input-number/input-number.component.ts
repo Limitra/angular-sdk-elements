@@ -14,7 +14,7 @@ export class InputNumberComponent extends InputExtend implements AfterViewInit {
 
   @Input() min = 0;
   @Input() max = 999999;
-  @Input() fixed = 2;
+  @Input() fixed = 0;
 
   private decimalSeperator: string;
   private thousandSeperator: string;
