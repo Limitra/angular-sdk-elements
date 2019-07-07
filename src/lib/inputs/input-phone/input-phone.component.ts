@@ -11,7 +11,9 @@ export class InputPhoneComponent extends InputExtend implements AfterViewInit {
   constructor(protected providers: SdkProviders) { super(providers); }
 
   ngAfterViewInit() {
-    this.init();
+    this.init(() => {
+      this.mask = this.validationMessages.PhoneMask;
+    });
   }
 
   keyboardQuery(event: KeyboardEvent): boolean {
