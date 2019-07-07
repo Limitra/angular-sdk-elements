@@ -1,0 +1,35 @@
+label {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+input {
+  padding-left: 25px !important;
+}
+
+.validation-message {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.validation-messages {
+  z-index: 1000;
+  width: 100%;
+  padding: 2px 5px 5px 10px;
+  border: 1px solid #cccccc;
+  background-color: #fff;
+  position: absolute;
+  margin-top: 33px;
+  margin-left:auto;
+  margin-right: auto;
+}
+
+.valid-status {
+  position: absolute;
+  z-index: 4;
+  top: 7px;
+  left: 6px;
+}
