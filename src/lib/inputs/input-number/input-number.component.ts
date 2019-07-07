@@ -55,7 +55,7 @@ export class InputNumberComponent extends InputExtend implements AfterViewInit {
   }
 
   formatValue(value: number): string {
-    if (value) {
+    if (value || value === 0) {
       if (value > 1e16) {
         value = 0;
       }
