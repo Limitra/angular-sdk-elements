@@ -26,7 +26,9 @@ export class InputExtend {
   protected hasError = false;
   protected validationMessages: any;
 
-  init() {
+  init(call: () => void = null) {
+    this.lang = this.lang || this.providers.Storage.Get('Localization_Lang');
+
     this.generateName();
     if (this.value) {
       this.input.nativeElement.value = this.formatValue(this.value);
@@ -35,6 +37,7 @@ export class InputExtend {
     if (this.lang) {
       this.providers.Http.Get('assets/limitra/validation.' + this.lang + '.json').subscribe(response => {
         this.validationMessages = response;
+        if (call) { call(); }
         this.validate();
       });
     } else {
@@ -49,14 +52,19 @@ export class InputExtend {
         Special: 'You must enter at least [$Special] special characters.',
         UpperCase: 'You must enter at least [$Uppercase] uppercase characters.',
         LowerCase: 'You must enter at least [$Lowercase] lowercase characters.',
+        DateMask: 'dd.mm.yyyy',
+        PhoneMask: '+(XX) XXX XXX XX XX',
         SelectDefaultText: 'Choose.',
         SelectSearchText: 'Search.',
         SelectEmptyText: 'No data found.',
         SelectMultiText: 'You have selected [$Length] data.',
         SelectMinLength: 'You must select at least [$MinLength] data.',
         SelectMaxLength: 'You can select up to [$MaxLength] data.',
+        DecimalSeperator: '.',
+        ThousandSeperator: ','
       };
       this.validate();
+      if (call) { call(); }
     }
   }
 
