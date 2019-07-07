@@ -16,8 +16,9 @@ export class InputDateComponent extends InputExtend implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.mask = this.mask || 'dd.mm.yyyy';
-    super.init();
+    this.init(() => {
+      this.mask = this.validationMessages.DateMask;
+    });
   }
 
   keyboardQuery(event: KeyboardEvent): boolean {
