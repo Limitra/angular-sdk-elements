@@ -3,9 +3,10 @@ label {
   overflow: hidden;
   white-space: nowrap;
   display: inline;
-  margin-left: 5px;
   padding: 0;
   cursor: pointer;
+  left: 3px;
+  position: relative;
 }
 
 .choice-box small {
