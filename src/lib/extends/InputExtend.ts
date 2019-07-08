@@ -27,6 +27,8 @@ export class InputExtend {
   protected validationMessages: any;
 
   init(call: () => void = null) {
+    this.form = this.form || { };
+    this.form.Errors = this.form.Errors || [];
     this.lang = this.lang || this.providers.Storage.Get('Localization_Lang');
 
     this.generateName();
