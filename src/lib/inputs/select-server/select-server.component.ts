@@ -54,6 +54,14 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
           this.selected = this.filteredSource.filter(x => this.value ? this.value == x[this.valuekey] : false)[0];
         }
       }
+    }, () => {
+      if (init) {
+        if (this.multiple) {
+          this.selecteds = this.value;
+        } else {
+          this.selected = this.value;
+        }
+      }
     });
   }
 
