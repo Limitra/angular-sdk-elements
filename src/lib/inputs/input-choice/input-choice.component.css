@@ -2,11 +2,12 @@ label {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  display: inline;
+  display: inline-flex;
   padding: 0;
   cursor: pointer;
   left: 3px;
   position: relative;
+  max-width: calc(100% - 14px);
 }
 
 .choice-box small {
@@ -26,6 +27,15 @@ label {
 .choice-box.border {
   border: 1px solid #cccccc;
   padding: 3px 10px 10px 10px;
+}
+
+.form-group {
+  position: relative;
+}
+
+.form-group.border {
+  border: 1px solid #cccccc;
+  padding: 15px 0 15px 0;
 }
 
 .validation-message {
@@ -49,8 +59,9 @@ label {
 }
 
 .valid-status {
+  font-size: 0.9rem;
   position: absolute;
   z-index: 4;
-  top: 5px;
-  right: 20px;
+  top: 1px;
+  right: 1px;
 }
