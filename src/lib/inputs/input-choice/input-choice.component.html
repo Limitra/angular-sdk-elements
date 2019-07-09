@@ -1,4 +1,4 @@
-<div class="form-group row {{box?'border':''}}" (lim-os-click)="focus=false">
+<div class="form-group row {{box?'border':''}}" (click)="focus=true" (lim-os-click)="focus=false">
   <input #input type="hidden">
   <i *ngIf="validationMessages&&(required||minlength||maxlength)" class="fa fa-{{hasError?'exclamation-triangle text-danger':'check-circle text-success'}} valid-status"></i>
   <div *ngFor="let choice of source;let i = index;" class="col-md-{{12/column}}" [style.marginTop.px]="i>0&&(column>1?i>column-1:true)?3:0">
@@ -9,7 +9,7 @@
       <small *ngIf="enableSummary" class="text-nowrap" title="{{choice.Summary || '...'}}">{{choice.Summary || '...'}}</small>
     </div>
   </div>
-  <div *ngIf="focus&&form&&errors.length>0" class="validation-messages {{box?'border':''}}" [style.marginTop.px]="((box?42:23)+(enableSummary?13:0)) * (source.length/column)">
+  <div *ngIf="focus&&form&&errors.length>0" class="validation-messages {{box?'border':''}}" [style.marginTop.px]="((box?42:23)+(enableSummary?15:0)) * (source.length/column)">
     <div *ngFor="let error of errors" class="validation-message">
       <small class="text-nowrap {{error.Solved?'text-success':'text-danger'}}"><i
         class="fa fa-{{error.Solved?'check-circle':'exclamation-triangle'}}"></i> {{error.Message}}</small>
