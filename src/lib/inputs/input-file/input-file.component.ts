@@ -13,6 +13,26 @@ export class InputFileComponent extends InputExtend implements OnInit {
   @Input() source: string;
   @Input() multiple: boolean;
 
+  @Input() minlength: number;
+  @Input() maxlength = 5;
+
+  @Input() min = 1;
+  @Input() max = 5242880;
+
+  @Input() accept = 'image';
+
+  @Input() image: Array<any> = [];
+  @Input() document: Array<any> = [];
+  @Input() audio: Array<any> = [];
+  @Input() video: Array<any> = [];
+
+  private imageTypes: Array<any> = ['image/png', 'image/jpeg', 'image/bmp', 'image/gif'];
+  private documentTypes: Array<any> = ['text/plain', 'application/pdf', 'application/msword', 'application/vnd.ms-excel'];
+  private audioTypes: Array<any> = ['audio/3gpp', 'audio/3gpp2', 'audio/mpeg', 'audio/mpeg4-generic', 'audio/ogg', 'audio/mp4'];
+  private videoTypes: Array<any> = ['video/mp4', 'video/MP4V-ES', 'video/3gpp', 'video/3gpp2', 'video/3gpp-tt', 'video/mpeg4-generic']
+
+  private canClear: boolean;
+  private canUpload: boolean;
   private files: Array<any>;
 
   ngOnInit() {
@@ -35,7 +55,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
           if (xhr.status >= 200 && xhr.status <= 220) {
             file.Size = response.size;
             file.Type = response.type;
-            file.CanPreview = response.type.substring(0, 6).includes('image/');
+            file.CanPreview = this.canPreview(response.type);
             file.Text = file.Text + ' (' + this.formatBytes(file.Size) + ')' + ' ' + file.Type;
           } else {
             file.Text = file.Text + ' [E: ' + xhr.status + ']';
@@ -49,25 +69,80 @@ export class InputFileComponent extends InputExtend implements OnInit {
     });
   }
 
-  preview(file: string) {
-
+  validate() {
+    this.input.nativeElement.value = 'validate';
+    super.validate();
+    this.input.nativeElement.value = '';
   }
 
-  choice(input: any) {
-    input.click();
-  }
+  validation() {
+    const invalidAnyLen = this.files.filter(x => !x.Name).length;
+    const upLen = this.files.filter(x => x.Uploaded).length;
+    const typeInvalidLen = this.files.filter(x => x.Type ? !this.fileTypeIsValid(x.Type) : false).length;
+    const sizeInvalidLen = this.files.filter(x => x.Size ? !this.fileSizeIsValid(x.Size) : false).length;
 
-  remove(file: any) {
-    const index = this.files.indexOf(file);
-    if (this.files.length > 1) {
-      this.files.splice(index, 1);
+    if (this.required && invalidAnyLen > 0 || (this.files.length > 1 && !this.required && invalidAnyLen > 0)) {
+      this.addFormError('Required');
     } else {
-      this.files[index] = {};
+      this.removeFormError('Required');
     }
-    this.validate();
+
+    if (invalidAnyLen < this.files.length && upLen !== this.files.length) {
+      this.addFormError('FileReadyError');
+    } else {
+      this.removeFormError('FileReadyError');
+    }
+
+    if (typeInvalidLen > 0) {
+      this.addFormError('FileTypeError');
+    } else {
+      this.removeFormError('FileTypeError');
+    }
+
+    if (sizeInvalidLen > 0) {
+      this.addFormError('FileSize');
+    } else {
+      this.removeFormError('FileSize');
+    }
+
+    if (invalidAnyLen < this.files.length && this.minlength && this.files.length < this.minlength) {
+      this.addFormError('FileMinLength');
+    } else {
+      this.removeFormError('FileMinLength');
+    }
+
+    if (this.maxlength && this.files.length > this.maxlength) {
+      this.addFormError('FileMaxLength');
+    } else {
+      this.removeFormError('FileMaxLength');
+    }
+
+    if (this.files.length === 1 && !this.required) {
+      if (!this.files[0].Name) {
+        this.files[0].Valid = true;
+        this.removeFormError(null, true);
+      }
+    } else if (this.files.length > 1) {
+      if (!this.files[0].Name && this.files[0].Valid) {
+        this.files[0].Valid = undefined;
+      }
+    }
+
+    this.canUpload = invalidAnyLen === 0 && sizeInvalidLen === 0 && typeInvalidLen === 0 && upLen !== this.files.length
+    && (this.minlength ? this.files.length >= this.minlength : true) && this.files.length <= this.maxlength;
+    this.canClear = (this.files.length > 1 ? invalidAnyLen > 0 : false) || sizeInvalidLen > 0
+      || typeInvalidLen > 0 || this.files.length > this.maxlength;
   }
 
-  fileChange(file: any, input: any) {
+  localizeReplace(message: string): string {
+    message = this.providers.String.Replace(message, '[$MinLength]', this.minlength ? this.minlength.toString() : '');
+    message = this.providers.String.Replace(message, '[$MaxLength]', this.maxlength ? this.maxlength.toString() : '');
+    message = this.providers.String.Replace(message, '[$MinSize]', this.min ? this.formatBytes(this.min) : '');
+    message = this.providers.String.Replace(message, '[$MaxSize]', this.max ? this.formatBytes(this.max) : '');
+    return message;
+  }
+
+  private fileChange(file: any, input: any) {
     const index = this.files.indexOf(file);
     if (input.files && input.files.length > 0) {
       const selected = input.files[0];
@@ -75,40 +150,84 @@ export class InputFileComponent extends InputExtend implements OnInit {
         Name: selected.name,
         Size: selected.size,
         Type: selected.type,
-        CanPreview: selected.type.substring(0, 6).includes('image/'),
+        CanPreview: this.canPreview(selected.type),
         Text: selected.name + ' (' + this.formatBytes(selected.size) + ')' + ' ' + selected.type,
-        Valid: true,
+        Valid: this.fileTypeIsValid(selected.type) && this.fileSizeIsValid(selected.size),
         File: selected
       };
       this.files[index] = obj;
-      console.log(obj)
     } else {
       this.files[index] = {};
     }
     this.validate();
   }
 
-  validate() {
-    this.input.nativeElement.value = 'valid';
-    super.validate();
-    this.input.nativeElement.value = '';
+  private fileTypeIsValid(type: string): boolean {
+    if (this.accept) {
+      const accept = this.accept.split(',');
+      let types: Array<string> = [];
+      if (accept.includes('image')) { types = types.concat(this.imageTypes).concat(this.image); }
+      if (accept.includes('video')) { types = types.concat(this.videoTypes).concat(this.video); }
+      if (accept.includes('audio')) { types = types.concat(this.audioTypes).concat(this.audio); }
+      if (accept.includes('document')) { types = types.concat(this.documentTypes).concat(this.document); }
+
+      return types.includes(type);
+    } else {
+      return false;
+    }
   }
 
-  validation() {
-    const upLen = this.files.filter(x => x.Uploaded).length;
-    const validLen = this.files.filter(x => x.Valid).length;
+  private fileSizeIsValid(size: number): boolean {
+    return size >= this.min && size <= this.max;
+  }
 
-    if (this.required && validLen === 0) {
-      this.addFormError('Required');
-    } else {
-      this.removeFormError('Required');
+  private addFile() {
+    if (this.files.length < this.max + 1) {
+      this.files.push({});
     }
 
-    if (upLen !== this.files.length) {
-      this.addFormError('FileNotReadyYet');
-    } else {
-      this.removeFormError('FileNotReadyYet');
+    this.validate();
+  }
+
+  private clearFiles() {
+    this.files = this.files.filter(x => x.Valid);
+    if (this.files.length === 0) {
+      this.files = [{}];
+    } else if (this.files.length > this.maxlength) {
+      this.files.splice(this.files.length - 1, 1);
     }
+    this.validate();
+  }
+
+  private uploadFiles() {
+
+  }
+
+  private preview(file: string) {
+
+  }
+
+  private choice(input: any) {
+    input.click();
+  }
+
+  private remove(file: any) {
+    const index = this.files.indexOf(file);
+    const refFile = this.files[index];
+    if (this.files.length > 1) {
+      if (refFile.Name) {
+        this.files[index] = {};
+      } else {
+        this.files.splice(index, 1);
+      }
+    } else {
+      this.files[index] = {};
+    }
+    this.validate();
+  }
+
+  private canPreview(type: string): boolean {
+    return type.substring(0, 6).includes('image/');
   }
 
   private downloadFile(path: string, call: (response, success) => void) {
