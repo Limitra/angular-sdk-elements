@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {InputExtend} from '../../extends/InputExtend';
 import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
 
@@ -42,30 +42,30 @@ export class InputFileComponent extends InputExtend implements OnInit {
 
     this.init(() => {
       this.source = this.source || (this.validationMessages ? this.validationMessages.FileUploadSource : '');
-    });
 
-    this.files.forEach(file => {
-      const index = this.files.indexOf(file);
-      if (file.Path) {
-        file.Name = file.Path.substring(file.Path.lastIndexOf('/') + 1);
-        file.Text = file.Name;
-        this.downloadFile(file.Path, (response, xhr) => {
-          file.Uploaded = true;
-          file.Valid = true;
-          if (xhr.status >= 200 && xhr.status <= 220) {
-            file.Size = response.size;
-            file.Type = response.type;
-            file.CanPreview = this.canPreview(response.type);
-            file.Text = file.Text + ' (' + this.formatBytes(file.Size) + ')' + ' ' + file.Type;
-          } else {
-            file.Text = file.Text + ' [E: ' + xhr.status + ']';
-          }
+      this.files.forEach(file => {
+        const index = this.files.indexOf(file);
+        if (file.Path) {
+          file.Name = file.Path.substring(file.Path.lastIndexOf('/') + 1);
+          file.Text = file.Name;
+          this.downloadFile(file.Path, (response, xhr) => {
+            file.Uploaded = true;
+            file.Valid = true;
+            if (xhr.status >= 200 && xhr.status <= 220) {
+              file.Size = response.size;
+              file.Type = response.type;
+              file.CanPreview = this.canPreview(response.type);
+              file.Text = file.Text + ' (' + this.formatBytes(file.Size) + ')' + ' ' + file.Type;
+            } else {
+              file.Text = file.Text + ' [E: ' + xhr.status + ']';
+            }
 
-          if (index === this.files.length - 1) {
-            this.validate();
-          }
-        });
-      }
+            if (index === this.files.length - 1) {
+              this.validate();
+            }
+          });
+        }
+      });
     });
   }
 
