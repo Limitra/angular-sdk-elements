@@ -15,14 +15,16 @@ input {
   text-overflow: ellipsis;
 }
 
-.validation-messages {
+.validation-wrapper {
   z-index: 1000;
+  position: absolute;
+}
+
+.validation-messages {
   width: 100%;
   padding: 2px 5px 5px 10px;
   border: 1px solid #cccccc;
   background-color: #fff;
-  position: absolute;
-  margin-top: 33px;
   margin-left:auto;
   margin-right: auto;
 }
@@ -32,6 +34,13 @@ input {
   z-index: 4;
   top: 7px;
   left: 6px;
+}
+
+.general-valid-status {
+  position: absolute;
+  z-index: 4;
+  left: calc(50% - -53px);
+  cursor: pointer;
 }
 
 .input-group-append {
