@@ -43,37 +43,39 @@ export class InputExtend {
         this.validate();
       });
     } else {
-      this.validationMessages = {
-        Required: 'You must fill in this field.',
-        ValidError: 'You must enter data in a valid format.',
-        GreaterThan: 'You must enter a value greater than or equal to [$Min].',
-        LessThan: 'You must enter a value less than or equal to [$Max].',
-        MinLength: 'You must enter at least [$MinLength] characters.',
-        MaxLength: 'You can enter up to [$MaxLength] characters.',
-        Digit: 'You must enter at least [$Digit] digits.',
-        Special: 'You must enter at least [$Special] special characters.',
-        UpperCase: 'You must enter at least [$Uppercase] uppercase characters.',
-        LowerCase: 'You must enter at least [$Lowercase] lowercase characters.',
-        DateMask: 'dd.mm.yyyy',
-        PhoneMask: '+(XX) XXX XXX XX XX',
-        FileMinLength: 'You must select at least [$MinLength] file.',
-        FileMaxLength: 'You can select up to [$MaxLength] file.',
-        FileSize: 'File size must be between [$MinSize] and [$MaxSize].',
-        FileTypeError: 'You must remove unsupported file types.',
-        FileReadyError: 'Your upload process not completed yet.',
-        FileUploadSource: 'http://localhost',
-        FileDefaultText: 'Choose File.',
-        SelectDefaultText: 'Choose.',
-        SelectSearchText: 'Search.',
-        SelectEmptyText: 'No data found.',
-        SelectMultiText: 'You have selected [$Length] data.',
-        SelectMinLength: 'You must select at least [$MinLength] data.',
-        SelectMaxLength: 'You can select up to [$MaxLength] data.',
-        DecimalSeperator: '.',
-        ThousandSeperator: ','
-      };
-      this.validate();
-      if (call) { call(); }
+      setTimeout(() => {
+        this.validationMessages = {
+          Required: 'You must fill in this field.',
+          ValidError: 'You must enter data in a valid format.',
+          GreaterThan: 'You must enter a value greater than or equal to [$Min].',
+          LessThan: 'You must enter a value less than or equal to [$Max].',
+          MinLength: 'You must enter at least [$MinLength] characters.',
+          MaxLength: 'You can enter up to [$MaxLength] characters.',
+          Digit: 'You must enter at least [$Digit] digits.',
+          Special: 'You must enter at least [$Special] special characters.',
+          UpperCase: 'You must enter at least [$Uppercase] uppercase characters.',
+          LowerCase: 'You must enter at least [$Lowercase] lowercase characters.',
+          DateMask: 'dd.mm.yyyy',
+          PhoneMask: '+(XX) XXX XXX XX XX',
+          FileMinLength: 'You must select at least [$MinLength] file.',
+          FileMaxLength: 'You can select up to [$MaxLength] file.',
+          FileSize: 'File size must be between [$MinSize] and [$MaxSize].',
+          FileTypeError: 'You must remove unsupported file types.',
+          FileReadyError: 'Your upload process not completed yet.',
+          FileUploadSource: 'http://localhost',
+          FileDefaultText: 'Choose File.',
+          SelectDefaultText: 'Choose.',
+          SelectSearchText: 'Search.',
+          SelectEmptyText: 'No data found.',
+          SelectMultiText: 'You have selected [$Length] data.',
+          SelectMinLength: 'You must select at least [$MinLength] data.',
+          SelectMaxLength: 'You can select up to [$MaxLength] data.',
+          DecimalSeperator: '.',
+          ThousandSeperator: ','
+        };
+        if (call) { call(); }
+        this.validate();
+      });
     }
   }
 
