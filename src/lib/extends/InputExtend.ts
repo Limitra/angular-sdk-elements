@@ -32,7 +32,7 @@ export class InputExtend {
     this.lang = this.lang || this.providers.Storage.Get('Localization_Lang');
 
     this.generateName();
-    if (this.value) {
+    if (this.value && this.input) {
       this.input.nativeElement.value = this.formatValue(this.value);
     }
 
@@ -56,6 +56,9 @@ export class InputExtend {
         LowerCase: 'You must enter at least [$Lowercase] lowercase characters.',
         DateMask: 'dd.mm.yyyy',
         PhoneMask: '+(XX) XXX XXX XX XX',
+        FileNotReadyYet: 'Your upload process not completed yet.',
+        FileUploadSource: 'http://localhost',
+        FileDefaultText: 'Choose File.',
         SelectDefaultText: 'Choose.',
         SelectSearchText: 'Search.',
         SelectEmptyText: 'No data found.',
