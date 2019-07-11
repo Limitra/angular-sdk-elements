@@ -1,5 +1,6 @@
 import {ElementRef, EventEmitter, HostListener, Input, Output, ViewChild} from '@angular/core';
 import {SdkProviders} from '../../../../sdk-core/src/lib/providers';
+import {ScreenSize} from '../../../../sdk-core/src/lib/definitions/screen-size';
 
 export class InputExtend {
   constructor(protected providers: SdkProviders) {
@@ -21,12 +22,18 @@ export class InputExtend {
 
   @Input() required: boolean;
 
+  @Input() inline = true;
+
   protected name: string;
   protected errors: Array<any> = [];
   protected hasError = false;
   protected validationMessages: any;
+  protected screenSize: number;
+  protected screenSizes = ScreenSize;
 
   init(call: () => void = null) {
+    this.screenSize = this.providers.Screen.GetSize();
+
     this.form = this.form || { };
     this.form.Errors = this.form.Errors || [];
     this.lang = this.lang || this.providers.Storage.Get('Localization_Lang');
