@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input} from '@angular/core';
 import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
 import {InputExtend} from '../../extends/InputExtend';
 
