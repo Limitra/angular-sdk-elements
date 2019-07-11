@@ -35,7 +35,7 @@
     <i class="fa fa-times fa-2x text-white ml-3" (click)="preview=undefined"></i>
   </div>
   <img #imagePreview *ngIf="imageTypes.includes(preview.Type)">
-  <audio #audioPreview *ngIf="audioTypes.includes(preview.Type)" controls>
+  <audio #audioPreview *ngIf="audioTypes.includes(preview.Type)" controls autoplay>
     <source type="{{preview.Type}}">
   </audio>
   <video #videoPreview *ngIf="videoTypes.includes(preview.Type)" controls autoplay>
