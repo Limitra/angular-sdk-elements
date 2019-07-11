@@ -23,7 +23,7 @@
   </div>
   <div class="{{label&&inline?'col-md-10 offset-md-2':'col-md-12'}} text-center">
     <div class="btn-group">
-      <button *ngIf="files.length<=maxlength" (click)="addFile()" type="button" class="btn btn-sm btn-outline-success"><i class="fa fa-plus-circle"></i></button>
+      <button *ngIf="multiple&&files.length<=maxlength" (click)="addFile()" type="button" class="btn btn-sm btn-outline-success"><i class="fa fa-plus-circle"></i></button>
       <button (click)="clearFiles()" type="button" class="btn btn-sm btn-outline-danger {{canClear?'':'disabled'}}"><i class="fa fa-recycle"></i></button>
       <button (click)="uploadFiles()" type="button" class="btn btn-sm btn-outline-secondary {{canUpload?'':'disabled'}}"><i class="fa fa-upload"></i></button>
     </div>
