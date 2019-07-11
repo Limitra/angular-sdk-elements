@@ -14,14 +14,14 @@
     </div>
     <i [style.top.px]="(35 * files.length)+7" class="fa fa-{{hasError?'exclamation-triangle':'check-circle'}} {{hasError?'text-danger':'text-success'}} general-valid-status"></i>
   </div>
-  <div class="{{label?'col-md-10 offset-md-2':'col-md-12'}} validation-wrapper" [style.marginTop.px]="35 * files.length">
+  <div class="{{label&&inline?'col-md-10 offset-md-2':'col-md-12'}} validation-wrapper" [style.marginTop.px]="35 * files.length">
     <div *ngIf="focus&&form&&errors.length>0" class="validation-messages">
       <div *ngFor="let error of errors" class="validation-message">
         <small class="text-nowrap {{error.Solved?'text-success':'text-danger'}}"><i class="fa fa-{{error.Solved?'check-circle':'exclamation-triangle'}}"></i> {{error.Message}}</small>
       </div>
     </div>
   </div>
-  <div class="{{label?'col-md-10 offset-md-2':'col-md-12'}} text-center">
+  <div class="{{label&&inline?'col-md-10 offset-md-2':'col-md-12'}} text-center">
     <div class="btn-group">
       <button *ngIf="files.length<=maxlength" (click)="addFile()" type="button" class="btn btn-sm btn-outline-success"><i class="fa fa-plus-circle"></i></button>
       <button (click)="clearFiles()" type="button" class="btn btn-sm btn-outline-danger {{canClear?'':'disabled'}}"><i class="fa fa-recycle"></i></button>
