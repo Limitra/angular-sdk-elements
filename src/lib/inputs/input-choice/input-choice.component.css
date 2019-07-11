@@ -62,7 +62,7 @@ label {
 .valid-status {
   position: absolute;
   z-index: 4;
-  top: 10px;
+  top: 6px;
   right: 25px;
   background-color: #fff;
 }
