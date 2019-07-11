@@ -1,4 +1,4 @@
-<div class="form-group row">
+<div class="form-group row {{inline?'':'mb-0'}}">
   <label *ngIf="label" class="{{inline?'col-md-2':'col-md-12'}} col-form-label col-form-label-sm font-weight-bold">{{label}}</label>
   <div class="{{label&&inline?'col-md-10':'col-md-12'}}">
     <div class="input-group input-group-sm mb-2 {{hasError?'has-error':''}}">
