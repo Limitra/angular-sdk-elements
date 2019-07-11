@@ -1,5 +1,5 @@
 <div class="form-group row">
-  <label *ngIf="label" class="col-md-2 col-form-label col-form-label-sm">{{label}}</label>
+  <label *ngIf="label" class="{{inline?'col-md-2':'col-md-12'}} col-form-label col-form-label-sm font-weight-bold">{{label}}</label>
   <div class="{{label?'col-md-10':'col-md-12'}}">
     <div class="input-group input-group-sm mb-2 {{hasError?'has-error':''}}">
       <i *ngIf="validationMessages" class="fa fa-{{hasError?'exclamation-triangle text-danger':'check-circle text-success'}} valid-status"></i>
