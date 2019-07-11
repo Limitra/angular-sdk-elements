@@ -13,6 +13,7 @@ export class InputChoiceComponent extends InputExtend implements OnInit {
   @Input() box: boolean;
   @Input() multiple: boolean;
   @Input() summary: string;
+  @Input() description: string;
   @Input() potential: any;
 
   @Input() minlength: number;
@@ -26,12 +27,12 @@ export class InputChoiceComponent extends InputExtend implements OnInit {
   private selecteds: Array<any>;
 
   private focus: boolean;
-  private enableSummary: boolean;
+  private enableDesc: boolean;
 
   ngOnInit() {
     this.potential = this.potential || true;
-    this.source = this.source || [{ Label: this.label, Summary: this.summary, Value: this.potential }];
-    this.enableSummary = this.source.filter(x => x.Summary).length > 0;
+    this.source = this.source || [{ Summary: this.summary, Description: this.description, Value: this.potential }];
+    this.enableDesc = this.source.filter(x => x.Description).length > 0;
     if (this.multiple) {
       this.selecteds = this.value || [];
     } else {
