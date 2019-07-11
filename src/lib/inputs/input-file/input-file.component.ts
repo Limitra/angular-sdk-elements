@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {InputExtend} from '../../extends/InputExtend';
 import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
 
@@ -27,18 +27,31 @@ export class InputFileComponent extends InputExtend implements OnInit {
   @Input() video: Array<any> = [];
 
   private imageTypes: Array<any> = ['image/png', 'image/jpeg', 'image/bmp', 'image/gif'];
-  private documentTypes: Array<any> = ['text/plain', 'application/pdf', 'application/msword', 'application/vnd.ms-excel'];
-  private audioTypes: Array<any> = ['audio/3gpp', 'audio/3gpp2', 'audio/mpeg', 'audio/mpeg4-generic', 'audio/ogg', 'audio/mp4'];
-  private videoTypes: Array<any> = ['video/mp4', 'video/MP4V-ES', 'video/3gpp', 'video/3gpp2', 'video/3gpp-tt', 'video/mpeg4-generic']
+  private documentTypes: Array<any> = ['text/plain', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel'];
+  private audioTypes: Array<any> = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/3gpp',
+    'audio/3gpp2', 'audio/mpeg4-generic', 'audio/mp4'];
+  private videoTypes: Array<any> = ['video/mp4', 'video/webm', 'video/ogg', 'video/MP4V-ES',
+    'video/3gpp', 'video/3gpp2', 'video/3gpp-tt', 'video/mpeg4-generic'];
 
+  private preview: any;
   private canClear: boolean;
   private canUpload: boolean;
   private files: Array<any>;
+
+  @ViewChild('imagePreview', { static: false }) imagePreview: ElementRef;
+  @ViewChild('audioPreview', { static: false }) audioPreview: ElementRef;
+  @ViewChild('videoPreview', { static: false }) videoPreview: ElementRef;
+  @ViewChild('documentPreview', { static: false }) documentPreview: ElementRef;
 
   ngOnInit() {
     this.files = Array.isArray(this.value) ? this.value.map(x => {
       return { Path: x };
     }) : (this.value ? [{ Path: this.value }] : [{}]);
+
+    this.imageTypes.concat(this.imageTypes).concat(this.image);
+    this.videoTypes.concat(this.videoTypes).concat(this.video);
+    this.audioTypes.concat(this.audioTypes).concat(this.audio);
+    this.documentTypes.concat(this.documentTypes).concat(this.document);
 
     this.init(() => {
       this.source = this.source || (this.validationMessages ? this.validationMessages.FileUploadSource : '');
@@ -166,10 +179,10 @@ export class InputFileComponent extends InputExtend implements OnInit {
     if (this.accept) {
       const accept = this.accept.split(',');
       let types: Array<string> = [];
-      if (accept.includes('image')) { types = types.concat(this.imageTypes).concat(this.image); }
-      if (accept.includes('video')) { types = types.concat(this.videoTypes).concat(this.video); }
-      if (accept.includes('audio')) { types = types.concat(this.audioTypes).concat(this.audio); }
-      if (accept.includes('document')) { types = types.concat(this.documentTypes).concat(this.document); }
+      if (accept.includes('image')) { types = types.concat(this.imageTypes); }
+      if (accept.includes('video')) { types = types.concat(this.videoTypes); }
+      if (accept.includes('audio')) { types = types.concat(this.audioTypes); }
+      if (accept.includes('document')) { types = types.concat(this.documentTypes); }
 
       return types.includes(type);
     } else {
@@ -203,8 +216,42 @@ export class InputFileComponent extends InputExtend implements OnInit {
 
   }
 
-  private preview(file: string) {
 
+  private showPreview(file: any) {
+    if (file && file.CanPreview) {
+      this.preview = file;
+      setTimeout(() => {
+        if (file.Uploaded) {
+          if (this.imageTypes.includes(file.Type)) {
+            this.imagePreview.nativeElement.src = this.source + this.preview.Path;
+          } else if (this.audioTypes.includes(file.Type)) {
+            this.audioPreview.nativeElement.src = this.source + this.preview.Path;
+          } else if (this.videoTypes.includes(file.Type)) {
+            this.videoPreview.nativeElement.src = this.source + this.preview.Path;
+          } else if (this.documentTypes.includes(file.Type)) {
+            this.documentPreview.nativeElement.src = this.source + this.preview.Path;
+          }
+        } else {
+          if (this.imageTypes.includes(file.Type)) {
+            this.loadFile(file.File, (result) => { this.imagePreview.nativeElement.src = result; });
+          } else if (this.audioTypes.includes(file.Type)) {
+            this.loadFile(file.File, (result) => { this.audioPreview.nativeElement.src = result; });
+          } else if (this.videoTypes.includes(file.Type)) {
+            this.loadFile(file.File, (result) => { this.videoPreview.nativeElement.src = result; });
+          } else if (this.documentTypes.includes(file.Type)) {
+            this.loadFile(file.File, (result) => { this.documentPreview.nativeElement.src = result; });
+          }
+        }
+      });
+    }
+  }
+
+  private loadFile(file: any, call: (result) => void) {
+    const reader = new FileReader();
+    reader.onload = (event: any) => {
+      call(event.target.result);
+    };
+    reader.readAsDataURL(file);
   }
 
   private choice(input: any) {
@@ -227,7 +274,20 @@ export class InputFileComponent extends InputExtend implements OnInit {
   }
 
   private canPreview(type: string): boolean {
-    return type.substring(0, 6).includes('image/');
+    let can = type.substring(0, 6).includes('image/');
+    switch (type) {
+      case 'application/pdf':
+      case 'video/mp4':
+      case 'video/webm':
+      case 'video/ogg':
+      case 'audio/mpeg':
+      case 'audio/ogg':
+      case 'audio/wav': {
+        can = true;
+        break;
+      }
+    }
+    return can;
   }
 
   private downloadFile(path: string, call: (response, success) => void) {
