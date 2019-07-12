@@ -37,8 +37,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
   @Input() excludeVideo: Array<any> = [];
 
   private imageTypes: Array<any> = ['image/png', 'image/jpeg', 'image/bmp', 'image/gif'];
-  private documentTypes: Array<any> = ['text/plain', 'application/pdf',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel'];
+  private documentTypes: Array<any> = ['text/plain', 'application/pdf'];
   private audioTypes: Array<any> = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/3gpp',
     'audio/3gpp2', 'audio/mpeg4-generic', 'audio/mp4'];
   private videoTypes: Array<any> = ['video/mp4', 'video/webm', 'video/ogg', 'video/MP4V-ES',
