@@ -38,10 +38,8 @@ export class InputFileComponent extends InputExtend implements OnInit {
 
   private imageTypes: Array<any> = ['image/png', 'image/jpeg', 'image/bmp', 'image/gif'];
   private documentTypes: Array<any> = ['text/plain', 'application/pdf'];
-  private audioTypes: Array<any> = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/3gpp',
-    'audio/3gpp2', 'audio/mpeg4-generic', 'audio/mp4'];
-  private videoTypes: Array<any> = ['video/mp4', 'video/webm', 'video/ogg', 'video/MP4V-ES',
-    'video/3gpp', 'video/3gpp2', 'video/3gpp-tt', 'video/mpeg4-generic'];
+  private audioTypes: Array<any> = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/3gpp', 'audio/mp4'];
+  private videoTypes: Array<any> = ['video/mp4', 'video/webm', 'video/ogg'];
 
   private preview: any;
   private canClear: boolean;
