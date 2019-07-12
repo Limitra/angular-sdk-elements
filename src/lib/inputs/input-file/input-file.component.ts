@@ -26,8 +26,19 @@ export class InputFileComponent extends InputExtend implements OnInit {
   @Input() audio: Array<any> = [];
   @Input() video: Array<any> = [];
 
+  @Input() includeImage: Array<any> = [];
+  @Input() includeDocument: Array<any> = [];
+  @Input() includeAudio: Array<any> = [];
+  @Input() includeVideo: Array<any> = [];
+
+  @Input() excludeImage: Array<any> = [];
+  @Input() excludeDocument: Array<any> = [];
+  @Input() excludeAudio: Array<any> = [];
+  @Input() excludeVideo: Array<any> = [];
+
   private imageTypes: Array<any> = ['image/png', 'image/jpeg', 'image/bmp', 'image/gif'];
-  private documentTypes: Array<any> = ['text/plain', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel'];
+  private documentTypes: Array<any> = ['text/plain', 'application/pdf',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel'];
   private audioTypes: Array<any> = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/3gpp',
     'audio/3gpp2', 'audio/mpeg4-generic', 'audio/mp4'];
   private videoTypes: Array<any> = ['video/mp4', 'video/webm', 'video/ogg', 'video/MP4V-ES',
@@ -48,10 +59,20 @@ export class InputFileComponent extends InputExtend implements OnInit {
       return { Path: x };
     }) : (this.value ? [{ Path: this.value }] : [{}]);
 
-    this.imageTypes.concat(this.imageTypes).concat(this.image);
-    this.videoTypes.concat(this.videoTypes).concat(this.video);
-    this.audioTypes.concat(this.audioTypes).concat(this.audio);
-    this.documentTypes.concat(this.documentTypes).concat(this.document);
+    this.imageTypes = this.image;
+    this.videoTypes = this.video;
+    this.audioTypes = this.audio;
+    this.documentTypes = this.document;
+
+    this.imageTypes = this.imageTypes.concat(this.includeImage);
+    this.videoTypes = this.videoTypes.concat(this.includeVideo);
+    this.audioTypes = this.audioTypes.concat(this.includeAudio);
+    this.documentTypes = this.documentTypes.concat(this.includeDocument);
+
+    this.imageTypes = this.imageTypes.filter(x => !this.excludeImage.includes(x));
+    this.videoTypes = this.videoTypes.filter(x => !this.excludeVideo.includes(x));
+    this.audioTypes = this.audioTypes.filter(x => !this.excludeAudio.includes(x));
+    this.documentTypes = this.documentTypes.filter(x => !this.excludeDocument.includes(x));
 
     this.init(() => {
       this.source = this.source || (this.validationMessages ? this.validationMessages.FileUploadSource : '');
@@ -80,6 +101,11 @@ export class InputFileComponent extends InputExtend implements OnInit {
         }
       });
     });
+  }
+
+  forceValue() {
+    this.value = this.files.filter(x => x.Uploaded && x.Path).map(x => x.Path);
+    this.valueChange.emit(this.value);
   }
 
   validate() {
@@ -213,45 +239,10 @@ export class InputFileComponent extends InputExtend implements OnInit {
   }
 
   private uploadFiles() {
+    const files = this.files.filter(x => !x.Uploaded && x.File);
+    files.forEach(file => {
 
-  }
-
-
-  private showPreview(file: any) {
-    if (file && file.CanPreview) {
-      this.preview = file;
-      setTimeout(() => {
-        if (file.Uploaded) {
-          if (this.imageTypes.includes(file.Type)) {
-            this.imagePreview.nativeElement.src = this.source + this.preview.Path;
-          } else if (this.audioTypes.includes(file.Type)) {
-            this.audioPreview.nativeElement.src = this.source + this.preview.Path;
-          } else if (this.videoTypes.includes(file.Type)) {
-            this.videoPreview.nativeElement.src = this.source + this.preview.Path;
-          } else if (this.documentTypes.includes(file.Type)) {
-            this.documentPreview.nativeElement.src = this.source + this.preview.Path;
-          }
-        } else {
-          if (this.imageTypes.includes(file.Type)) {
-            this.loadFile(file.File, (result) => { this.imagePreview.nativeElement.src = result; });
-          } else if (this.audioTypes.includes(file.Type)) {
-            this.loadFile(file.File, (result) => { this.audioPreview.nativeElement.src = result; });
-          } else if (this.videoTypes.includes(file.Type)) {
-            this.loadFile(file.File, (result) => { this.videoPreview.nativeElement.src = result; });
-          } else if (this.documentTypes.includes(file.Type)) {
-            this.loadFile(file.File, (result) => { this.documentPreview.nativeElement.src = result; });
-          }
-        }
-      });
-    }
-  }
-
-  private loadFile(file: any, call: (result) => void) {
-    const reader = new FileReader();
-    reader.onload = (event: any) => {
-      call(event.target.result);
-    };
-    reader.readAsDataURL(file);
+    });
   }
 
   private choice(input: any) {
@@ -290,12 +281,52 @@ export class InputFileComponent extends InputExtend implements OnInit {
     return can;
   }
 
+  private showPreview(file: any) {
+    if (file && file.CanPreview) {
+      this.preview = file;
+      setTimeout(() => {
+        if (file.Uploaded) {
+          if (this.imageTypes.includes(file.Type)) {
+            this.imagePreview.nativeElement.src = this.source + this.preview.Path;
+          } else if (this.audioTypes.includes(file.Type)) {
+            this.audioPreview.nativeElement.src = this.source + this.preview.Path;
+          } else if (this.videoTypes.includes(file.Type)) {
+            this.videoPreview.nativeElement.src = this.source + this.preview.Path;
+          } else if (this.documentTypes.includes(file.Type)) {
+            this.documentPreview.nativeElement.src = this.source + this.preview.Path;
+          }
+        } else {
+          if (this.imageTypes.includes(file.Type)) {
+            this.loadFile(file.File, (result) => { this.imagePreview.nativeElement.src = result; });
+          } else if (this.audioTypes.includes(file.Type)) {
+            this.loadFile(file.File, (result) => { this.audioPreview.nativeElement.src = result; });
+          } else if (this.videoTypes.includes(file.Type)) {
+            this.loadFile(file.File, (result) => { this.videoPreview.nativeElement.src = result; });
+          } else if (this.documentTypes.includes(file.Type)) {
+            this.loadFile(file.File, (result) => { this.documentPreview.nativeElement.src = result; });
+          }
+        }
+      });
+    }
+  }
+
+  private loadFile(file: any, call: (result) => void) {
+    const reader = new FileReader();
+    reader.onload = (event: any) => {
+      call(event.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
+
   private downloadFile(path: string, call: (response, success) => void) {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', this.source + path);
     xhr.responseType = 'blob';
     xhr.onload = () => {
       call(xhr.response, xhr);
+    };
+    xhr.onerror = (err) => {
+      call(undefined, { status: 500 });
     };
     xhr.send();
   }
