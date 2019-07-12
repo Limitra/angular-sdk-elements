@@ -59,10 +59,10 @@ export class InputFileComponent extends InputExtend implements OnInit {
       return { Path: x };
     }) : (this.value ? [{ Path: this.value }] : [{}]);
 
-    this.imageTypes = this.image;
-    this.videoTypes = this.video;
-    this.audioTypes = this.audio;
-    this.documentTypes = this.document;
+    this.imageTypes = this.image.length > 0 ? this.image : this.imageTypes;
+    this.videoTypes = this.video.length > 0 ? this.video : this.videoTypes;
+    this.audioTypes = this.audio.length > 0 ? this.audio : this.audioTypes;
+    this.documentTypes = this.document.length > 0 ? this.document : this.documentTypes;
 
     this.imageTypes = this.imageTypes.concat(this.includeImage);
     this.videoTypes = this.videoTypes.concat(this.includeVideo);
