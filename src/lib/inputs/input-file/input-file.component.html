@@ -2,8 +2,9 @@
 <div class="form-group row {{inline?'':'mb-0'}}">
   <label *ngIf="label" class="{{inline?'col-md-2':'col-md-12'}} col-form-label col-form-label-sm font-weight-bold">{{label}}</label>
   <div class="{{label&&inline?'col-md-10':'col-md-12'}}" (lim-os-click)="focus=false" (click)="focus=true">
-    <div *ngFor="let file of files;let i = index;" class="input-group input-group-sm mb-1 {{hasError?'has-error':''}}">
-      <i class="fa fa-{{file.Valid?'check-circle':'exclamation-triangle'}} {{file.Valid?(hasError?'text-warning':'text-success'):'text-danger'}} valid-status"></i>
+    <div *ngFor="let file of files;let i = index;" class="input-group input-group-sm mb-1 {{hasError?'has-error':''}} {{sortable?'sortable':''}}" [draggable]="sortable" (dragstart)="onDrag(file, $event)" (drop)="onDrop(file)" (dragover)="sortable?$event.preventDefault():''">
+      <i *ngIf="sortable" class="fa fa-2x sort-number">{{(file.Index||0)+1}}</i>
+      <i *ngIf="!sortable" class="fa fa-{{file.Valid?'check-circle':'exclamation-triangle'}} {{file.Valid?(hasError?'text-warning':'text-success'):'text-danger'}} valid-status"></i>
       <input #inputFile type="file" (change)="fileChange(file, inputFile)">
       <input class="form-control form-control-sm" placeholder="{{validationMessages?validationMessages.FileDefaultText:''}}" [value]="file&&file.Text?file.Text:''" [title]="file&&file.Text?file.Text:''" readonly />
       <div *ngIf="file.UploadPercent||file.Uploaded" class="upload-progress bottom" [style.width.%]="file.Uploaded?100:file.UploadPercent"></div>
@@ -24,7 +25,8 @@
   </div>
   <div class="{{label&&inline?'col-md-10 offset-md-2':'col-md-12'}} text-center">
     <div class="btn-group">
-      <button *ngIf="multiple&&files.length<=maxlength" (click)="addFile()" type="button" class="btn btn-sm btn-outline-success {{progress?'disabled':''}}"><i class="fa fa-plus-circle"></i></button>
+      <button (click)="addFile()" type="button" class="btn btn-sm btn-outline-success {{multiple&&files.length<=maxlength&&!progress?'':'disabled'}}"><i class="fa fa-plus-circle"></i></button>
+      <button (click)="multiple&&files.length>1?sortable=!sortable:''" type="button" class="btn btn-sm btn{{sortable?'':'-outline'}}-info {{multiple&&files.length>1?'':'disabled'}}"><i class="fa fa-list-ol"></i></button>
       <button (click)="clearFiles()" type="button" class="btn btn-sm btn-outline-danger {{canClear&&!progress?'':'disabled'}}"><i class="fa fa-recycle"></i></button>
       <button (click)="uploadFiles()" type="button" class="btn btn-sm btn-outline-secondary {{canUpload&&!progress?'':'disabled'}}"><i class="fa fa-upload"></i></button>
     </div>
