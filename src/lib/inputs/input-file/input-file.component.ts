@@ -335,6 +335,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
       case 'video/mp4':
       case 'video/webm':
       case 'video/ogg':
+      case 'audio/mp3':
       case 'audio/mpeg':
       case 'audio/ogg':
       case 'audio/wav': {
