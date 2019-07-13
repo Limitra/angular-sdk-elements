@@ -22,7 +22,7 @@ export class InputExtend {
 
   @Input() required: boolean;
 
-  @Input() inline = true;
+  @Input() inline = false;
 
   protected name: string;
   protected errors: Array<any> = [];
@@ -30,6 +30,7 @@ export class InputExtend {
   protected validationMessages: any;
   protected screenSize: number;
   protected screenSizes = ScreenSize;
+  protected fileProvider: any = {};
 
   init(call: () => void = null) {
     this.screenSize = this.providers.Screen.GetSize();
@@ -37,6 +38,20 @@ export class InputExtend {
     this.form = this.form || { };
     this.form.Errors = this.form.Errors || [];
     this.lang = this.lang || this.providers.Storage.Get('Localization_Lang');
+    const fileProvider = this.providers.Storage.Get('FileProvider_Settings') || {};
+    this.fileProvider = {
+      Domain: fileProvider.Domain,
+      Upload: fileProvider.Upload,
+      Download: fileProvider.Download,
+      Settings: {
+        MaxLength: {
+          Image: fileProvider.Settings && fileProvider.Settings.MaxLength ? fileProvider.Settings.MaxLength.Image : 5242880,
+          Audio: fileProvider.Settings && fileProvider.Settings.MaxLength ? fileProvider.Settings.MaxLength.Audio : 5242880,
+          Video: fileProvider.Settings && fileProvider.Settings.MaxLength ? fileProvider.Settings.MaxLength.Video : 5242880,
+          Document: fileProvider.Settings && fileProvider.Settings.MaxLength ? fileProvider.Settings.MaxLength.Document : 5242880
+        }
+      }
+    }
 
     this.generateName();
     if (this.value && this.input) {
@@ -64,12 +79,14 @@ export class InputExtend {
           LowerCase: 'You must enter at least [$Lowercase] lowercase characters.',
           DateMask: 'dd.mm.yyyy',
           PhoneMask: '+(XX) XXX XXX XX XX',
+          ImageMaxLength: 'Image files must be less than or equal to [$ImageMaxLength].',
+          AudioMaxLength: 'Audio files must be less than or equal to [$AudioMaxLength].',
+          VideoMaxLength: 'Video files must be less than or equal to [$VideoMaxLength].',
+          DocumentMaxLength: 'Document files must be less than or equal to [$DocumentMaxLength].',
           FileMinLength: 'You must select at least [$MinLength] file.',
           FileMaxLength: 'You can select up to [$MaxLength] file.',
-          FileSize: 'File size must be between [$MinSize] and [$MaxSize].',
           FileTypeError: 'You must remove unsupported file types.',
           FileReadyError: 'Your upload process not completed yet.',
-          FileUploadSource: 'http://localhost',
           FileDefaultText: 'Choose File.',
           SelectDefaultText: 'Choose.',
           SelectSearchText: 'Search.',
