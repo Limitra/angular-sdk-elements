@@ -6,6 +6,7 @@
       <i class="fa fa-{{file.Valid?'check-circle':'exclamation-triangle'}} {{file.Valid?(hasError?'text-warning':'text-success'):'text-danger'}} valid-status"></i>
       <input #inputFile type="file" (change)="fileChange(file, inputFile)">
       <input class="form-control form-control-sm" placeholder="{{validationMessages?validationMessages.FileDefaultText:''}}" [value]="file&&file.Text?file.Text:''" [title]="file&&file.Text?file.Text:''" readonly />
+      <div *ngIf="file.UploadPercent||file.Uploaded" class="upload-progress bottom" [style.width.%]="file.Uploaded?100:file.UploadPercent"></div>
       <div class="input-group-append">
         <div *ngIf="file&&(file.Name||i!==0)" class="input-group-text" (click)="remove(file)"><i class="fa fa-{{file.Name?'times':'trash'}}"></i></div>
         <div *ngIf="file?file.CanPreview:false" class="input-group-text" (click)="showPreview(file)"><i class="fa fa-eye"></i></div>
@@ -23,15 +24,15 @@
   </div>
   <div class="{{label&&inline?'col-md-10 offset-md-2':'col-md-12'}} text-center">
     <div class="btn-group">
-      <button *ngIf="multiple&&files.length<=maxlength" (click)="addFile()" type="button" class="btn btn-sm btn-outline-success"><i class="fa fa-plus-circle"></i></button>
-      <button (click)="clearFiles()" type="button" class="btn btn-sm btn-outline-danger {{canClear?'':'disabled'}}"><i class="fa fa-recycle"></i></button>
-      <button (click)="uploadFiles()" type="button" class="btn btn-sm btn-outline-secondary {{canUpload?'':'disabled'}}"><i class="fa fa-upload"></i></button>
+      <button *ngIf="multiple&&files.length<=maxlength" (click)="addFile()" type="button" class="btn btn-sm btn-outline-success {{progress?'disabled':''}}"><i class="fa fa-plus-circle"></i></button>
+      <button (click)="clearFiles()" type="button" class="btn btn-sm btn-outline-danger {{canClear&&!progress?'':'disabled'}}"><i class="fa fa-recycle"></i></button>
+      <button (click)="uploadFiles()" type="button" class="btn btn-sm btn-outline-secondary {{canUpload&&!progress?'':'disabled'}}"><i class="fa fa-upload"></i></button>
     </div>
   </div>
 </div>
 <div *ngIf="preview" class="preview-wrapper" >
   <div class="preview-tools" (wheel)="$event.stopPropagation()">
-    <i class="fa fa-trash fa-2x text-white" (click)="remove(preview);preview=undefined"></i>
+    <i class="fa fa-trash fa-2x {{progress?'disabled text-muted':'text-white'}}" (click)="!progress?remove(preview):''"></i>
     <i class="fa fa-times fa-2x text-white ml-3" (click)="preview=undefined"></i>
   </div>
   <img #imagePreview *ngIf="imageTypes.includes(preview.Type)">
