@@ -83,7 +83,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
       this.domain = this.domain || this.fileProvider.Domain;
       this.upload = this.upload || this.fileProvider.Upload;
       this.download = this.download || this.fileProvider.Download;
-      this.source = this.providers.String.Replace(this.domain + '/' + this.download + '/', '//', '/');
+      this.source = this.domain + '/' + this.download;
 
       this.imageMaxLength = this.imageMaxLength || this.fileProvider.Settings.MaxLength.Image;
       this.audioMaxLength = this.audioMaxLength || this.fileProvider.Settings.MaxLength.Audio;
@@ -351,13 +351,13 @@ export class InputFileComponent extends InputExtend implements OnInit {
       setTimeout(() => {
         if (file.Uploaded) {
           if (this.imageTypes.includes(file.Type)) {
-            this.imagePreview.nativeElement.src = this.source + this.preview.Path;
+            this.imagePreview.nativeElement.src = this.source + '/' + this.preview.Path;
           } else if (this.audioTypes.includes(file.Type)) {
-            this.audioPreview.nativeElement.src = this.source + this.preview.Path;
+            this.audioPreview.nativeElement.src = this.source + '/' + this.preview.Path;
           } else if (this.videoTypes.includes(file.Type)) {
-            this.videoPreview.nativeElement.src = this.source + this.preview.Path;
+            this.videoPreview.nativeElement.src = this.source + '/' + this.preview.Path;
           } else if (this.documentTypes.includes(file.Type)) {
-            this.documentPreview.nativeElement.src = this.source + this.preview.Path;
+            this.documentPreview.nativeElement.src = this.source + '/' + this.preview.Path;
           }
         } else {
           if (this.imageTypes.includes(file.Type)) {
