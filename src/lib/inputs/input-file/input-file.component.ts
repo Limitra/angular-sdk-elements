@@ -47,6 +47,8 @@ export class InputFileComponent extends InputExtend implements OnInit {
   private videoTypes: Array<any> = ['video/mp4', 'video/webm', 'video/ogg'];
 
   private focus: boolean;
+  private sortable: boolean;
+  private dragging: any;
   private source: string;
   private progress: boolean;
   private preview: any;
@@ -125,6 +127,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
     this.input.nativeElement.value = 'validate';
     super.validate();
     this.input.nativeElement.value = '';
+    this.initSortable();
   }
 
   validation() {
@@ -281,7 +284,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
   }
 
   private addFile() {
-    if (!this.progress) {
+    if (!this.progress && this.multiple && this.files.length <= this.maxlength) {
       if (this.files.length < this.maxlength + 1) {
         this.files.push({});
       }
@@ -472,6 +475,32 @@ export class InputFileComponent extends InputExtend implements OnInit {
     if (header) {
       xhr.setRequestHeader('Authorization', header);
     }
+  }
+
+  private onDrag(file: any, event: any) {
+    this.dragging = file;
+    event.dataTransfer.setData('...', event.target.id);
+  }
+
+  private onDrop(file: any) {
+    const oldIndex = this.dragging.Index;
+    const targetIndex = file.Index;
+    if (this.dragging.Index > file.Index) {
+      this.files.filter(x => x.Index >= file.Index && x.Index < oldIndex).forEach(sort => {
+        sort.Index++;
+      });
+    } else {
+      this.files.filter(x => x.Index > oldIndex && x.Index <= file.Index).forEach(sort => {
+        sort.Index--;
+      });
+    }
+    this.dragging.Index = targetIndex;
+    this.files = this.files.sort((x, y) => x.Index - y.Index);
+    this.validate();
+  }
+
+  private initSortable() {
+    this.files = this.files.map((x, i) => { x.Index = i; return x; });
   }
 
   private formatBytes(value: number, decimals = 2): string {
