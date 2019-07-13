@@ -91,48 +91,48 @@ input[type='file'] {
 .preview-wrapper img {
   max-width: 90%;
   max-height: 90%;
-  position: relative;
-  top: calc(50% - 63px);
-  -ms-transform: translateY(-50%);
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -o-transform: tranlslateY(-50%);
-  transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 5px;
 }
 
 .preview-wrapper iframe {
   width: 90%;
   height: 90%;
-  position: relative;
-  top: calc(50% - 63px);
-  -ms-transform: translateY(-50%);
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -o-transform: tranlslateY(-50%);
-  transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 5px;
 }
 
 .preview-wrapper audio {
-  position: relative;
-  top: calc(50% - 150px);
-  -ms-transform: translateY(-50%);
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -o-transform: tranlslateY(-50%);
-  transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 5px;
 }
 
 .preview-wrapper video {
   max-width: 90%;
-  position: relative;
-  top: calc(50% - 63px);
-  -ms-transform: translateY(-50%);
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -o-transform: tranlslateY(-50%);
-  transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 5px;
+}
+
+.upload-progress {
+  height: 3px;
+  background-color: rgba(9, 128, 13, 0.44);
+  position: absolute;
+  left: 0;
+  pointer-events: none;
+}
+
+.upload-progress.bottom {
+  bottom: 0;
 }

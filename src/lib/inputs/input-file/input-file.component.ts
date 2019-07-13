@@ -10,14 +10,19 @@ import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
 export class InputFileComponent extends InputExtend implements OnInit {
   constructor(protected providers: SdkProviders) { super(providers); }
 
-  @Input() source: string;
+  @Input() domain: string;
+  @Input() upload: string;
+  @Input() download: string;
+
   @Input() multiple: boolean;
 
   @Input() minlength: number;
   @Input() maxlength = 5;
 
-  @Input() min = 1;
-  @Input() max = 5242880;
+  @Input() imageMaxLength;
+  @Input() audioMaxLength;
+  @Input() videoMaxLength;
+  @Input() documentMaxLength;
 
   @Input() accept = 'image';
 
@@ -38,9 +43,12 @@ export class InputFileComponent extends InputExtend implements OnInit {
 
   private imageTypes: Array<any> = ['image/png', 'image/jpeg', 'image/bmp', 'image/gif'];
   private documentTypes: Array<any> = ['text/plain', 'application/pdf'];
-  private audioTypes: Array<any> = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/3gpp', 'audio/mp4'];
+  private audioTypes: Array<any> = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/3gpp', 'audio/mp3', 'audio/mp4'];
   private videoTypes: Array<any> = ['video/mp4', 'video/webm', 'video/ogg'];
 
+  private focus: boolean;
+  private source: string;
+  private progress: boolean;
   private preview: any;
   private canClear: boolean;
   private canUpload: boolean;
@@ -72,20 +80,28 @@ export class InputFileComponent extends InputExtend implements OnInit {
     this.documentTypes = this.documentTypes.filter(x => !this.excludeDocument.includes(x));
 
     this.init(() => {
-      this.source = this.source || (this.validationMessages ? this.validationMessages.FileUploadSource : '');
+      this.domain = this.domain || this.fileProvider.Domain;
+      this.upload = this.upload || this.fileProvider.Upload;
+      this.download = this.download || this.fileProvider.Download;
+      this.source = this.domain + '/' + this.download;
+
+      this.imageMaxLength = this.imageMaxLength || this.fileProvider.Settings.MaxLength.Image;
+      this.audioMaxLength = this.audioMaxLength || this.fileProvider.Settings.MaxLength.Audio;
+      this.videoMaxLength = this.videoMaxLength || this.fileProvider.Settings.MaxLength.Video;
+      this.documentMaxLength = this.documentMaxLength || this.fileProvider.Settings.MaxLength.Document;
 
       this.files.forEach(file => {
         const index = this.files.indexOf(file);
         if (file.Path) {
           file.Name = file.Path.substring(file.Path.lastIndexOf('/') + 1);
           file.Text = file.Name;
-          this.downloadFile(file.Path, (response, xhr) => {
+          this.downloadFile(file.Path, false, (xhr) => {
             file.Uploaded = true;
             file.Valid = true;
-            if (xhr.status >= 200 && xhr.status <= 220) {
-              file.Size = response.size;
-              file.Type = response.type;
-              file.CanPreview = this.canPreview(response.type);
+            if (xhr.status === 200) {
+              file.Size = xhr.response.size;
+              file.Type = xhr.response.type;
+              file.CanPreview = this.canPreview(xhr.response.type);
               file.Text = file.Text + ' (' + this.formatBytes(file.Size) + ')' + ' ' + file.Type;
             } else {
               file.Text = file.Text + ' [E: ' + xhr.status + ']';
@@ -115,7 +131,14 @@ export class InputFileComponent extends InputExtend implements OnInit {
     const invalidAnyLen = this.files.filter(x => !x.Name).length;
     const upLen = this.files.filter(x => x.Uploaded).length;
     const typeInvalidLen = this.files.filter(x => x.Type ? !this.fileTypeIsValid(x.Type) : false).length;
-    const sizeInvalidLen = this.files.filter(x => x.Size ? !this.fileSizeIsValid(x.Size) : false).length;
+    const imageInvalidLen = this.files.filter(x => this.imageTypes.includes(x.Type)
+      && (x.Size ? !this.fileSizeIsValid(x.Type, x.Size) : false)).length;
+    const audioInvalidLen = this.files.filter(x => this.audioTypes.includes(x.Type)
+      && (x.Size ? !this.fileSizeIsValid(x.Type, x.Size) : false)).length;
+    const videoInvalidLen = this.files.filter(x => this.videoTypes.includes(x.Type)
+      && (x.Size ? !this.fileSizeIsValid(x.Type, x.Size) : false)).length;
+    const documentInvalidLen = this.files.filter(x => this.documentTypes.includes(x.Type)
+      && (x.Size ? !this.fileSizeIsValid(x.Type, x.Size) : false)).length;
 
     if (this.required && invalidAnyLen > 0 || (this.files.length > 1 && !this.required && invalidAnyLen > 0)) {
       this.addFormError('Required');
@@ -135,10 +158,28 @@ export class InputFileComponent extends InputExtend implements OnInit {
       this.removeFormError('FileTypeError');
     }
 
-    if (sizeInvalidLen > 0) {
-      this.addFormError('FileSize');
+    if (imageInvalidLen > 0) {
+      this.addFormError('ImageMaxLength');
     } else {
-      this.removeFormError('FileSize');
+      this.removeFormError('ImageMaxLength', true);
+    }
+
+    if (audioInvalidLen > 0) {
+      this.addFormError('AudioMaxLength');
+    } else {
+      this.removeFormError('AudioMaxLength', true);
+    }
+
+    if (videoInvalidLen > 0) {
+      this.addFormError('VideoMaxLength');
+    } else {
+      this.removeFormError('VideoMaxLength', true);
+    }
+
+    if (documentInvalidLen > 0) {
+      this.addFormError('DocumentMaxLength');
+    } else {
+      this.removeFormError('DocumentMaxLength', true);
     }
 
     if (invalidAnyLen < this.files.length && this.minlength && this.files.length < this.minlength) {
@@ -164,38 +205,47 @@ export class InputFileComponent extends InputExtend implements OnInit {
       }
     }
 
-    this.canUpload = invalidAnyLen === 0 && sizeInvalidLen === 0 && typeInvalidLen === 0 && upLen !== this.files.length
+    this.canUpload = invalidAnyLen === 0 && imageInvalidLen === 0 && audioInvalidLen === 0 && videoInvalidLen === 0
+      && documentInvalidLen === 0 && typeInvalidLen === 0 && upLen !== this.files.length
     && (this.minlength ? this.files.length >= this.minlength : true) && this.files.length <= this.maxlength;
-    this.canClear = (this.files.length > 1 ? invalidAnyLen > 0 : false) || sizeInvalidLen > 0
-      || typeInvalidLen > 0 || this.files.length > this.maxlength;
+    this.canClear = (this.files.length > 1 ? invalidAnyLen > 0 : false) || imageInvalidLen === 0
+      || audioInvalidLen === 0 || videoInvalidLen === 0 || documentInvalidLen === 0 || typeInvalidLen > 0
+      || this.files.length > this.maxlength;
   }
 
   localizeReplace(message: string): string {
     message = this.providers.String.Replace(message, '[$MinLength]', this.minlength ? this.minlength.toString() : '');
     message = this.providers.String.Replace(message, '[$MaxLength]', this.maxlength ? this.maxlength.toString() : '');
-    message = this.providers.String.Replace(message, '[$MinSize]', this.min ? this.formatBytes(this.min) : '');
-    message = this.providers.String.Replace(message, '[$MaxSize]', this.max ? this.formatBytes(this.max) : '');
+    message = this.providers.String.Replace(message, '[$ImageMaxLength]', this.imageMaxLength ? this.formatBytes(this.imageMaxLength) : '');
+    message = this.providers.String.Replace(message, '[$AudioMaxLength]', this.audioMaxLength ? this.formatBytes(this.audioMaxLength) : '');
+    message = this.providers.String.Replace(message, '[$VideoMaxLength]', this.videoMaxLength ? this.formatBytes(this.videoMaxLength) : '');
+    message = this.providers.String.Replace(message, '[$DocumentMaxLength]',
+      this.documentMaxLength ? this.formatBytes(this.documentMaxLength) : '');
     return message;
   }
 
   private fileChange(file: any, input: any) {
-    const index = this.files.indexOf(file);
-    if (input.files && input.files.length > 0) {
-      const selected = input.files[0];
-      const obj = {
-        Name: selected.name,
-        Size: selected.size,
-        Type: selected.type,
-        CanPreview: this.canPreview(selected.type),
-        Text: selected.name + ' (' + this.formatBytes(selected.size) + ')' + ' ' + selected.type,
-        Valid: this.fileTypeIsValid(selected.type) && this.fileSizeIsValid(selected.size),
-        File: selected
-      };
-      this.files[index] = obj;
-    } else {
-      this.files[index] = {};
+    if (!this.progress) {
+      clearInterval(file.Interval);
+      const index = this.files.indexOf(file);
+      if (input.files && input.files.length > 0 && input.files[0].name) {
+        const selected = input.files[0];
+        const obj = {
+          Name: selected.name,
+          Size: selected.size,
+          Type: selected.type,
+          CanPreview: this.canPreview(selected.type),
+          Text: selected.name + ' (' + this.formatBytes(selected.size) + ')' + ' ' + selected.type,
+          Valid: this.fileTypeIsValid(selected.type) && this.fileSizeIsValid(selected.type, selected.size),
+          File: selected
+        };
+        this.files[index] = obj;
+      } else {
+        this.files[index] = {};
+      }
+      this.validate();
     }
-    this.validate();
+    this.focus = false;
   }
 
   private fileTypeIsValid(type: string): boolean {
@@ -213,33 +263,43 @@ export class InputFileComponent extends InputExtend implements OnInit {
     }
   }
 
-  private fileSizeIsValid(size: number): boolean {
-    return size >= this.min && size <= this.max;
+  private fileSizeIsValid(type: string, size: number): boolean {
+    const check = (length): boolean => {
+      return size <= length;
+    };
+    if (this.imageTypes.includes(type)) {
+      return check(this.imageMaxLength);
+    } else if (this.audioTypes.includes(type)) {
+      return check(this.audioMaxLength);
+    } else if (this.videoTypes.includes(type)) {
+      return check(this.videoMaxLength);
+    } else if (this.documentTypes.includes(type)) {
+      return check(this.documentMaxLength);
+    } else {
+      return false;
+    }
   }
 
   private addFile() {
-    if (this.files.length < this.max + 1) {
-      this.files.push({});
-    }
+    if (!this.progress) {
+      if (this.files.length < this.maxlength + 1) {
+        this.files.push({});
+      }
 
-    this.validate();
+      this.validate();
+    }
   }
 
   private clearFiles() {
-    this.files = this.files.filter(x => x.Valid);
-    if (this.files.length === 0) {
-      this.files = [{}];
-    } else if (this.files.length > this.maxlength) {
-      this.files.splice(this.files.length - 1, 1);
+    if (!this.progress && this.canClear) {
+      this.files = this.files.filter(x => x.Valid);
+      if (this.files.length === 0) {
+        this.files = [{}];
+      } else if (this.files.length > this.maxlength) {
+        this.files.splice(this.files.length - 1, 1);
+      }
+      this.validate();
     }
-    this.validate();
-  }
-
-  private uploadFiles() {
-    const files = this.files.filter(x => !x.Uploaded && x.File);
-    files.forEach(file => {
-
-    });
   }
 
   private choice(input: any) {
@@ -247,16 +307,23 @@ export class InputFileComponent extends InputExtend implements OnInit {
   }
 
   private remove(file: any) {
-    const index = this.files.indexOf(file);
-    const refFile = this.files[index];
-    if (this.files.length > 1) {
-      if (refFile.Name) {
-        this.files[index] = {};
+    clearInterval(file.Interval);
+    if (!this.progress) {
+      const index = this.files.indexOf(file);
+      const refFile = this.files[index];
+      if (this.files.length > 1) {
+        if (refFile.Name) {
+          this.files[index] = {};
+        } else {
+          this.files.splice(index, 1);
+        }
       } else {
-        this.files.splice(index, 1);
+        this.files[index] = {};
       }
+      this.preview = undefined;
     } else {
-      this.files[index] = {};
+      this.focus = false;
+      file.Xhr.abort();
     }
     this.validate();
   }
@@ -284,7 +351,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
       setTimeout(() => {
         if (file.Uploaded) {
           if (this.imageTypes.includes(file.Type)) {
-            this.imagePreview.nativeElement.src = this.source + this.preview.Path;
+            this.imagePreview.nativeElement.src = this.source +  + this.preview.Path;
           } else if (this.audioTypes.includes(file.Type)) {
             this.audioPreview.nativeElement.src = this.source + this.preview.Path;
           } else if (this.videoTypes.includes(file.Type)) {
@@ -315,17 +382,95 @@ export class InputFileComponent extends InputExtend implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  private downloadFile(path: string, call: (response, success) => void) {
+  private uploadFiles() {
+    if (!this.progress && this.canUpload) {
+      const files = this.files.filter(x => !x.Uploaded && x.File);
+      let counter = 0;
+      const recursive = () => {
+        this.uploadFile(files[counter], () => {
+          counter++;
+          if (counter < files.length) {
+            recursive();
+          }
+        });
+      };
+      recursive();
+    }
+  }
+
+  private uploadFile(file: any, load: () => void) {
+    if (this.source && file && !file.UploadPercent) {
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = 'json';
+      const formData = new FormData();
+      formData.append('file', file.File);
+      xhr.onloadstart = () => {
+        file.Xhr = xhr;
+        file.Uploaded = undefined;
+        file.UploadPercent = 0;
+        this.progress = true;
+      };
+      xhr.onloadend = () => {
+        file.UploadPercent = undefined;
+        if (xhr.status === 200) {
+          file.Uploaded = true;
+          file.Path = xhr.response.Path;
+          file.Name = xhr.response.Name;
+          file.Size = xhr.response.Size;
+          file.Text = xhr.response.Name + ' (' + this.formatBytes(file.Size) + ')' + ' ' + file.Type;
+          clearInterval(file.Interval);
+          file.Interval = setInterval(() => {
+            this.downloadFile(xhr.response.Path, true, (download) => {
+              if (download.status === 200) {
+                file.Uploaded = true;
+              } else {
+                this.uploadFile(file, () => {});
+              }
+              this.validate();
+            });
+          }, 10000);
+        }
+        this.progress = false;
+        this.validate();
+        load();
+      };
+      xhr.onerror = () => {
+        file.UploadPercent = undefined;
+        this.progress = false;
+        this.validate();
+      }
+      xhr.upload.addEventListener('progress', (evt) => {
+        if (evt.lengthComputable) {
+          file.UploadPercent = evt.loaded / (evt.total / 100);
+        }
+      }, false);
+
+      xhr.open('POST', this.domain + '/' + this.upload);
+      this.setAuthHeader(xhr);
+      xhr.send(formData);
+    }
+  }
+
+  private downloadFile(path: string, ping: boolean, call: (response) => void) {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', this.source + path);
     xhr.responseType = 'blob';
     xhr.onload = () => {
-      call(xhr.response, xhr);
+      call(xhr);
     };
-    xhr.onerror = (err) => {
-      call(undefined, { status: 500 });
+    xhr.onerror = () => {
+      call({ status: 500 });
     };
+
+    xhr.open('GET', this.source + path + (ping ? '?type=ping' : ''));
+    this.setAuthHeader(xhr);
     xhr.send();
+  }
+
+  private setAuthHeader(xhr: XMLHttpRequest) {
+    const header = this.providers.Storage.Get('Authorization_Header');
+    if (header) {
+      xhr.setRequestHeader('Authorization', header);
+    }
   }
 
   private formatBytes(value: number, decimals = 2): string {
@@ -336,7 +481,6 @@ export class InputFileComponent extends InputExtend implements OnInit {
     const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
     const i = Math.floor(Math.log(value) / Math.log(k));
-
     return parseFloat((value / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 }
