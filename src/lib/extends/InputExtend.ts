@@ -30,7 +30,6 @@ export class InputExtend {
   protected validationMessages: any;
   protected screenSize: number;
   protected screenSizes = ScreenSize;
-  protected fileProvider: any = {};
 
   init(call: () => void = null) {
     this.screenSize = this.providers.Screen.GetSize();
@@ -38,20 +37,6 @@ export class InputExtend {
     this.form = this.form || { };
     this.form.Errors = this.form.Errors || [];
     this.lang = this.lang || this.providers.Storage.Get('Localization_Lang');
-    const fileProvider = this.providers.Storage.Get('FileProvider_Settings') || {};
-    this.fileProvider = {
-      Domain: fileProvider.Domain,
-      Upload: fileProvider.Upload,
-      Download: fileProvider.Download,
-      Settings: {
-        MaxLength: {
-          Image: fileProvider.Settings && fileProvider.Settings.MaxLength ? fileProvider.Settings.MaxLength.Image : 5242880,
-          Audio: fileProvider.Settings && fileProvider.Settings.MaxLength ? fileProvider.Settings.MaxLength.Audio : 5242880,
-          Video: fileProvider.Settings && fileProvider.Settings.MaxLength ? fileProvider.Settings.MaxLength.Video : 5242880,
-          Document: fileProvider.Settings && fileProvider.Settings.MaxLength ? fileProvider.Settings.MaxLength.Document : 5242880
-        }
-      }
-    }
 
     this.generateName();
     if (this.value && this.input) {
