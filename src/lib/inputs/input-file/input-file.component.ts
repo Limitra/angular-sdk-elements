@@ -55,6 +55,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
   private canClear: boolean;
   private canUpload: boolean;
   private files: Array<any>;
+  private fileProvider: any = {};
 
   @ViewChild('imagePreview', { static: false }) imagePreview: ElementRef;
   @ViewChild('audioPreview', { static: false }) audioPreview: ElementRef;
@@ -65,6 +66,20 @@ export class InputFileComponent extends InputExtend implements OnInit {
     this.files = Array.isArray(this.value) ? this.value.map(x => {
       return { Path: x };
     }) : (this.value ? [{ Path: this.value }] : [{}]);
+    const fileProvider = this.providers.Storage.Get('FileProvider_Settings') || {};
+    this.fileProvider = {
+      Domain: fileProvider.Domain,
+      Upload: fileProvider.Upload,
+      Download: fileProvider.Download,
+      Settings: {
+        MaxLength: {
+          Image: fileProvider.Settings && fileProvider.Settings.MaxLength ? fileProvider.Settings.MaxLength.Image : 5242880,
+          Audio: fileProvider.Settings && fileProvider.Settings.MaxLength ? fileProvider.Settings.MaxLength.Audio : 5242880,
+          Video: fileProvider.Settings && fileProvider.Settings.MaxLength ? fileProvider.Settings.MaxLength.Video : 5242880,
+          Document: fileProvider.Settings && fileProvider.Settings.MaxLength ? fileProvider.Settings.MaxLength.Document : 5242880
+        }
+      }
+    };
 
     this.imageTypes = this.image.length > 0 ? this.image : this.imageTypes;
     this.videoTypes = this.video.length > 0 ? this.video : this.videoTypes;
