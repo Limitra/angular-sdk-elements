@@ -66,9 +66,10 @@ export class InputFileComponent extends InputExtend implements OnInit {
     this.files = Array.isArray(this.value) ? this.value.map(x => {
       return { Path: x };
     }) : (this.value ? [{ Path: this.value }] : [{}]);
-    const fileProvider = this.providers.Storage.Get('FileProvider_Settings') || {};
+    const apiSettings = this.providers.Storage.Get('API_Settings') || {};
+    const fileProvider = apiSettings.File ? apiSettings.File : {};
     this.fileProvider = {
-      Domain: fileProvider.Domain,
+      Domain: apiSettings.Domain,
       Upload: fileProvider.Upload,
       Download: fileProvider.Download,
       Settings: {
