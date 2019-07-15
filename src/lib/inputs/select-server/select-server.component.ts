@@ -17,8 +17,8 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
 
   @Input() length: number;
 
-  @Input() textkey: string;
-  @Input() valuekey: string;
+  @Input() textkey: string = 'Text';
+  @Input() valuekey: string = 'Value';
 
   @ViewChild('search', {static: false}) search: ElementRef;
 
