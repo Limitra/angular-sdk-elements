@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Input} from '@angular/core';
-import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
-import {InputExtend} from '../../extends/InputExtend';
+import {SdkProviders} from '@limitra/sdk-core/lib/providers';
+import {InputExtend} from '../../extends/input-extend';
 
 @Component({
   selector: 'lim-input-date',
@@ -11,7 +11,7 @@ export class InputDateComponent extends InputExtend implements AfterViewInit {
   @Input() min: number;
   @Input() max: number;
 
-  constructor(protected providers: SdkProviders) {
+  constructor(public providers: SdkProviders) {
     super(providers);
   }
 

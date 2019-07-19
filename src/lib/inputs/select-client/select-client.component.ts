@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, Input, ViewChild} from '@angular/core';
-import {InputExtend} from '../../extends/InputExtend';
-import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
+import {InputExtend} from '../../extends/input-extend';
+import {SdkProviders} from '@limitra/sdk-core/lib/providers';
 
 @Component({
   selector: 'lim-select-client',
@@ -8,7 +8,7 @@ import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
   styleUrls: ['./select-client.component.css']
 })
 export class SelectClientComponent extends InputExtend implements AfterViewInit {
-  constructor(protected providers: SdkProviders) { super(providers); }
+  constructor(public providers: SdkProviders) { super(providers); }
 
   @Input() source: Array<any>;
   @Input() multiple = false;
@@ -17,10 +17,10 @@ export class SelectClientComponent extends InputExtend implements AfterViewInit 
 
   @ViewChild('search', {static: false}) search: ElementRef;
 
-  private selected: any;
-  private selecteds: Array<any> = [];
-  private searchText: string;
-  private filteredSource: Array<any> = [];
+  public selected: any;
+  public selecteds: Array<any> = [];
+  public searchText: string;
+  public filteredSource: Array<any> = [];
 
   ngAfterViewInit() {
     this.filteredSource = this.source;

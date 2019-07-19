@@ -1,6 +1,6 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {InputExtend} from '../../extends/InputExtend';
-import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
+import {InputExtend} from '../../extends/input-extend';
+import {SdkProviders} from '@limitra/sdk-core/lib/providers';
 
 @Component({
   selector: 'lim-input-file',
@@ -8,7 +8,7 @@ import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
   styleUrls: ['./input-file.component.css']
 })
 export class InputFileComponent extends InputExtend implements OnInit {
-  constructor(protected providers: SdkProviders) { super(providers); }
+  constructor(public providers: SdkProviders) { super(providers); }
 
   @Input() domain: string;
   @Input() upload: string;
@@ -41,21 +41,22 @@ export class InputFileComponent extends InputExtend implements OnInit {
   @Input() excludeAudio: Array<any> = [];
   @Input() excludeVideo: Array<any> = [];
 
-  private imageTypes: Array<any> = ['image/png', 'image/jpeg', 'image/bmp', 'image/gif'];
-  private documentTypes: Array<any> = ['text/plain', 'application/pdf'];
-  private audioTypes: Array<any> = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/3gpp', 'audio/mp3', 'audio/mp4'];
-  private videoTypes: Array<any> = ['video/mp4', 'video/webm', 'video/ogg'];
+  public imageTypes: Array<any> = ['image/png', 'image/jpeg', 'image/bmp', 'image/gif'];
+  public documentTypes: Array<any> = ['text/plain', 'application/pdf'];
+  public audioTypes: Array<any> = ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/3gpp', 'audio/mp3', 'audio/mp4'];
+  public videoTypes: Array<any> = ['video/mp4', 'video/webm', 'video/ogg'];
 
-  private focus: boolean;
-  private sortable: boolean;
   private dragging: any;
   private source: string;
-  private progress: boolean;
-  private preview: any;
-  private canClear: boolean;
-  private canUpload: boolean;
-  private files: Array<any>;
+
   private fileProvider: any = {};
+
+  public preview: any;
+  public canUpload: boolean;
+  public canClear: boolean;
+  public progress: boolean;
+  public sortable: boolean;
+  public files: Array<any>;
 
   @ViewChild('imagePreview', { static: false }) imagePreview: ElementRef;
   @ViewChild('audioPreview', { static: false }) audioPreview: ElementRef;
@@ -243,7 +244,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
     return message;
   }
 
-  private fileChange(file: any, input: any) {
+  public fileChange(file: any, input: any) {
     if (!this.progress) {
       clearInterval(file.Interval);
       const index = this.files.indexOf(file);
@@ -299,7 +300,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
     }
   }
 
-  private addFile() {
+  public addFile() {
     if (!this.progress && this.multiple && this.files.length <= this.maxlength) {
       if (this.files.length < this.maxlength + 1) {
         this.files.push({});
@@ -309,7 +310,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
     }
   }
 
-  private clearFiles() {
+  public clearFiles() {
     if (!this.progress && this.canClear) {
       this.files = this.files.filter(x => x.Valid);
       if (this.files.length === 0) {
@@ -321,11 +322,11 @@ export class InputFileComponent extends InputExtend implements OnInit {
     }
   }
 
-  private choice(input: any) {
+  public choice(input: any) {
     input.click();
   }
 
-  private remove(file: any) {
+  public remove(file: any) {
     clearInterval(file.Interval);
     if (!this.progress) {
       const index = this.files.indexOf(file);
@@ -365,7 +366,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
     return can;
   }
 
-  private showPreview(file: any) {
+  public showPreview(file: any) {
     if (file && file.CanPreview) {
       this.preview = file;
       setTimeout(() => {
@@ -402,7 +403,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  private uploadFiles() {
+  public uploadFiles() {
     if (!this.progress && this.canUpload) {
       const files = this.files.filter(x => !x.Uploaded && x.File);
       let counter = 0;
@@ -493,12 +494,12 @@ export class InputFileComponent extends InputExtend implements OnInit {
     }
   }
 
-  private onDrag(file: any, event: any) {
+  public onDrag(file: any, event: any) {
     this.dragging = file;
     event.dataTransfer.setData('...', event.target.id);
   }
 
-  private onDrop(file: any) {
+  public onDrop(file: any) {
     const oldIndex = this.dragging.Index;
     const targetIndex = file.Index;
     if (this.dragging.Index > file.Index) {

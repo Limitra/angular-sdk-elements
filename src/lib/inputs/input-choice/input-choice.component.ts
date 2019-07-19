@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {InputExtend} from '../../extends/InputExtend';
-import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
+import {InputExtend} from '../../extends/input-extend';
+import {SdkProviders} from '@limitra/sdk-core/lib/providers';
 
 @Component({
   selector: 'lim-input-choice',
@@ -8,7 +8,7 @@ import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
   styleUrls: ['./input-choice.component.css']
 })
 export class InputChoiceComponent extends InputExtend implements OnInit {
-  constructor(protected providers: SdkProviders) { super(providers); }
+  constructor(public providers: SdkProviders) { super(providers); }
 
   @Input() box: boolean;
   @Input() multiple: boolean;
@@ -23,11 +23,10 @@ export class InputChoiceComponent extends InputExtend implements OnInit {
 
   @Input() source: Array<any>;
 
-  private selected: any;
-  private selecteds: Array<any>;
+  public selected: any;
+  public selecteds: Array<any>;
 
-  private focus: boolean;
-  private enableDesc: boolean;
+  public enableDesc: boolean;
 
   ngOnInit() {
     this.potential = this.potential || true;

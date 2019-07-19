@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
-import {InputExtend} from '../../extends/InputExtend';
-import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
+import {InputExtend} from '../../extends/input-extend';
+import {SdkProviders} from '@limitra/sdk-core/lib/providers';
 
 @Component({
   selector: 'lim-input-number',
@@ -8,7 +8,7 @@ import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
   styleUrls: ['./input-number.component.css']
 })
 export class InputNumberComponent extends InputExtend implements AfterViewInit {
-  constructor(protected providers: SdkProviders) {
+  constructor(public providers: SdkProviders) {
     super(providers);
   }
 

@@ -1,0 +1,52 @@
+{
+  "name": "@limitra/sdk-elements",
+  "version": "0.0.3",
+  "description": "The Limitra Angular Sdk Elements enables you to use the full-stack elements for Angular projects in a practical, functional and non-repetitive way and to achieve optimized results.",
+  "author": "Limitra <pom@limitra.com> (https://github.com/Limitra)",
+  "contributors": [
+    "Mustafa Nevfel <mnevfel@limitra.com> (https://github.com/mnevfel)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Limitra/angular-sdk-elements.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Limitra/angular-sdk-elements/issues"
+  },
+  "homepage": "https://github.com/Limitra/angular-sdk-elements",
+  "keywords": [
+    "angular",
+    "javascript",
+    "typescript",
+    "sdk",
+    "elements",
+    "directive",
+    "component",
+    "full-stack",
+    "limitra"
+  ],
+  "license": "BSD-2-Clause",
+  "peerDependencies": {
+    "@angular/common": "^8.1.2",
+    "@angular/core": "^8.1.2"
+  },
+  "main": "karma.conf.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@angular/common": "^8.1.2",
+    "@angular/core": "^8.1.2",
+    "@angular/forms": "^8.1.2",
+    "@angular/platform-browser": "^8.1.2",
+    "@limitra/sdk-core": "file:../../dist/sdk-core",
+    "bootstrap": "^4.3.1",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.4.1",
+    "jquery.easing": "^1.4.1",
+    "popper.js": "^1.15.0",
+    "rxjs": "^6.5.2",
+    "rxjs-compat": "^6.5.2",
+    "zone.js": "^0.9.1"
+  }
+}

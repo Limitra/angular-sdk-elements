@@ -4,5 +4,5 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "whitelistedNonPeerDependencies": ["limitra"]
+  "whitelistedNonPeerDependencies": ["limitra", "angular", "bootstrap", "font-awesome", "jquery", "popper.js", "rxjs", "zone.js"]
 }

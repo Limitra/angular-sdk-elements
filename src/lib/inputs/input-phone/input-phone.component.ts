@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {InputExtend} from '../../extends/InputExtend';
-import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
+import {InputExtend} from '../../extends/input-extend';
+import {SdkProviders} from '@limitra/sdk-core/lib/providers';
 
 @Component({
   selector: 'lim-input-phone',
@@ -8,7 +8,7 @@ import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
   styleUrls: ['./input-phone.component.css']
 })
 export class InputPhoneComponent extends InputExtend implements AfterViewInit {
-  constructor(protected providers: SdkProviders) { super(providers); }
+  constructor(public providers: SdkProviders) { super(providers); }
 
   ngAfterViewInit() {
     this.init(() => {

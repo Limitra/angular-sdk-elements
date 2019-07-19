@@ -21,10 +21,10 @@
       <div *ngIf="settings" class="dropdown-menu dropdown-menu-right">
         <div class="dropdown-divider"></div>
         <h6 class="dropdown-header">{{settings && settings.Texts ? settings.Texts.FixedOperations : ''}}</h6>
-        <button class="dropdown-item" (click)="setBulkChoice()"><i class="fa fa-align-justify"></i> {{settings && settings.Texts ? settings.Texts.BulkChoice : ''}}</button>
+        <button class="dropdown-item" (click)="setBulkChoice(null)"><i class="fa fa-align-justify"></i> {{settings && settings.Texts ? settings.Texts.BulkChoice : ''}}</button>
         <div class="dropdown-divider"></div>
         <h6 class="dropdown-header">{{settings && settings.Texts ? settings.Texts.AutoRefresh : ''}}</h6>
-        <button *ngFor="let interval of settings.Intervals" class="dropdown-item" (click)="setInterval(interval, $event)"><i class="fa {{interval.Checked ? 'fa-check-circle' : 'fa-circle'}}"></i> {{interval.Text}}</button>
+        <button *ngFor="let interval of settings.Intervals" class="dropdown-item" (click)="setToInterval(interval, $event)"><i class="fa {{interval.Checked ? 'fa-check-circle' : 'fa-circle'}}"></i> {{interval.Text}}</button>
       </div>
     </div>
   </div>

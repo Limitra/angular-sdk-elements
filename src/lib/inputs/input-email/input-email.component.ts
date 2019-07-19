@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Input} from '@angular/core';
-import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
-import {InputExtend} from '../../extends/InputExtend';
+import {SdkProviders} from '@limitra/sdk-core/lib/providers';
+import {InputExtend} from '../../extends/input-extend';
 
 @Component({
   selector: 'lim-input-email',
@@ -8,7 +8,7 @@ import {InputExtend} from '../../extends/InputExtend';
   styleUrls: ['./input-email.component.css']
 })
 export class InputEmailComponent extends InputExtend implements AfterViewInit {
-  constructor(protected providers: SdkProviders) { super(providers); }
+  constructor(public providers: SdkProviders) { super(providers); }
 
   @Input() minlength = 0;
   @Input() maxlength = 100;

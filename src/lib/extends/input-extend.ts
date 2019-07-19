@@ -1,9 +1,9 @@
 import {ElementRef, EventEmitter, HostListener, Input, Output, ViewChild} from '@angular/core';
-import {SdkProviders} from '../../../../sdk-core/src/lib/providers';
-import {ScreenSize} from '../../../../sdk-core/src/lib/definitions/screen-size';
+import {SdkProviders} from '@limitra/sdk-core/lib/providers';
+import {ScreenSize} from '@limitra/sdk-core/lib/definitions/screen-size';
 
 export class InputExtend {
-  constructor(protected providers: SdkProviders) {
+  constructor(public providers: SdkProviders) {
   }
 
   @ViewChild('input', {static: false}) input: ElementRef;
@@ -24,12 +24,13 @@ export class InputExtend {
 
   @Input() inline = false;
 
-  protected name: string;
-  protected errors: Array<any> = [];
-  protected hasError = false;
-  protected validationMessages: any;
-  protected screenSize: number;
-  protected screenSizes = ScreenSize;
+  public focus: boolean;
+  public name: string;
+  public errors: Array<any> = [];
+  public hasError = false;
+  public validationMessages: any;
+  public screenSize: number;
+  public screenSizes = ScreenSize;
 
   init(call: () => void = null) {
     this.screenSize = this.providers.Screen.GetSize();
@@ -88,11 +89,11 @@ export class InputExtend {
     }
   }
 
-  protected keyboardQuery(event: KeyboardEvent): boolean {
+  public keyboardQuery(event: KeyboardEvent): boolean {
     return false;
   }
 
-  protected findMaskSeperator(): Array<string> {
+  public findMaskSeperator(): Array<string> {
     const charArray = [];
     if (this.mask) {
       const mask = this.providers.String.Replace(this.mask.toLowerCase(), 'x', '');
@@ -107,20 +108,20 @@ export class InputExtend {
   }
 
   // If value masked and completed => Check, If, Rewrite
-  protected forceValue() {
+  public forceValue() {
     this.value = this.input.nativeElement.value;
     this.valueChange.emit(this.value);
   }
 
-  protected formatValue(value: any): string {
+  public formatValue(value: any): string {
     return this.value;
   }
 
-  protected localizeReplace(message: string): string {
+  public localizeReplace(message: string): string {
     return '';
   }
 
-  protected isDefaultKey(event: any): boolean {
+  public isDefaultKey(event: any): boolean {
     return (
       // Allow: Delete, Backspace, Tab, Escape, Enter
       [46, 8, 9, 27, 13].indexOf(event.keyCode) !== -1 ||
@@ -138,13 +139,13 @@ export class InputExtend {
     );
   }
 
-  protected changeCharByIndex(text: string, value: string, index: number): string {
+  public changeCharByIndex(text: string, value: string, index: number): string {
     const before = text.substring(0, index) || '';
     const after = text.length > index ? text.substring(index + 1, text.length) : '';
     return before + value + after;
   }
 
-  protected changeWordByIndex(text: string, value: string, index: number): string {
+  public changeWordByIndex(text: string, value: string, index: number): string {
     let result: string = text;
     for (let i = 0; i < value.length; i++) {
       result = this.changeCharByIndex(result, value[i], index + i);
@@ -154,7 +155,7 @@ export class InputExtend {
 
   @HostListener('input', ['$event'])
   @HostListener('keydown', ['$event'])
-  protected setMask(event: any) {
+  public setMask(event: any) {
     if (this.mask) {
       event.stopPropagation();
       if (this.isDefaultKey(event)) {
@@ -227,7 +228,7 @@ export class InputExtend {
     this.validate();
   }
 
-  protected validate() {
+  public validate() {
     let value = this.input.nativeElement.value || '';
     let mask = this.mask;
     if (this.mask) {
@@ -273,11 +274,11 @@ export class InputExtend {
     }
   }
 
-  protected validation(value: any, mask: any) {
+  public validation(value: any, mask: any) {
 
   }
 
-  protected addFormError(key: string) {
+  public addFormError(key: string) {
     if (this.form) {
       const error = this.form.Errors.filter(x => x.Name === this.name && x.Key === key && !x.Solved)[0];
       if (this.form && this.validationMessages && !error) {
@@ -295,7 +296,7 @@ export class InputExtend {
     }
   }
 
-  protected removeFormError(key: string, remove: boolean = false) {
+  public removeFormError(key: string, remove: boolean = false) {
     if (this.form) {
       this.form.Errors.filter(x => x.Name === this.name && (key ? x.Key === key : true)).forEach(error => {
         if (error) {
