@@ -1,6 +1,5 @@
-import {Component, OnInit, Input, HostListener, ViewChild, ElementRef} from '@angular/core';
-import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
-
+import {Component, OnInit, Input, HostListener} from '@angular/core';
+import {SdkProviders} from '@limitra/sdk-core';
 
 @Component({
   selector: 'lim-datatable',
@@ -110,7 +109,7 @@ export class DatatableComponent implements OnInit {
     ];
   }
 
-  private validateSearch() {
+  public validateSearch() {
     if (!this.settings.HasProcess) {
       if (this.settings && this.settings.Params) {
         this.settings.Params.Page = 1;
@@ -119,7 +118,7 @@ export class DatatableComponent implements OnInit {
     }
   }
 
-  private validatePage() {
+  public validatePage() {
     if (!this.settings.HasProcess) {
       const len = parseInt(this.settings.Params.Page, 0);
       if (!this.settings.Params.Page || this.settings.Params.Page < 0 || !len) {
@@ -130,7 +129,7 @@ export class DatatableComponent implements OnInit {
     }
   }
 
-  private validateLength() {
+  public validateLength() {
     if (this.settings && !this.settings.HasProcess) {
       const len = parseInt(this.settings.Params.Length, 0);
       if (!this.settings.Params.Length || this.settings.Params.Length < 0 || !len) {
@@ -161,13 +160,13 @@ export class DatatableComponent implements OnInit {
     }
   }
 
-  private nextPage() {
+  public nextPage() {
     if (!this.settings.HasProcess && this.settings.Response.Page.Number < this.settings.Response.Page.Count) {
       this.goToPage(this.settings.Response.Page.Number + 1);
     }
   }
 
-  private privPage() {
+  public privPage() {
     if (!this.settings.HasProcess && this.settings.Response.Page.Number > 1) {
       this.goToPage(this.settings.Response.Page.Number - 1);
     }
@@ -190,7 +189,7 @@ export class DatatableComponent implements OnInit {
     }
   }
 
-  private sortColumn(column: any) {
+  public sortColumn(column: any) {
     if (this.settings && this.settings.Params && column) {
       column.Direction = column.Direction || '';
       column.Direction = column.Direction === 'asc' ? 'desc' : (column.Direction === 'desc' ? '' : 'asc');
@@ -209,7 +208,7 @@ export class DatatableComponent implements OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  private resizeColumns() {
+  public resizeColumns(event: any = null) {
     if (this.settings && this.settings.Columns) {
       const totalChar = this.settings.Columns.reduce((sum, current) => sum + current.MaxChar, 0);
       this.settings.Columns.forEach(col => {
@@ -230,7 +229,7 @@ export class DatatableComponent implements OnInit {
   }
 
   @HostListener('window:keyup', ['$event'])
-  private keyEvent(event: KeyboardEvent) {
+  public keyEvent(event: KeyboardEvent) {
     if (!this.settings.HasProcess) {
       switch (event.keyCode) {
         case 37:
@@ -248,7 +247,7 @@ export class DatatableComponent implements OnInit {
           this.validateLength();
           break;
         case 27:
-          this.setBulkChoice();
+          this.setBulkChoice(null);
           break;
       }
     }
@@ -272,7 +271,7 @@ export class DatatableComponent implements OnInit {
     return obj;
   }
 
-  private setInterval(interval: any, $event) {
+  public setToInterval(interval: any, $event: any) {
     $event.stopPropagation();
     if (this.settings && this.settings.Interval) {
       clearInterval(this.settings.Interval);
@@ -292,7 +291,7 @@ export class DatatableComponent implements OnInit {
     }
   }
 
-  private setBulkChoice(enabled: boolean = null) {
+  public setBulkChoice(enabled: boolean = null) {
     this.settings.BulkChoice = enabled === false ? enabled : (enabled || !this.settings.BulkChoice);
     if (this.settings && this.settings.Response && this.settings.Response.Data && this.settings.Response.Data.Source) {
       this.settings.Response.Data.Source = this.settings.Response.Data.Source.map(x => {
@@ -302,7 +301,7 @@ export class DatatableComponent implements OnInit {
     }
   }
 
-  private selectRow(row: any) {
+  public selectRow(row: any) {
     if (this.settings.BulkChoice) {
       if (row.Selected !== false && !row.Selected) {
         row.Selected = false;

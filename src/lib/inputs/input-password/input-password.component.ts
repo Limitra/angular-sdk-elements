@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
-import {InputExtend} from '../../extends/InputExtend';
-import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
+import {InputExtend} from '../../extends/input-extend';
+import {SdkProviders} from '@limitra/sdk-core/lib/providers';
 
 @Component({
   selector: 'lim-input-password',
@@ -8,7 +8,7 @@ import {SdkProviders} from '../../../../../sdk-core/src/lib/providers';
   styleUrls: ['./input-password.component.css']
 })
 export class InputPasswordComponent extends InputExtend implements AfterViewInit {
-  constructor(protected providers: SdkProviders) { super(providers); }
+  constructor(public providers: SdkProviders) { super(providers); }
 
   @Input() minlength = 0;
   @Input() maxlength = 25;
@@ -17,6 +17,7 @@ export class InputPasswordComponent extends InputExtend implements AfterViewInit
   @Input() uppercase = 0;
   @Input() lowercase = 1;
 
+  public show: boolean;
   private chars = '!\'^+%&/()=?_"#$½¾{[]}\|-*<>@.,;:~';
 
   ngAfterViewInit() {
