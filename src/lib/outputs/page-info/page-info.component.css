@@ -1,0 +1,48 @@
+div.direction-wrapper {
+    padding-left: 1.5rem;
+}
+
+div.direction-left {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+div.history-list {
+    z-index: 5;
+    position: absolute;
+    width: max-content;
+    height: max-content;
+    max-width: 240px;
+    max-height: 300px;
+    overflow: auto;
+    right: 0.75rem;
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 1px solid #d3d3d3;
+}
+
+div.history-list .history-item {
+    line-height: 26px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+div.history-list .history-item a {
+    display: block;
+}
+
+a.history-button {
+    cursor: pointer;
+}
+
+a.history-button.disabled {
+    cursor: not-allowed;
+}
+
+hr {
+    margin-top: 0.5rem;
+}
