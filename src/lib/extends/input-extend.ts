@@ -1,6 +1,6 @@
 import {ElementRef, EventEmitter, HostListener, Input, Output, ViewChild} from '@angular/core';
-import {SdkProviders} from '@limitra/sdk-core/lib/providers';
-import {ScreenSize} from '@limitra/sdk-core/lib/definitions/screen-size';
+import {SdkProviders} from '@limitra/sdk-core';
+import {ScreenSize} from '@limitra/sdk-core';
 
 export class InputExtend {
   constructor(public providers: SdkProviders) {

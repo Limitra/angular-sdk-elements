@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {InputExtend} from '../../extends/input-extend';
-import {SdkProviders} from '@limitra/sdk-core/lib/providers';
+import {SdkProviders} from '@limitra/sdk-core';
 
 @Component({
   selector: 'lim-select-server',

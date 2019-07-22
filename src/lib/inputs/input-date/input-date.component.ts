@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, Input} from '@angular/core';
-import {SdkProviders} from '@limitra/sdk-core/lib/providers';
+import {SdkProviders} from '@limitra/sdk-core';
 import {InputExtend} from '../../extends/input-extend';
 
 @Component({
