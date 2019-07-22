@@ -1,7 +1,7 @@
 <div class="form-group row {{inline?'':'mb-0'}}">
   <label *ngIf="label" class="{{inline?'col-md-2':'col-md-12'}} col-form-label col-form-label-sm font-weight-bold">{{label}}</label>
   <div class="{{label&&inline?'col-md-10':'col-md-12'}}">
-    <div class="input-group input-group-sm mb-2 {{hasError?'has-error':''}}" (lim-os-click)="focus=false">
+    <div class="input-group input-group-sm {{hasError?'has-error':''}}" (lim-os-click)="focus=false">
       <i *ngIf="validationMessages" class="fa fa-{{hasError?'exclamation-triangle text-danger':'check-circle text-success'}} valid-status"></i>
       <input #input type="hidden">
       <input class="form-control form-control-sm show" attr.placeholder="{{placeholder||(validationMessages?validationMessages.SelectDefaultText:'')}}" (mousedown)="focus?focus=false:''"
