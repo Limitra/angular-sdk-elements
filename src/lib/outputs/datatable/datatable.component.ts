@@ -14,6 +14,7 @@ export class DatatableComponent implements OnInit {
 
   ngOnInit() {
     this.settings.Texts = {};
+    this.settings.Filters = this.settings || [];
 
     if (this.settings.Params.Lang) {
       this.providers.Http.Get('assets/limitra/datatable.' + this.settings.Params.Lang + '.json').subscribe(response => {

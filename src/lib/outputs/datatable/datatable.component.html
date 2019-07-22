@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-12 col-sm-2 col-lg-1 pr-sm-0">
-    <button *ngIf="settings&&settings.Definition" class="btn btn-block btn-outline-secondary text-nowrap" attr.data-toggle="{{'modal'}}" attr.data-target="#filter_{{settings.Definition}}">
+    <button *ngIf="settings&&settings.Definition" class="btn btn-block btn-outline-secondary text-nowrap {{settings.Filters&&settings.Filters.length>0?'':'disabled'}}" attr.data-toggle="{{'modal'}}" attr.data-target="{{settings.Filters&&settings.Filters.length>0?'#filter_' + settings.Definition:''}}">
       <i class="fa fa-filter"></i>
     </button>
   </div>
