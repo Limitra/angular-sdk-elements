@@ -1,0 +1,28 @@
+<div class="container-fluid mb-2 direction-wrapper mt-2">
+    <div class="row">
+        <div class="col-md-6 direction-left">
+            <i class="fa fa-compass"></i>
+            <a *ngFor="let route of routes;let i=index;" [routerLink]="route.path"
+               class="ml-2 text-secondary font-weight-bold">
+                <span>{{route.name}}</span>
+                <i *ngIf="i<routes.length-1" class="fa fa-caret-right ml-2"></i>
+            </a>
+        </div>
+        <div class="col-md-6">
+            <div class="pull-right">
+                <a [routerLink]="page&&page.parent&&page.parent.path"
+                   class="history-button text-secondary {{page&&page.parent&&page.parent.path?'':'disabled'}}"><i
+                        class="fa fa-arrow-circle-up"></i></a>
+                <a (click)="historyFocus=!historyFocus" (lim-os-click)="historyFocus=false" class="history-button {{history.length==0?'disabled':''}}"><i
+                        class="fa fa-history ml-2"></i></a>
+                <div *ngIf="historyFocus&&history.length>0" class="history-list">
+                    <div *ngFor="let route of history" class="history-item">
+                        <a [routerLink]="route.path" class="text-secondary" [title]="route.name"><i
+                                class="fa fa-history mr-1"></i>{{route.name}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
