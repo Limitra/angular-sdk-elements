@@ -1,0 +1,48 @@
+<div class="group-card-wrapper">
+    <div class="group-card-header">
+        <div class="group-card-title">
+            <i class="{{icon}}"></i> {{title}}
+        </div>
+        <div class="group-card-tools">
+            <div class="btn-group btn-group-sm wrapper">
+                <div class="btn-group btn-group-sm">
+                    <button *ngIf="button.Primary&&button.Primary.length>0" type="button" class="btn btn-outline-secondary {{button.Primary&&button.Primary.length>1?'dropdown-toggle':''}}"
+                            [attr.data-toggle]="button.Primary&&button.Primary.length>1?'dropdown':null" [routerLink]="button.Primary[0].Link||null"
+                            (click)="button.Primary[0].Action?button.Primary[0].Action():''" [disabled]="!button.Primary[0].Enabled?true:null">
+                        <i class="{{button.Primary[0].Spinner?'fa fa-refresh fa-spin':button.Primary[0].Icon}}"></i> <span class="d-none d-sm-inline">{{button.Primary[0].Text?(' '+button.Primary[0].Text):''}}</span>
+                    </button>
+                    <div *ngIf="button.Primary&&button.Primary.length>1" class="dropdown-menu dropdown-menu-right">
+                        <div class="dropdown-divider"></div>
+                        <div *ngFor="let btn of (button.Primary||[]).slice(1)">
+                            <div *ngIf="btn.IsDivider" class="dropdown-divider"></div>
+                            <h6 *ngIf="btn.IsHeader" class="dropdown-header">{{btn.Text}}</h6>
+                            <button *ngIf="!btn.IsHeader&&!btn.IsDivider" class="dropdown-item" [routerLink]="btn.Link||null" (click)="btn.Action?btn.Action():$event.stopPropagation()"><i class="{{btn.Icon}}"></i> {{btn.Text}}</button>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                </div>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-secondary dropdown-toggle pulse" data-toggle="dropdown">
+                        <i class="fa fa-ellipsis-v mr-sm-2"></i>
+                        <span class="sr-only"></span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <div class="dropdown-divider"></div>
+                        <div *ngFor="let btn of (button.Secondary||[])">
+                            <div *ngIf="btn.IsDivider" class="dropdown-divider"></div>
+                            <h6 *ngIf="btn.IsHeader" class="dropdown-header">{{btn.Text}}</h6>
+                            <button *ngIf="!btn.IsHeader&&!btn.IsDivider" class="dropdown-item" [routerLink]="btn.Link||null" (click)="btn.Action?btn.Action():$event.stopPropagation()"><i class="{{btn.Icon}}"></i> {{btn.Text}}</button>
+                        </div>
+                        <div *ngIf="button.Secondary&&button.Secondary.length>0" class="dropdown-divider"></div>
+                        <h6 class="dropdown-header">{{texts['CardOptions']}}</h6>
+                        <button class="dropdown-item"  (click)="$event.stopPropagation();collapsed=!collapsed"><i class="fa fa-{{collapsed?'expand-arrows-alt':'compress-arrows-alt'}}"></i> {{texts[collapsed?'CardExpand':'CardCollapse']}}</button>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!collapsed" class="group-card-body">
+        <ng-content></ng-content>
+    </div>
+</div>
