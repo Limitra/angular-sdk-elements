@@ -12,7 +12,6 @@ export class InputExtend {
   @Input() placeholder: string;
 
   @Input() mask: string;
-  @Input() lang: string;
 
   @Input() value: any;
   @Input() form: any;
@@ -34,18 +33,16 @@ export class InputExtend {
 
   init(call: () => void = null) {
     this.screenSize = this.providers.Screen.GetSize();
-
-    this.form = this.form || { };
-    this.form.Errors = this.form.Errors || [];
-    this.lang = this.lang || this.providers.Storage.Get('Localization_Lang');
+    this.form.errors = this.form.errors || [];
+    const lang = this.providers.Storage.Get('Localization_Lang');
 
     this.generateName();
     if (this.value && this.input) {
       this.input.nativeElement.value = this.formatValue(this.value);
     }
 
-    if (this.lang) {
-      this.providers.Http.Get('assets/limitra/validation.' + this.lang + '.json').subscribe(response => {
+    if (lang) {
+      this.providers.Http.Get('assets/limitra/validation.' + lang + '.json').subscribe(response => {
         this.validationMessages = response;
         if (call) { call(); }
         this.validate();
@@ -264,14 +261,15 @@ export class InputExtend {
 
     if (this.form) {
       if (!value) {
-        this.form.Errors.filter(x => x.Name === this.name && x.Solved).forEach(error => {
-          this.form.Errors.splice(this.form.Errors.indexOf(error), 1);
+        this.form.errors.filter(x => x.Name === this.name && x.Solved).forEach(error => {
+          this.form.errors.splice(this.form.errors.indexOf(error), 1);
         });
       }
 
-      this.errors = this.form.Errors.filter(x => x.Name === this.name);
+      this.errors = this.form.errors.filter(x => x.Name === this.name);
       this.hasError = this.errors.filter(x => !x.Solved).length > 0;
     }
+    this.form.onFormChange();
   }
 
   public validation(value: any, mask: any) {
@@ -280,17 +278,17 @@ export class InputExtend {
 
   public addFormError(key: string) {
     if (this.form) {
-      const error = this.form.Errors.filter(x => x.Name === this.name && x.Key === key && !x.Solved)[0];
+      const error = this.form.errors.filter(x => x.Name === this.name && x.Key === key && !x.Solved)[0];
       if (this.form && this.validationMessages && !error) {
-        const solved = this.form.Errors.filter(x => x.Name === this.name && x.Key === key)[0];
+        const solved = this.form.errors.filter(x => x.Name === this.name && x.Key === key)[0];
         if (solved) {
-          this.form.Errors.splice(this.form.Errors.indexOf(solved), 1);
+          this.form.errors.splice(this.form.errors.indexOf(solved), 1);
         }
 
         let message = this.validationMessages[key];
         message = this.localizeReplace(message) || message;
 
-        this.form.Errors.push({Name: this.name, Key: key, Message: message, Solved: false});
+        this.form.errors.push({Name: this.name, Key: key, Message: message, Solved: false});
         this.formChange.emit(this.form);
       }
     }
@@ -298,10 +296,10 @@ export class InputExtend {
 
   public removeFormError(key: string, remove: boolean = false) {
     if (this.form) {
-      this.form.Errors.filter(x => x.Name === this.name && (key ? x.Key === key : true)).forEach(error => {
+      this.form.errors.filter(x => x.Name === this.name && (key ? x.Key === key : true)).forEach(error => {
         if (error) {
           if (remove) {
-            this.form.Errors.splice(this.form.Errors.indexOf(error), 1);
+            this.form.errors.splice(this.form.errors.indexOf(error), 1);
           } else {
             error.Solved = true;
           }
@@ -312,12 +310,6 @@ export class InputExtend {
   }
 
   private generateName() {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    for (let i = 0; i < 11; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    this.name = result;
+    this.name = this.providers.String.Generate(11);
   }
 }
