@@ -15,9 +15,10 @@ export class DatatableComponent implements OnInit {
   ngOnInit() {
     this.settings.Texts = {};
     this.settings.Filters = this.settings || [];
+    const lang = this.providers.Storage.Get('Localization_Lang');
 
-    if (this.settings.Params.Lang) {
-      this.providers.Http.Get('assets/limitra/datatable.' + this.settings.Params.Lang + '.json').subscribe(response => {
+    if (lang) {
+      this.providers.Http.Get('assets/limitra/datatable.' + lang + '.json').subscribe(response => {
         this.settings.TextSource = response;
         this.initTexts();
         this.initIntervals();
@@ -42,9 +43,11 @@ export class DatatableComponent implements OnInit {
   }
 
   private initTable() {
+    const api = this.providers.Storage.Get('API_Settings');
     if (this.settings && this.settings.Params && this.settings.Columns) {
       this.settings.Params.MaxLength = this.settings.Params.MaxLength || 500;
       this.settings.Params.Sort = this.settings.Params.Sort || [];
+      this.settings.Params.Domain = this.settings.Params.Domain || (api ? api.Domain : undefined);
 
       this.resetColumns();
       const params: any = {};
@@ -58,7 +61,8 @@ export class DatatableComponent implements OnInit {
 
       const qs = '?' + this.providers.Url.Serialize(params);
       this.settings.HasProcess = true;
-      this.providers.Http.Get(this.settings.Params.Source + qs).subscribe(response => {
+      const source = this.settings.Params.Domain + this.providers.String.Replace('/' + this.settings.Params.Source, '//', '/');
+      this.providers.Http.Get(source + qs).subscribe(response => {
         this.settings.Response = response;
         this.settings.Response.Data.Source = this.settings.Response.Data.Source.map(data => {
           data.PrimaryKey = this.valOfObj(data, {Field: this.settings.PrimaryKey}, false);
