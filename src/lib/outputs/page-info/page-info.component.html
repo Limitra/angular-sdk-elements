@@ -1,6 +1,6 @@
 <div class="container-fluid mb-2 direction-wrapper mt-2">
     <div class="row">
-        <div class="col-md-6 direction-left">
+        <div class="col-6 direction-left">
             <i class="fa fa-compass"></i>
             <a *ngFor="let route of routes;let i=index;" [routerLink]="route.path"
                class="ml-2 text-secondary font-weight-bold">
@@ -8,7 +8,7 @@
                 <i *ngIf="i<routes.length-1" class="fa fa-caret-right ml-2"></i>
             </a>
         </div>
-        <div class="col-md-6">
+        <div class="col-6">
             <div class="pull-right">
                 <a [routerLink]="page&&page.parent&&page.parent.path"
                    class="history-button text-secondary {{page&&page.parent&&page.parent.path?'':'disabled'}}"><i
