@@ -1,0 +1,35 @@
+.notification-wrapper {
+    z-index: 10;
+    position: fixed !important;
+    cursor: pointer;
+}
+
+.toast .title {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.notification-wrapper.success .toast-header, .notification-wrapper.success .close-button {
+    background-color: #28a745;
+    color: #ffffff;
+    opacity: 1;
+}
+
+.notification-wrapper.warning .toast-header, .notification-wrapper.warning .close-button {
+    background-color: #ffc107;
+    color: #ffffff;
+    opacity: 1;
+}
+
+.notification-wrapper.danger .toast-header, .notification-wrapper.danger .close-button {
+    background-color: #dc3545;
+    color: #ffffff;
+    opacity: 1;
+}
+
+.notification-wrapper.info .toast-header, .notification-wrapper.info .close-button {
+    background-color: #17a2b8;
+    color: #ffffff;
+    opacity: 1;
+}
