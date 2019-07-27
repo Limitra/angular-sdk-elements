@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-6 direction-left">
             <i class="fa fa-compass"></i>
-            <a *ngFor="let route of routes;let i=index;" [routerLink]="route.path"
+            <a *ngFor="let route of routes;let i=index;" [routerLink]="i<routes.length-1?route.path:null"
                class="ml-2 text-secondary font-weight-bold">
                 <span>{{route.name}}</span>
                 <i *ngIf="i<routes.length-1" class="fa fa-caret-right ml-2"></i>
