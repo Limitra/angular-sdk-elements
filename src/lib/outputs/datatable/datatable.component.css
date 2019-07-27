@@ -224,6 +224,25 @@ tbody tr {
   cursor: pointer;
 }
 
+tbody tr td:first-child .context-menu-wrapper {
+  position: fixed;
+  width: max-content;
+  height: max-content;
+  z-index: 2;
+}
+
+tbody tr td:first-child .context-menu-wrapper a {
+  text-decoration: none;
+}
+
+tbody tr td:first-child .context-menu-wrapper .list-group-item {
+  padding: 0;
+}
+
+tbody tr td:first-child .context-menu-wrapper .list-group-item a {
+  padding: 0.75rem 1.25rem;
+}
+
 tbody tr td {
   color: #5d6368;
   white-space: nowrap;
@@ -236,7 +255,24 @@ tbody tr.row-selected td {
   color: #fff;
 }
 
-tbody.bulk-choice tr td:first-child {
+tbody tr.row-selected td:first-child {
+  background-color: transparent !important;
+}
+
+tbody tr td:first-child {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+tbody a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+tbody.bulk-choice tr td:nth-child(2) {
   border-left-width: 10px;
   border-left-color: #858796;
 }
@@ -246,7 +282,7 @@ tbody.bulk-choice tr td:last-child {
   border-right-color: #858796;
 }
 
-tbody.bulk-choice tr.row-selected td:first-child {
+tbody.bulk-choice tr.row-selected td:nth-child(2) {
   border-left-color: #fff;
 }
 
@@ -266,7 +302,7 @@ tbody.bulk-choice tr.row-selected td:last-child {
   border-bottom-width: 1px;
 }
 
-table.table-bordered.dataTable th:first-child {
+table.table-bordered.dataTable th:nth-child(2) {
   border-left-width: 1px;
 }
 
@@ -274,7 +310,7 @@ table.table-bordered.dataTable th:last-child {
   border-right-width: 1px;
 }
 
-table.table-bordered.dataTable td:first-child {
+table.table-bordered.dataTable td:nth-child(2) {
   border-left-width: 1px;
 }
 
