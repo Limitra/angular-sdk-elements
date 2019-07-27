@@ -1,3 +1,5 @@
+<lim-notification #notification top="10" left="10"></lim-notification>
+
 <div class="row">
   <div class="col-12 col-sm-2 col-lg-1 pr-sm-0">
     <button *ngIf="settings&&settings.Definition" class="btn btn-sm btn-block btn-outline-secondary text-nowrap {{settings.Filters&&settings.Filters.length>0?'':'disabled'}}" attr.data-toggle="{{'modal'}}" attr.data-target="{{settings.Filters&&settings.Filters.length>0?'#filter_' + settings.Definition:''}}">
@@ -11,7 +13,7 @@
   </div>
   <div class="col-md-3 col-lg-2 mt-2 mt-md-0">
     <div class="btn-group btn-group-sm btn-block">
-      <button *ngIf="settings" class="btn btn-secondary text-nowrap search" type="button" (click)="validateSearch(); $event.stopPropagation();">
+      <button *ngIf="settings" class="btn btn-secondary text-nowrap search {{settings.HasProcess?'disabled':''}}" type="button" (click)="validateSearch(); $event.stopPropagation();">
           <span class="fa fa-refresh {{settings.HasProcess ? 'fa-spin' : ''}}"></span>
       </button>
       <button type="button" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown">
@@ -35,12 +37,23 @@
   <table class="table table-striped table-bordered dataTable">
     <thead *ngIf="settings&&settings.Columns">
     <tr>
+      <th></th>
       <th *ngFor="let column of settings.Columns" [style.width.%]="column.Width"
           title="{{column.Title}}" (click)="sortColumn(column)"><i class="fa {{column.Direction==='asc' ? 'fa-sort-up' : (column.Direction==='desc' ? 'fa-sort-down' :'fa-sort')}} text-secondary"></i> {{column.Title}}</th>
     </tr>
     </thead>
     <tbody *ngIf="settings&&settings.Columns&&settings.Response&&settings.Response.Data&&settings.Response.Data.Source" class="{{settings.BulkChoice?'bulk-choice':''}}">
-    <tr *ngFor="let data of settings.Response.Data.Source" (click)="selectRow(data)" class="{{data.Selected ? 'row-selected' : ''}}">
+    <tr #row *ngFor="let data of settings.Response.Data.Source" (click)="selectRow(data)" class="{{data.Selected ? 'row-selected' : ''}}" (contextmenu)="openMenu(data, $event)" (lim-os-click)="data.ContextMenu?data.ContextMenu.Focus=false:''">
+      <td [style.width.px]="row.offsetWidth" [style.height.px]="row.offsetHeight" title="#{{settings.PrimaryKey?data[settings.PrimaryKey]:''}}">
+        <a *ngIf="!this.settings.BulkChoice&&settings.PrimaryKey&&settings.RowRedirect" [routerLink]="settings.RowRedirect+data[settings.PrimaryKey]"></a>
+        <div *ngIf="data.ContextMenu&&data.ContextMenu.Focus&&contextMenu&&contextMenu.length>0" class="context-menu-wrapper" (contextmenu)="$event.stopPropagation();data.ContextMenu.Focus=false" [style.top.px]="data.ContextMenu.PositionY" [style.left.px]="data.ContextMenu.PositionX">
+          <ul class="list-group">
+            <li *ngFor="let item of contextMenu" class="list-group-item">
+              <a class="text-secondary" [routerLink]="item.Link&&settings.PrimaryKey?(item.Link+data[settings.PrimaryKey]):null" (click)="(item.Action?item.Action(data):'');$event.stopPropagation();data.ContextMenu.Focus=false"><i class="{{item.Icon}} mr-1"></i>{{item.Text}}</a>
+            </li>
+          </ul>
+        </div>
+      </td>
       <td *ngFor="let column of data.Columns" title="{{column.Value}}">
         {{column.Value}}<br>
         <small *ngFor="let nest of column.Nested"><strong>{{nest.Title}} :</strong> {{nest.Value}} <br></small>
