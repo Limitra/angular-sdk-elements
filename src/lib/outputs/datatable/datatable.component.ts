@@ -1,5 +1,7 @@
-import {Component, OnInit, Input, HostListener} from '@angular/core';
+import {Component, OnInit, Input, HostListener, ViewChild} from '@angular/core';
 import {SdkProviders} from '@limitra/sdk-core';
+import {CardComponent} from '../card/card.component';
+import {NotificationComponent} from '../notification/notification.component';
 
 @Component({
   selector: 'lim-datatable',
@@ -8,13 +10,24 @@ import {SdkProviders} from '@limitra/sdk-core';
 })
 export class DatatableComponent implements OnInit {
   @Input() settings: any = {};
+  @Input() card: CardComponent;
+
+  @ViewChild('notification', { static: false }) notification: NotificationComponent;
+
+  private texts: any;
+  private api: any;
+
+  contextMenu: Array<any> = [];
 
   constructor(private providers: SdkProviders) {
   }
 
   ngOnInit() {
+    this.api = this.providers.Storage.Get('API_Settings');
+    this.settings = this.settings || {};
     this.settings.Texts = {};
     this.settings.Filters = this.settings || [];
+    this.settings.RowRedirect = this.settings.RowRedirect || this.settings.RowEdit;
     const lang = this.providers.Storage.Get('Localization_Lang');
 
     if (lang) {
@@ -23,7 +36,17 @@ export class DatatableComponent implements OnInit {
         this.initTexts();
         this.initIntervals();
       });
+      this.providers.Http.Get('assets/limitra/interface.' + lang + '.json').subscribe(response => {
+        this.texts = response;
+        this.initButtons();
+      });
     } else {
+      this.texts = {
+        TableNewRow: 'Add New',
+        TableRowSelect: 'Select',
+        TableRowEdit: 'Edit',
+        TableRowDelete: 'Delete'
+      };
       this.settings.TextSource = {
         SearchPlaceHolder: 'Type to search from [$DataLength] data..',
         FilterTitle: 'Filter your data..',
@@ -36,18 +59,95 @@ export class DatatableComponent implements OnInit {
         AutoRefresh: 'Auto Refresh',
         FixedOperations: 'Fixed Operations'
       };
+      this.initButtons();
       this.initTexts();
       this.initIntervals();
     }
     this.initTable();
   }
 
+  public openMenu(data: any, event: any) {
+    if (this.settings && this.settings.Response && this.settings.Response.Data
+        && this.settings.Response.Data.Source && this.settings.Response.Data.Source.length > 0) {
+      this.contextMenu = [];
+      this.settings.Response.Data.Source = this.settings.Response.Data.Source.map(x => {
+        x.ContextMenu = { Focus: false }
+        return x;
+      });
+
+      this.contextMenu.push({
+        Icon: 'fa fa-hand-pointer', Text: this.texts.TableRowSelect, Action: (data) => {
+          this.settings.BulkChoice = true;
+          this.selectRow(data);
+        }
+      });
+      if (this.settings.RowEdit) {
+        this.contextMenu.push({
+          Icon: 'fa fa-edit',
+          Text: this.texts.TableRowEdit,
+          Link: this.settings.RowEdit
+        });
+      }
+
+      if (this.settings.Params && this.settings.Params.Delete) {
+        this.contextMenu.push({
+          Icon: 'fa fa-times', Text: this.texts.TableRowDelete, Action: (data) => {
+            const selecteds = this.settings.Response.Data.Source.filter(x => x.Selected).map(x => x[this.settings.PrimaryKey]);
+            if (selecteds.length === 0) {
+              selecteds.push(data[this.settings.PrimaryKey]);
+            }
+            const params: any = {
+              ids: selecteds
+            };
+            const qs = '?' + this.providers.Url.Serialize(params);
+            const source = this.settings.Params.Domain + this.providers.String.Replace('/' + this.settings.Params.Delete, '//', '/');
+
+            const errCall = (error: any) => {
+              this.settings.HasProcess = false;
+              let notification: any = {};
+              if (error.response && error.response.Notification) {
+                notification = error.response.Notification;
+              } else {
+                notification = {
+                  Status: 'danger',
+                  Title: error.status,
+                  Message: error.message
+                };
+              }
+
+              this.notification.push(notification);
+            };
+
+            this.providers.Http.Delete(source + qs, errCall).subscribe(response => {
+              this.settings.HasProcess = false;
+              if (response.Notification) {
+                this.notification.push(response.Notification);
+              }
+            });
+          }
+        });
+      }
+
+      if (this.settings && this.settings.ContextMenu && this.settings.ContextMenu.length > 0) {
+        this.settings.ContextMenu.forEach(menu => {
+          this.contextMenu.push(menu);
+        });
+      }
+
+      data.ContextMenu = {
+        Focus: true,
+        PositionX: event.clientX,
+        PositionY: event.clientY
+      };
+    }
+    return false;
+  }
+
   private initTable() {
-    const api = this.providers.Storage.Get('API_Settings');
     if (this.settings && this.settings.Params && this.settings.Columns) {
       this.settings.Params.MaxLength = this.settings.Params.MaxLength || 500;
       this.settings.Params.Sort = this.settings.Params.Sort || [];
-      this.settings.Params.Domain = this.settings.Params.Domain || (api ? api.Domain : undefined);
+      this.settings.Params.Domain = this.settings.Params.Domain || (this.api ? this.api.Domain : undefined);
 
       this.resetColumns();
       const params: any = {};
@@ -94,6 +194,16 @@ export class DatatableComponent implements OnInit {
         this.settings.HasProcess = false;
       });
     }
+  }
+
+  private initButtons() {
+    this.card.button.Primary = [];
+    const buttons = this.settings.NewButtons || [
+      { Icon: 'fa fa-plus', Text: this.texts.TableNewRow, Link: this.settings.NewRow }
+    ];
+    buttons.forEach(button => {
+      this.card.button.Primary.push(button);
+    });
   }
 
   private initTexts() {
@@ -252,7 +362,7 @@ export class DatatableComponent implements OnInit {
           this.validateLength();
           break;
         case 27:
-          this.setBulkChoice(null);
+          this.setBulkChoice(false);
           break;
       }
     }
