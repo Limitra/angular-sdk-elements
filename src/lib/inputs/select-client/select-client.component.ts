@@ -23,13 +23,17 @@ export class SelectClientComponent extends InputExtend implements AfterViewInit 
   public filteredSource: Array<any> = [];
 
   ngAfterViewInit() {
+    this.preInit();
+    this.init();
+  }
+
+  preInit() {
     this.filteredSource = this.source || [];
     if (this.multiple) {
       this.selecteds = this.filteredSource.filter(x => this.value ? this.value.includes(x.Value) : false);
     } else {
       this.selected = this.filteredSource.filter(x => this.value ? this.value === x.Value : false)[0];
     }
-    this.init();
   }
 
   forceValue() {
