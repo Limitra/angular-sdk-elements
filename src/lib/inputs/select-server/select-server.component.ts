@@ -10,18 +10,20 @@ import {SdkProviders} from '@limitra/sdk-core';
 export class SelectServerComponent extends InputExtend implements AfterViewInit {
   constructor(public providers: SdkProviders) { super(providers); }
 
+  @Input() domain: string;
   @Input() source: string;
   @Input() multiple = false;
   @Input() minlength: number;
   @Input() maxlength: number;
 
-  @Input() length: number;
+  @Input() length: number = 10;
 
   @Input() textkey: string = 'Text';
   @Input() valuekey: string = 'Value';
 
   @ViewChild('search', {static: false}) search: ElementRef;
 
+  private api: any;
   private page = 1;
   public searchText: string;
   public filteredSource: Array<any> = [];
@@ -30,6 +32,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   public selecteds: Array<any> = [];
 
   ngAfterViewInit() {
+    this.api = this.providers.Storage.Get('API_Settings');
     this.init();
     this.initSource(true, false);
   }
@@ -39,7 +42,8 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     if (this.length) { params.length = this.length; }
     if (this.searchText) { params.search = this.searchText.toLowerCase(); }
     if (this.value) { params.value = this.value; }
-    const source = this.source + '?' + this.providers.Url.Serialize(params);
+    const domain = this.domain || (this.api ? this.api.Domain : '');
+    const source = domain + this.source + '?' + this.providers.Url.Serialize(params);
     this.providers.Http.Get(source).subscribe(response => {
       if (reset) {
         this.filteredSource = response.Data.Source;
