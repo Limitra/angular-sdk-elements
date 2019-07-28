@@ -16,6 +16,8 @@ export class InputExtend {
   @Input() value: any;
   @Input() form: any;
 
+  @Input() property: any;
+
   @Output() valueChange = new EventEmitter();
   @Output() formChange = new EventEmitter();
 
@@ -31,9 +33,24 @@ export class InputExtend {
   public screenSize: number;
   public screenSizes = ScreenSize;
 
+  preInit() {
+
+  }
+
   init(call: () => void = null) {
+    if (this.form) {
+      this.form.errors = this.form.errors || [];
+      const subs = this.form.modelChange.subscribe(model => {
+        subs.unsubscribe();
+        this.value = model[this.property];
+        this.valueChange.emit(this.value);
+        this.input.nativeElement.value = this.formatValue(this.value);
+        this.preInit();
+        this.validate();
+      });
+    }
+
     this.screenSize = this.providers.Screen.GetSize();
-    this.form.errors = this.form.errors || [];
     const lang = this.providers.Storage.Get('Localization_Lang');
 
     this.generateName();
@@ -268,8 +285,8 @@ export class InputExtend {
 
       this.errors = this.form.errors.filter(x => x.Name === this.name);
       this.hasError = this.errors.filter(x => !x.Solved).length > 0;
+      this.form.onFormChange();
     }
-    this.form.onFormChange();
   }
 
   public validation(value: any, mask: any) {
