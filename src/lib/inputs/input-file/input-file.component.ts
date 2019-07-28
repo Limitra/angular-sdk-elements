@@ -64,9 +64,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
   @ViewChild('documentPreview', { static: false }) documentPreview: ElementRef;
 
   ngOnInit() {
-    this.files = Array.isArray(this.value) ? this.value.map(x => {
-      return { Path: x };
-    }) : (this.value ? [{ Path: this.value }] : [{}]);
+    this.preInit();
     const apiSettings = this.providers.Storage.Get('API_Settings') || {};
     const fileProvider = apiSettings.File ? apiSettings.File : {};
     this.fileProvider = {
@@ -133,6 +131,12 @@ export class InputFileComponent extends InputExtend implements OnInit {
         }
       });
     });
+  }
+
+  preInit() {
+    this.files = Array.isArray(this.value) ? this.value.map(x => {
+      return { Path: x };
+    }) : (this.value ? [{ Path: this.value }] : [{}]);
   }
 
   forceValue() {
