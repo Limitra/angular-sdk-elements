@@ -37,6 +37,10 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     this.initSource(true, false);
   }
 
+  preInit() {
+    this.initSource(true, true);
+  }
+
   initSource(init: boolean, reset: boolean) {
     const params: any = { page: this.page };
     if (this.length) { params.length = this.length; }
