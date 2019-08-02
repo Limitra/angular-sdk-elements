@@ -6,10 +6,6 @@
     "declaration": true,
     "inlineSources": true,
     "types": [],
-    "paths": {
-      "@limitra/sdk-core": ["@limitra/sdk-core/*"],
-      "@limitra/sdk-elements": ["@limitra/sdk-elements/*"]
-    },
     "lib": [
       "dom",
       "es2018"
@@ -23,9 +19,6 @@
     "strictInjectionParameters": true,
     "enableResourceInlining": true
   },
-  "include" : [
-    "src/sdk-elements.module.ts"
-  ],
   "exclude": [
     "src/test.ts",
     "**/*.spec.ts"

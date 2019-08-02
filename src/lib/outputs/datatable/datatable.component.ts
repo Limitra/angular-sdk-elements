@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, HostListener, ViewChild} from '@angular/core';
+import {Component, OnInit, Input, HostListener, ViewChild, ElementRef, ViewChildren, QueryList} from '@angular/core';
 import {SdkProviders} from '@limitra/sdk-core';
 import {CardComponent} from '../card/card.component';
 import {NotificationComponent} from '../notification/notification.component';
@@ -12,6 +12,7 @@ export class DatatableComponent implements OnInit {
   @Input() settings: any = {};
   @Input() card: CardComponent;
 
+  @ViewChildren('row') rows: QueryList<ElementRef>;
   @ViewChild('notification', { static: false }) notification: NotificationComponent;
 
   private texts: any;
@@ -144,17 +145,31 @@ export class DatatableComponent implements OnInit {
     return false;
   }
 
+  private getStoredParams() {
+    return this.providers.Storage.Get('DT_' + this.settings.Definition) || {};
+  }
+
+  private setStoredParams(key: string, value: string) {
+    const stored = this.getStoredParams();
+    stored[key] = value;
+    this.providers.Storage.Set('DT_' + this.settings.Definition, stored);
+  }
+
   private initTable() {
     if (this.settings && this.settings.Params && this.settings.Columns) {
+      const stored = this.getStoredParams();
       this.settings.Params.MaxLength = this.settings.Params.MaxLength || 500;
-      this.settings.Params.Sort = this.settings.Params.Sort || [];
+      this.settings.Params.Length = stored.Length || (this.settings.Params.Length || 10);
+      this.settings.Params.Page = stored.Page || (this.settings.Params.Page || 1);
+      this.settings.Params.Sort = stored.Sort || (this.settings.Params.Sort || []);
+      this.settings.Params.Search = stored.Search || this.settings.Params.Search;
       this.settings.Params.Domain = this.settings.Params.Domain || (this.api ? this.api.Domain : undefined);
 
       this.resetColumns();
       const params: any = {};
       params.sort = this.settings.Params.Sort;
-      params.length = this.settings.Params.Length || 10;
-      params.page = this.settings.Params.Page || 1;
+      params.length = this.settings.Params.Length;
+      params.page = this.settings.Params.Page;
       if (this.settings.Params.Search) {
         params.search = this.settings.Params.Search;
       }
@@ -171,10 +186,12 @@ export class DatatableComponent implements OnInit {
           this.settings.Columns.forEach(column => {
             const colObj: any = {Nested: []};
             this.pushColumnLen(column, column.Title.toString().length);
-            colObj.Value = this.valOfObj(data, column);
+            const nowValue = this.valOfObj(data, column);
             colObj.Position = column.Position;
             if (column.Render) {
-              colObj.Value = column.Render(colObj.Value);
+              colObj.Value = column.Render(nowValue);
+            } else {
+              colObj.Value = nowValue;
             }
             if (column.Badge) {
               const badge = column.Badge(colObj.Value);
@@ -242,6 +259,8 @@ export class DatatableComponent implements OnInit {
     if (!this.settings.HasProcess) {
       if (this.settings && this.settings.Params) {
         this.settings.Params.Page = 1;
+        this.setStoredParams('Page', this.settings.Params.Page);
+        this.setStoredParams('Search', this.settings.Params.Search);
       }
       this.initTable();
     }
@@ -252,8 +271,8 @@ export class DatatableComponent implements OnInit {
       const len = parseInt(this.settings.Params.Page, 0);
       if (!this.settings.Params.Page || this.settings.Params.Page < 0 || !len) {
         this.settings.Params.Page = 1;
+        this.setStoredParams('Page', this.settings.Params.Page);
       }
-
       this.initTable();
     }
   }
@@ -267,6 +286,10 @@ export class DatatableComponent implements OnInit {
 
       if (this.settings.Params.MaxLength <= this.settings.Params.Length) {
         this.settings.Params.Length = this.settings.Params.MaxLength;
+      }
+
+      if (this.settings.Params.Length) {
+        this.setStoredParams('Length', this.settings.Params.Length);
       }
 
       this.initTable();
@@ -285,6 +308,7 @@ export class DatatableComponent implements OnInit {
   private goToPage(page: number) {
     if (!this.settings.HasProcess) {
       this.settings.Params.Page = page;
+      this.setStoredParams('Page', this.settings.Params.Page);
       this.initTable();
     }
   }
@@ -309,10 +333,13 @@ export class DatatableComponent implements OnInit {
 
   private resetColumns() {
     if (this.settings && this.settings.Columns) {
+      const stored = this.getStoredParams();
       this.settings.Columns = this.settings.Columns.map(column => {
+        const strCol = stored && stored.Sort ? (stored.Sort.filter(x => x.split(',')[0] === column.Field)[0]) : undefined;
         const nwCol = column;
         nwCol.MaxChar = undefined;
         nwCol.Width = undefined;
+        nwCol.Direction = strCol ? strCol.split(',')[1] : undefined;
         return nwCol;
       });
     }
@@ -323,7 +350,7 @@ export class DatatableComponent implements OnInit {
       column.Direction = column.Direction || '';
       column.Direction = column.Direction === 'asc' ? 'desc' : (column.Direction === 'desc' ? '' : 'asc');
 
-      const current = this.settings.Params.Sort.filter(x => x.includes(column.Field))[0];
+      const current = this.settings.Params.Sort.filter(x => x.split(',')[0] === column.Field)[0];
       if (current) {
         const index = this.settings.Params.Sort.indexOf(current);
         this.settings.Params.Sort.splice(index, 1);
@@ -332,6 +359,11 @@ export class DatatableComponent implements OnInit {
       if (column.Direction === 'asc' || column.Direction === 'desc') {
         this.settings.Params.Sort.push(column.Field + ',' + column.Direction);
       }
+
+      if (this.settings.Params.Sort) {
+        this.setStoredParams('Sort', this.settings.Params.Sort);
+      }
+
       this.initTable();
     }
   }
@@ -354,6 +386,14 @@ export class DatatableComponent implements OnInit {
           col.Width = width;
         }
       });
+      if (this.settings.Response && this.settings.Response.Data && this.settings.Response.Data.Source) {
+        setTimeout(() => {
+          this.rows.forEach((row: any, index: number) => {
+            this.settings.Response.Data.Source[index].Width = row.nativeElement.offsetWidth;
+            this.settings.Response.Data.Source[index].Height = row.nativeElement.offsetHeight;
+          });
+        });
+      }
     }
   }
 
