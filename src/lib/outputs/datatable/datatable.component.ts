@@ -20,8 +20,7 @@ export class DatatableComponent implements OnInit {
 
   contextMenu: Array<any> = [];
 
-  constructor(private providers: SdkProviders) {
-  }
+  constructor(private providers: SdkProviders) { }
 
   ngOnInit() {
     this.api = this.providers.Storage.Get('API_Settings');
