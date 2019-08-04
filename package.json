@@ -28,14 +28,6 @@
   "license": "BSD-2-Clause",
   "peerDependencies": {
     "@angular/common": "^8.1.2",
-    "@angular/core": "^8.1.2"
-  },
-  "main": "karma.conf.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "@angular/common": "^8.1.2",
     "@angular/core": "^8.1.2",
     "@angular/forms": "^8.1.2",
     "@angular/platform-browser": "^8.1.2",
@@ -48,5 +40,13 @@
     "rxjs": "^6.5.2",
     "rxjs-compat": "^6.5.2",
     "zone.js": "^0.9.1"
+  },
+  "main": "karma.conf.js",
+  "typings": "src/public-api.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@limitra/sdk-core": "0.0.3"
   }
 }
