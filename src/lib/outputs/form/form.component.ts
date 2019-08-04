@@ -15,11 +15,8 @@ export class FormComponent implements OnInit, OnDestroy {
   @Input() model: any;
   @Input() route: any;
 
-  @Input() fixed = false;
-  @Input() insert: string;
-  @Input() update: string;
-
   @Input() get: any = 'get';
+  @Input() put: any = 'put';
   @Input() post: any = 'post';
 
   @Output('') modelChange = new EventEmitter();
@@ -29,7 +26,7 @@ export class FormComponent implements OnInit, OnDestroy {
   isValid: boolean;
   errors: Array<any>;
 
-  @ViewChild('notification', { static: false }) notification: NotificationComponent;
+  @ViewChild('notification', {static: false}) notification: NotificationComponent;
 
   private subscribe: any;
 
@@ -43,7 +40,7 @@ export class FormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.route && this.model) {
       this.subscribe = this.route.params.subscribe(param => {
-        this.model.ID = param['id'];
+        this.model.ID = param.id;
       });
     }
 
@@ -83,14 +80,24 @@ export class FormComponent implements OnInit, OnDestroy {
     const button = {
       Icon: 'fa fa-save', Text: this.texts.FormSave || '',
       Enabled: this.isValid && !this.hasProgress, Spinner: this.hasProgress,
-      Action: () => { this.postAction(); }
+      Action: () => {
+        if (this.model.ID) {
+          this.putAction();
+        } else {
+          this.postAction();
+        }
+      }
     };
     this.card.button.Primary.unshift(button);
   }
 
   private noProgress = () => {
-    setTimeout(() => { this.hasProgress = false; this.initButton(); }, 500);
-  };
+    setTimeout(() => {
+      this.hasProgress = false;
+      this.initButton();
+    }, 500);
+  }
+
   private errCall = (error: any) => {
     this.noProgress();
     let notification: any = {};
@@ -105,18 +112,16 @@ export class FormComponent implements OnInit, OnDestroy {
     }
 
     this.notification.push(notification);
-  };
+  }
 
   private getAction() {
     if (this.model && this.model.ID) {
       const source = this.domain + this.providers.String.Replace(this.source
-          + (this.fixed ? '' :
-              ((this.update ? ('/' + this.update) : (this.insert ? ('/' + this.insert) : ''))
-                  + (this.get ? '/' + this.get + '/' + this.model.ID : ''))), '//', '/');
+        + (this.get ? '/' + this.get + '/' + this.model.ID : ''), '//', '/');
       this.hasProgress = true;
       this.initButton();
       this.providers.Http.Get(source, this.errCall).subscribe(response => {
-        for(let prop in response) {
+        for (const prop of response) {
           this.model[prop] = response[prop];
         }
 
@@ -129,29 +134,33 @@ export class FormComponent implements OnInit, OnDestroy {
     }
   }
 
+  private putAction() {
+    if (this.isValid && !this.hasProgress) {
+      const source = this.domain + this.providers.String.Replace(this.source
+        + (this.post ? '/' + this.post + '/' + this.model.ID : ''), '//', '/');
+      this.hasProgress = true;
+      this.initButton();
+      this.providers.Http.Put(source, this.model, this.errCall).subscribe(response => {
+        this.noProgress();
+        if (response.Notification) {
+          this.notification.push(response.Notification);
+        }
+      });
+    }
+  }
+
   private postAction() {
     if (this.isValid && !this.hasProgress) {
       const source = this.domain + this.providers.String.Replace(this.source
-          + (this.fixed ? '' :
-              ((this.update ? ('/' + this.update) : (this.insert ? ('/' + this.insert) : ''))
-                  + (this.post ? '/' + this.post : ''))), '//', '/');
+        + (this.post ? '/' + this.post + '/' + this.model.ID : ''), '//', '/');
       this.hasProgress = true;
       this.initButton();
-      if (this.model.ID) {
-        this.providers.Http.Put(source, this.model, this.errCall).subscribe(response => {
-          this.noProgress();
-          if (response.Notification) {
-            this.notification.push(response.Notification);
-          }
-        });
-      } else {
-        this.providers.Http.Post(source, this.model, this.errCall).subscribe(response => {
-          this.noProgress();
-          if (response.Notification) {
-            this.notification.push(response.Notification);
-          }
-        });
-      }
+      this.providers.Http.Post(source, this.model, this.errCall).subscribe(response => {
+        this.noProgress();
+        if (response.Notification) {
+          this.notification.push(response.Notification);
+        }
+      });
     }
   }
 }
