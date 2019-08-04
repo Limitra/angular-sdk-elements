@@ -137,12 +137,21 @@ export class FormComponent implements OnInit, OnDestroy {
                   + (this.post ? '/' + this.post : ''))), '//', '/');
       this.hasProgress = true;
       this.initButton();
-      this.providers.Http.Post(source, this.model, this.errCall).subscribe(response => {
-        this.noProgress();
-        if (response.Notification) {
-          this.notification.push(response.Notification);
-        }
-      });
+      if (this.model.ID) {
+        this.providers.Http.Put(source, this.model, this.errCall).subscribe(response => {
+          this.noProgress();
+          if (response.Notification) {
+            this.notification.push(response.Notification);
+          }
+        });
+      } else {
+        this.providers.Http.Post(source, this.model, this.errCall).subscribe(response => {
+          this.noProgress();
+          if (response.Notification) {
+            this.notification.push(response.Notification);
+          }
+        });
+      }
     }
   }
 }
