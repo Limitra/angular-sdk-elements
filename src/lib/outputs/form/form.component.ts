@@ -44,6 +44,7 @@ export class FormComponent implements OnInit, OnDestroy {
       });
     }
 
+    // This storage keys is pinned for all elements.
     const api = this.providers.Storage.Get('API_Settings');
     const lang = this.providers.Storage.Get('Localization_Lang');
     this.domain = this.domain || (api ? api.Domain : undefined);
