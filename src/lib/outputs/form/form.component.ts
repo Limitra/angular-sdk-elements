@@ -153,7 +153,7 @@ export class FormComponent implements OnInit, OnDestroy {
   private postAction() {
     if (this.isValid && !this.hasProgress) {
       const source = this.domain + this.providers.String.Replace(this.source
-        + (this.post ? '/' + this.post + '/' + this.model.ID : ''), '//', '/');
+        + (this.post ? '/' + this.post : ''), '//', '/');
       this.hasProgress = true;
       this.initButton();
       this.providers.Http.Post(source, this.model, this.errCall).subscribe(response => {
