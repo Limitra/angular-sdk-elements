@@ -40,13 +40,21 @@ export class InputExtend {
   init(call: () => void = null) {
     if (this.form) {
       this.form.errors = this.form.errors || [];
-      const subs = this.form.modelChange.subscribe(model => {
-        subs.unsubscribe();
-        this.value = model[this.property];
-        this.valueChange.emit(this.value);
+      this.form.modelChange.subscribe(model => {
+        if (this.value !== model[this.property]) {
+          this.value = model[this.property];
+          this.valueChange.emit(this.value);
+        }
         this.input.nativeElement.value = this.formatValue(this.value);
         this.preInit();
         this.validate();
+      });
+
+      this.valueChange.subscribe(value => {
+        if (value !== this.form.model[this.property]) {
+          this.form.model[this.property] = value;
+          this.form.modelChange.emit(this.form.model);
+        }
       });
     }
 
@@ -61,7 +69,9 @@ export class InputExtend {
     if (lang) {
       this.providers.Http.Get('assets/locale/validation/' + lang + '.json').subscribe(response => {
         this.validationMessages = response;
-        if (call) { call(); }
+        if (call) {
+          call();
+        }
         this.validate();
       });
     } else {
@@ -97,7 +107,9 @@ export class InputExtend {
           DecimalSeperator: '.',
           ThousandSeperator: ','
         };
-        if (call) { call(); }
+        if (call) {
+          call();
+        }
         this.validate();
       });
     }
@@ -128,7 +140,7 @@ export class InputExtend {
   }
 
   public formatValue(value: any): string {
-    return this.value;
+    return this.value === undefined ? '' : this.value;
   }
 
   public localizeReplace(message: string): string {
