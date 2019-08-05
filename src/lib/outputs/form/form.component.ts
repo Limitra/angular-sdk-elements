@@ -51,7 +51,7 @@ export class FormComponent implements OnInit, OnDestroy {
     this.texts = {};
 
     if (lang) {
-      this.providers.Http.Get('assets/interface/' + lang + '.json').subscribe(response => {
+      this.providers.Http.Get('assets/locale/interface/' + lang + '.json').subscribe(response => {
         this.texts = response;
         this.init();
       });

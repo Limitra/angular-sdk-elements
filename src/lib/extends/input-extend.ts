@@ -59,7 +59,7 @@ export class InputExtend {
     }
 
     if (lang) {
-      this.providers.Http.Get('assets/validation/' + lang + '.json').subscribe(response => {
+      this.providers.Http.Get('assets/locale/validation/' + lang + '.json').subscribe(response => {
         this.validationMessages = response;
         if (call) { call(); }
         this.validate();

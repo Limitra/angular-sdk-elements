@@ -26,7 +26,7 @@ export class CardComponent implements OnInit {
     this.texts = {};
 
     if (this.lang) {
-      this.providers.Http.Get('assets/interface/' + this.lang + '.json').subscribe(response => {
+      this.providers.Http.Get('assets/locale/interface/' + this.lang + '.json').subscribe(response => {
         this.texts = response;
       });
     } else {
