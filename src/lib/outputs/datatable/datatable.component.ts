@@ -120,6 +120,7 @@ export class DatatableComponent implements OnInit {
 
             this.providers.Http.Delete(source + qs, errCall).subscribe(response => {
               this.settings.HasProcess = false;
+              this.initTable();
               if (response.Notification) {
                 this.notification.push(response.Notification);
               }
