@@ -19,7 +19,7 @@ export class FormComponent implements OnInit, OnDestroy {
   @Input() put: any = 'put';
   @Input() post: any = 'post';
 
-  @Output('') modelChange = new EventEmitter();
+  @Output() modelChange = new EventEmitter();
 
   texts: any;
   hasProgress: boolean;
