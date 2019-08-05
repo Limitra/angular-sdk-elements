@@ -122,7 +122,7 @@ export class FormComponent implements OnInit, OnDestroy {
       this.hasProgress = true;
       this.initButton();
       this.providers.Http.Get(source, this.errCall).subscribe(response => {
-        for (const prop of response) {
+        for (let prop in response) {
           this.model[prop] = response[prop];
         }
 
