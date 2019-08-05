@@ -31,12 +31,12 @@ export class DatatableComponent implements OnInit {
     const lang = this.providers.Storage.Get('Localization_Lang');
 
     if (lang) {
-      this.providers.Http.Get('assets/datatable/' + lang + '.json').subscribe(response => {
+      this.providers.Http.Get('assets/locale/datatable/' + lang + '.json').subscribe(response => {
         this.settings.TextSource = response;
         this.initTexts();
         this.initIntervals();
       });
-      this.providers.Http.Get('assets/interface/' + lang + '.json').subscribe(response => {
+      this.providers.Http.Get('assets/locale/interface/' + lang + '.json').subscribe(response => {
         this.texts = response;
         this.initButtons();
       });
