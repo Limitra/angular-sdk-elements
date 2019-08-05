@@ -42,7 +42,6 @@
     "zone.js": "^0.9.1"
   },
   "main": "karma.conf.js",
-  "typings": "src/public-api.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
