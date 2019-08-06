@@ -1,0 +1,44 @@
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="sidebar-menu" (mousewheel)="setScroll($event)" (wheel)="setScroll($event)">
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" routerLink="/">
+    <div *ngIf="icon" class="sidebar-brand-icon rotate-n-15">
+      <i class="{{icon}}"></i>
+    </div>
+    <div *ngIf="brand" class="sidebar-brand-text mx-3">{{brand}} <sup>{{note}}</sup></div>
+  </a>
+  <ng-container *ngFor="let menu of menus;let i=index;">
+    <ng-container [ngSwitch]="menu.TypeID">
+      <hr *ngSwitchCase="types.Divider" class="sidebar-divider {{i===0?'my-0':''}}">
+      <div *ngSwitchCase="types.Title" class="sidebar-heading">
+        {{menu.Name}}
+      </div>
+      <li class="nav-item {{menu.Route===window.location.pathname?'active':''}}" *ngSwitchCase="types.Link">
+        <a class="nav-link" [routerLink]="menu.Route">
+          <i *ngIf="menu.Icon" class="{{menu.Icon}}"></i>
+          <span>{{menu.Name}}</span></a>
+      </li>
+      <li class="nav-item {{parentIsActive(menu)?'active':''}}" *ngSwitchCase="types.Parent">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" [attr.data-target]="'#parent_'+menu.ID" aria-expanded="true" [attr.aria-controls]="'parent_'+menu.ID">
+          <i *ngIf="menu.Icon" class="{{menu.Icon}}"></i>
+          <span>{{menu.Name}}</span>
+        </a>
+        <div *ngIf="menu.Children&&menu.Children.length>0" [id]="'parent_'+menu.ID" class="collapse" data-parent="#sidebar-menu">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <ng-container *ngFor="let child of menu.Children;let ci=index;">
+              <ng-container [ngSwitch]="child.TypeID">
+                <h6 *ngSwitchCase="types.Title" class="collapse-header">{{child.Name}}</h6>
+                <a *ngSwitchCase="types.Link" class="collapse-item {{child.Route===window.location.pathname?'active':''}}" [routerLink]="child.Route"><i *ngIf="child.Icon" class="{{child.Icon}}"></i> {{child.Name}}</a>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+      </li>
+    </ng-container>
+  </ng-container>
+  <hr class="sidebar-divider d-none d-md-block">
+  <div class="text-center d-none d-md-inline">
+    <button class="rounded-circle border-0 toggle-button" (click)="setToggle()"></button>
+  </div>
+</ul>
+<a class="scroll-to-top rounded" href="#template-origin" (click)="goToTop($event)">
+  <i class="fas fa-angle-up"></i>
+</a>
