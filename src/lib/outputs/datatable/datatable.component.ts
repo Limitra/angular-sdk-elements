@@ -172,6 +172,19 @@ export class DatatableComponent implements OnInit {
             const colObj: any = {Nested: []};
             this.pushColumnLen(column, column.Title.toString().length);
             colObj.Value = this.valOfObj(data, column);
+            colObj.Position = column.Position;
+            if (column.Render) {
+              colObj.Value = column.Render(colObj.Value);
+            }
+            if (column.Badge) {
+              const badge = column.Badge(colObj.Value);
+              colObj.Badge = {
+                Status: badge.Status === 'auto' ? (colObj.Value === true ? 'success'
+                  : (colObj.Value !== false ? 'warning' : 'danger')) : badge.Status,
+                Value: badge.Value,
+                Icon: badge.Icon
+              };
+            }
 
             if (column.Nested) {
               column.Nested.forEach(nest => {
