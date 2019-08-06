@@ -274,7 +274,7 @@ export class InputExtend {
       this.forceValue();
     }
 
-    if ((!value || (mask ? value.length !== mask.length : false)) && this.required) {
+    if ((!value || this.isEmpty() || (mask ? value.length !== mask.length : false)) && this.required) {
       this.addFormError('Required');
     } else {
       this.removeFormError('Required');
@@ -340,5 +340,11 @@ export class InputExtend {
 
   private generateName() {
     this.name = this.providers.String.Generate(11);
+  }
+
+  private isEmpty() {
+    return (this.value
+      || this.value === 0
+      || this.value === false) ? this.value.toString.length === 0 || !this.value.toString.trim() : true;
   }
 }
