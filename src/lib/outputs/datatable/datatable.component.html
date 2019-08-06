@@ -54,8 +54,14 @@
           </ul>
         </div>
       </td>
-      <td *ngFor="let column of data.Columns" title="{{column.Value}}">
-        {{column.Value}}<br>
+      <td *ngFor="let column of data.Columns" class="{{column.Position?'text-'+column.Position:''}}" title="{{column.Badge?column.Badge.Value:column.Value}}">
+        <div *ngIf="!column.Badge">{{column.Value}}<br></div>
+        <div *ngIf="column.Badge">
+          <span class="badge badge-{{column.Badge.Status}}">
+            <i *ngIf="column.Badge.Icon" class="{{column.Badge.Icon}}"></i>
+            {{column.Badge.Value}}
+          </span>
+        </div>
         <small *ngFor="let nest of column.Nested"><strong>{{nest.Title}} :</strong> {{nest.Value}} <br></small>
       </td>
     </tr>
