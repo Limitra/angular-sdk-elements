@@ -345,6 +345,6 @@ export class InputExtend {
   private isEmpty() {
     return (this.value
       || this.value === 0
-      || this.value === false) ? this.value.toString.length === 0 || !this.value.toString.trim() : true;
+      || this.value === false) ? this.value.toString().length === 0 || !this.value.toString().trim() : true;
   }
 }
