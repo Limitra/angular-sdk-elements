@@ -22,8 +22,15 @@ import { PageInfoComponent } from './lib/outputs/page-info/page-info.component';
 import { CardComponent } from './lib/outputs/card/card.component';
 import { FormComponent } from './lib/outputs/form/form.component';
 import { NotificationComponent } from './lib/outputs/notification/notification.component';
+import { SideMenuComponent } from './lib/outputs/side-menu/side-menu.component';
+import { TopBarComponent } from './lib/outputs/top-bar/top-bar.component';
+import { FooterComponent } from './lib/outputs/footer/footer.component';
+import { TemplateComponent } from './lib/outputs/template/template.component';
+import { ContentComponent } from './lib/outputs/content/content.component';
+import { WrapperComponent } from './lib/outputs/wrapper/wrapper.component';
 
 export * from './lib/extends/input-extend';
+export * from './lib/definitions/side-menu-types';
 export * from './lib/inputs/input-text/input-text.component';
 export * from './lib/inputs/input-date/input-date.component';
 export * from './lib/inputs/input-password/input-password.component';
@@ -46,12 +53,12 @@ export * from './lib/outputs/datatable/datatable.component';
     OutsideClickDirective, InputDateComponent, DatatableComponent, InputTextComponent,
     InputPasswordComponent, InputPhoneComponent, InputEmailComponent, SelectClientComponent,
     SelectServerComponent, InputNumberComponent, InputChoiceComponent, InputFileComponent, PageInfoComponent,
-    CardComponent, FormComponent, NotificationComponent],
+    CardComponent, FormComponent, NotificationComponent, SideMenuComponent, TopBarComponent, FooterComponent, TemplateComponent, ContentComponent, WrapperComponent],
   exports: [FormsModule, BrowserModule, RouterModule,
     OutsideClickDirective, InputDateComponent, DatatableComponent, InputTextComponent,
     InputPasswordComponent, InputPhoneComponent, InputEmailComponent, SelectClientComponent,
     SelectServerComponent, InputNumberComponent, InputChoiceComponent, InputFileComponent, PageInfoComponent,
-    CardComponent, FormComponent, NotificationComponent]
+    CardComponent, FormComponent, NotificationComponent, SideMenuComponent, TopBarComponent, FooterComponent, TemplateComponent, ContentComponent, WrapperComponent]
 })
 export class SdkElementsModule {
   static forRoot(): ModuleWithProviders {
