@@ -14,4 +14,11 @@ export class OutsideClickDirective {
       this.clickOutside.emit(null);
     }
   }
+
+  @HostListener('document:focusin', ['$event.target']) onFocusIn(targetElement) {
+    const clickedInside = this.elementRef.nativeElement.contains(targetElement);
+    if (!clickedInside) {
+      this.clickOutside.emit(null);
+    }
+  }
 }
