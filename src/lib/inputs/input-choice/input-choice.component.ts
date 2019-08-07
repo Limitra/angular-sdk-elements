@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, HostListener, Input, OnInit} from '@angular/core';
 import {InputExtend} from '../../extends/input-extend';
 import {SdkProviders} from '@limitra/sdk-core';
 
@@ -88,6 +88,16 @@ export class InputChoiceComponent extends InputExtend implements OnInit {
       this.addFormError('Required');
     } else {
       this.removeFormError('Required');
+    }
+  }
+
+  resetFocus(choice: any) {
+    this.source = this.source.map(cho => {
+      cho.Focus = false;
+      return cho;
+    });
+    if (choice) {
+      choice.Focus = true;
     }
   }
 
