@@ -70,7 +70,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 
   parentIsActive(menu: any): boolean {
     if (menu && menu.Children && menu.Children.length > 0) {
-      return menu.Children.filter(x => x.Route === this.window.location.pathname).length > 0;
+      return menu.Children.filter(x => this.window.location.pathname.includes(x.Route)).length > 0;
     } else {
       return false;
     }
