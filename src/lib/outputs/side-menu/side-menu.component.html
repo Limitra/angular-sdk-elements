@@ -11,7 +11,7 @@
       <div *ngSwitchCase="types.Title" class="sidebar-heading">
         {{menu.Name}}
       </div>
-      <li class="nav-item {{menu.Route===window.location.pathname?'active':''}}" *ngSwitchCase="types.Link">
+      <li class="nav-item {{window.location.pathname.includes(menu.Route)?'active':''}}" *ngSwitchCase="types.Link">
         <a class="nav-link" [routerLink]="menu.Route">
           <i *ngIf="menu.Icon" class="{{menu.Icon}}"></i>
           <span>{{menu.Name}}</span></a>
@@ -26,7 +26,7 @@
             <ng-container *ngFor="let child of menu.Children;let ci=index;">
               <ng-container [ngSwitch]="child.TypeID">
                 <h6 *ngSwitchCase="types.Title" class="collapse-header">{{child.Name}}</h6>
-                <a *ngSwitchCase="types.Link" class="collapse-item {{child.Route===window.location.pathname?'active':''}}" [routerLink]="child.Route"><i *ngIf="child.Icon" class="{{child.Icon}}"></i> {{child.Name}}</a>
+                <a *ngSwitchCase="types.Link" class="collapse-item {{window.location.pathname.includes(child.Route)?'active':''}}" [routerLink]="child.Route"><i *ngIf="child.Icon" class="{{child.Icon}}"></i> {{child.Name}}</a>
               </ng-container>
             </ng-container>
           </div>
