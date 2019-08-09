@@ -2,6 +2,7 @@ import {Component, Input, OnInit, OnDestroy, Output, ViewChild, EventEmitter} fr
 import {CardComponent} from '../card/card.component';
 import {SdkProviders} from '@limitra/sdk-core';
 import {NotificationComponent} from '../notification/notification.component';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'lim-form',
@@ -13,7 +14,6 @@ export class FormComponent implements OnInit, OnDestroy {
   @Input() domain: string;
   @Input() source: string;
   @Input() model: any;
-  @Input() route: any;
 
   @Input() get: any = 'get';
   @Input() put: any = 'put';
@@ -30,7 +30,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
   private subscribe: any;
 
-  constructor(private providers: SdkProviders) {
+  constructor(private route: ActivatedRoute, private providers: SdkProviders) {
   }
 
   ngOnDestroy() {

@@ -26,6 +26,7 @@ label {
 }
 
 .choice-box {
+  line-height: 31px;
   cursor: pointer;
   display: block;
 }
