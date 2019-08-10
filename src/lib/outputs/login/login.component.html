@@ -1,0 +1,29 @@
+<div class="login-wrapper" [style.backgroundImage]="'url('+background+')'">
+  <div class="login-layer">
+    <div class="row">
+      <div class="col-md-4 offset-md-4 login-card">
+        <span class="login-header"><i *ngIf="icon" class="{{icon}} mr-3"></i> {{brand}}</span>
+        <div class="login-body">
+          <lim-form #form [(model)]="model" [source]="source">
+            <lim-input-text label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="45"></lim-input-text>
+            <lim-input-password label="{{textSource.Password}}" property="Icon" [form]="form" required="true" maxlength="45"></lim-input-password>
+            <hr>
+            <div class="row">
+              <div class="col-6">
+                <lim-input-choice summary="{{textSource.KeepSession}}" property="KeepSession" [form]="form"></lim-input-choice>
+              </div>
+              <div class="col-6">
+                <button class="btn btn-outline-dark pull-right">
+                  <i class="fa fa-shield-alt"></i> <span class="d-none d-sm-inline ml-2">{{textSource.LoginAction}}</span>
+                </button>
+              </div>
+            </div>
+            <span class="login-copyright">
+              {{copyright}} <a *ngIf="link" href="{{link}}" target="_blank"> {{author}}</a> {{year}}
+            </span>
+          </lim-form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
