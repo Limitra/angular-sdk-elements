@@ -1,5 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {SdkProviders} from '@limitra/sdk-core';
+import {FormComponent} from "../form/form.component";
 
 @Component({
   selector: 'lim-login',
@@ -17,7 +18,10 @@ export class LoginComponent implements OnInit {
   @Input() link: string;
   @Input() year: number = new Date().getFullYear();
 
+  public state: any;
   public textSource: any = {};
+
+  @ViewChild('form', { static: false }) form: FormComponent;
 
   constructor(private providers: SdkProviders) { }
 
@@ -35,5 +39,9 @@ export class LoginComponent implements OnInit {
         LoginAction: 'Log In'
       };
     }
+  }
+
+  onStateChange(event: any) {
+    this.state = event;
   }
 }
