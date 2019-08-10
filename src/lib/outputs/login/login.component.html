@@ -4,7 +4,7 @@
       <div class="col-md-4 offset-md-4 login-card">
         <span class="login-header"><i *ngIf="icon" class="{{icon}} mr-3"></i> {{brand}}</span>
         <div class="login-body">
-          <lim-form #form [(model)]="model" [source]="source">
+          <lim-form #form [(model)]="model" [source]="source" (stateChange)="onStateChange($event)">
             <lim-input-text label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="45"></lim-input-text>
             <lim-input-password label="{{textSource.Password}}" property="Icon" [form]="form" required="true" maxlength="45"></lim-input-password>
             <hr>
@@ -13,8 +13,8 @@
                 <lim-input-choice summary="{{textSource.KeepSession}}" property="KeepSession" [form]="form"></lim-input-choice>
               </div>
               <div class="col-6">
-                <button class="btn btn-outline-dark pull-right">
-                  <i class="fa fa-shield-alt"></i> <span class="d-none d-sm-inline ml-2">{{textSource.LoginAction}}</span>
+                <button class="btn btn-outline-dark pull-right" [disabled]="state&&state.Enabled===false?true:null" (click)="state?state.Action():''">
+                  <i class="fa fa-{{state&&state.Spinner?'refresh fa-spin':'sign-in-alt'}}"></i> <span class="d-none d-sm-inline ml-2">{{textSource.LoginAction}}</span>
                 </button>
               </div>
             </div>
