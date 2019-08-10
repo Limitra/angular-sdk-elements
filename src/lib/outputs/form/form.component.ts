@@ -2,7 +2,7 @@ import {Component, Input, OnInit, OnDestroy, Output, ViewChild, EventEmitter} fr
 import {CardComponent} from '../card/card.component';
 import {SdkProviders} from '@limitra/sdk-core';
 import {NotificationComponent} from '../notification/notification.component';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'lim-form',
@@ -77,19 +77,21 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   private initButton() {
-    this.card.button.Primary.splice(0, 1);
-    const button = {
-      Icon: 'fa fa-save', Text: this.texts.FormSave || '',
-      Enabled: this.isValid && !this.hasProgress, Spinner: this.hasProgress,
-      Action: () => {
-        if (this.model.ID) {
-          this.putAction();
-        } else {
-          this.postAction();
+    if (this.card) {
+      this.card.button.Primary.splice(0, 1);
+      const button = {
+        Icon: 'fa fa-save', Text: this.texts.FormSave || '',
+        Enabled: this.isValid && !this.hasProgress, Spinner: this.hasProgress,
+        Action: () => {
+          if (this.model.ID) {
+            this.putAction();
+          } else {
+            this.postAction();
+          }
         }
-      }
-    };
-    this.card.button.Primary.unshift(button);
+      };
+      this.card.button.Primary.unshift(button);
+    }
   }
 
   private noProgress = () => {
