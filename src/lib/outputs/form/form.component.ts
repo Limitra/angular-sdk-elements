@@ -20,6 +20,7 @@ export class FormComponent implements OnInit, OnDestroy {
   @Input() post: any = 'post';
 
   @Output() modelChange = new EventEmitter();
+  @Output() stateChange = new EventEmitter();
 
   texts: any;
   hasProgress: boolean;
@@ -77,20 +78,23 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   private initButton() {
-    if (this.card) {
-      this.card.button.Primary.splice(0, 1);
-      const button = {
-        Icon: 'fa fa-save', Text: this.texts.FormSave || '',
-        Enabled: this.isValid && !this.hasProgress, Spinner: this.hasProgress,
-        Action: () => {
-          if (this.model.ID) {
-            this.putAction();
-          } else {
-            this.postAction();
-          }
+    const state: any = {
+      Enabled: this.isValid && !this.hasProgress, Spinner: this.hasProgress,
+      Action: () => {
+        if (this.model.ID) {
+          this.putAction();
+        } else {
+          this.postAction();
         }
-      };
-      this.card.button.Primary.unshift(button);
+      }
+    };
+    if (this.card) {
+      state.Icon = 'fa fa-save';
+      state.Text = this.texts.FormSave || '',
+      this.card.button.Primary.splice(0, 1);
+      this.card.button.Primary.unshift(state);
+    } else {
+      this.stateChange.emit(state);
     }
   }
 
