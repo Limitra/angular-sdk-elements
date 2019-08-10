@@ -9,7 +9,7 @@ export class FooterComponent implements OnInit {
   constructor() { }
 
   @Input() copyright = 'Copyright ©';
-  @Input() text: string;
+  @Input() author: string;
   @Input() link: string;
   @Input() year: number = new Date().getFullYear();
 
