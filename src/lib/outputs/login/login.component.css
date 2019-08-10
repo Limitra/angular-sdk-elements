@@ -1,0 +1,60 @@
+.login-wrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-size: 100% 100%;
+}
+
+.login-layer {
+  width: 100%;
+  height: 100%;
+  background-color: #00000080;
+}
+
+.login-header {
+  color: #fff;
+  display: block;
+  height: 120px;
+  line-height: 120px;
+  background-color: rgba(0, 0, 0, 0.65);
+  margin-top: -20px;
+  margin-left: -20px;
+  margin-right: -20px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 3rem;
+  text-align: center;
+}
+
+.login-card {
+  padding:20px;
+  border: 2px solid rgba(0, 0, 0, 0.73);
+  border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 20px);
+  margin: 0;
+  transform: translate(-50%, -50%);
+  margin-left: 20px !important;
+  margin-right: 20px !important;
+  width: calc(100% - 40px) !important;
+  max-width: 420px;
+  background-color: #ffffffe6;
+}
+
+.login-copyright {
+  border-top: 1px solid #cccccc;
+  padding-top: 15px;
+  margin-top: 15px;
+  display: block;
+  text-align: center;
+  font-size: 0.75rem;
+}
+
+.login-copyright a {
+  color: #212529;
+  font-weight: bold;
+}

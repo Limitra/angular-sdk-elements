@@ -28,6 +28,7 @@ import { FooterComponent } from './lib/outputs/footer/footer.component';
 import { TemplateComponent } from './lib/outputs/template/template.component';
 import { ContentComponent } from './lib/outputs/content/content.component';
 import { WrapperComponent } from './lib/outputs/wrapper/wrapper.component';
+import { LoginComponent } from './lib/outputs/login/login.component';
 
 export * from './lib/extends/input-extend';
 export * from './lib/definitions/side-menu-types';
@@ -53,12 +54,14 @@ export * from './lib/outputs/datatable/datatable.component';
     OutsideClickDirective, InputDateComponent, DatatableComponent, InputTextComponent,
     InputPasswordComponent, InputPhoneComponent, InputEmailComponent, SelectClientComponent,
     SelectServerComponent, InputNumberComponent, InputChoiceComponent, InputFileComponent, PageInfoComponent,
-    CardComponent, FormComponent, NotificationComponent, SideMenuComponent, TopBarComponent, FooterComponent, TemplateComponent, ContentComponent, WrapperComponent],
+    CardComponent, FormComponent, NotificationComponent, SideMenuComponent, TopBarComponent, FooterComponent,
+    TemplateComponent, ContentComponent, WrapperComponent, LoginComponent],
   exports: [FormsModule, BrowserModule, RouterModule,
     OutsideClickDirective, InputDateComponent, DatatableComponent, InputTextComponent,
     InputPasswordComponent, InputPhoneComponent, InputEmailComponent, SelectClientComponent,
     SelectServerComponent, InputNumberComponent, InputChoiceComponent, InputFileComponent, PageInfoComponent,
-    CardComponent, FormComponent, NotificationComponent, SideMenuComponent, TopBarComponent, FooterComponent, TemplateComponent, ContentComponent, WrapperComponent]
+    CardComponent, FormComponent, NotificationComponent, SideMenuComponent, TopBarComponent, FooterComponent,
+    TemplateComponent, ContentComponent, WrapperComponent, LoginComponent]
 })
 export class SdkElementsModule {
   static forRoot(): ModuleWithProviders {
