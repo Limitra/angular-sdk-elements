@@ -11,7 +11,7 @@ export class FooterComponent implements OnInit {
   @Input() copyright = 'Copyright ©';
   @Input() text: string;
   @Input() link: string;
-  @Input() year: number;
+  @Input() year: number = new Date().getFullYear();
 
   ngOnInit() {
   }
