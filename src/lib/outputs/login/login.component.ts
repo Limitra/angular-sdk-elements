@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {SdkProviders} from '@limitra/sdk-core';
-import {FormComponent} from "../form/form.component";
+import {FormComponent} from '../form/form.component';
 
 @Component({
   selector: 'lim-login',
@@ -9,6 +9,7 @@ import {FormComponent} from "../form/form.component";
 })
 export class LoginComponent implements OnInit {
   @Input() model: any = {};
+  @Input() email: boolean;
   @Input() source: string;
   @Input() background: string;
   @Input() icon: string;
