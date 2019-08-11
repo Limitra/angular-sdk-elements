@@ -20,7 +20,7 @@ export class CardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.lang = this.lang || this.providers.Storage.Get('Localization_Lang');
+    this.lang = this.lang || this.providers.Storage.Get('Localization_Settings', 'Language');
     this.button = this.button || {};
 
     this.texts = {};
