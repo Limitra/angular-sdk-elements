@@ -96,7 +96,7 @@ export class FormComponent implements OnInit, OnDestroy {
       this.card.button.Primary.splice(0, 1);
       this.card.button.Primary.unshift(state);
     } else {
-      this.stateChange.emit(state);
+      this.stateChange.emit({ State: state, Response: this.response });
     }
   }
 
