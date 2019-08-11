@@ -21,7 +21,7 @@
           <i *ngIf="menu.Icon" class="{{menu.Icon}}"></i>
           <span>{{menu.Name}}</span>
         </a>
-        <div *ngIf="menu.Children&&menu.Children.length>0" [id]="'parent_'+menu.ID" class="collapse" data-parent="#sidebar-menu">
+        <div *ngIf="menu.Children&&menu.Children.length>0" [id]="'parent_'+menu.ID" class="collapse {{parentIsActive(menu)?'show':''}}" data-parent="#sidebar-menu">
           <div class="bg-white py-2 collapse-inner rounded">
             <ng-container *ngFor="let child of menu.Children;let ci=index;">
               <ng-container [ngSwitch]="child.TypeID">
