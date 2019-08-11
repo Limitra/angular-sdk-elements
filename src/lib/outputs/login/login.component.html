@@ -7,7 +7,7 @@
           <lim-form #form [(model)]="model" [source]="source" (stateChange)="onStateChange($event)">
             <lim-input-email *ngIf="email" label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="100"></lim-input-email>
             <lim-input-text *ngIf="!email" label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="50"></lim-input-text>
-            <lim-input-password label="{{textSource.Password}}" property="Icon" [form]="form" required="true" maxlength="50"></lim-input-password>
+            <lim-input-password label="{{textSource.Password}}" property="Password" [form]="form" required="true" maxlength="50"></lim-input-password>
             <hr>
             <div class="row">
               <div class="col-6">
