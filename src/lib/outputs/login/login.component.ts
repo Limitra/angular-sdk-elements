@@ -43,6 +43,11 @@ export class LoginComponent implements OnInit {
   }
 
   onStateChange(event: any) {
-    this.state = event;
+    if (event) {
+      this.state = event.State;
+      if (event.Response && event.Response.ResponseToken) {
+
+      }
+    }
   }
 }
