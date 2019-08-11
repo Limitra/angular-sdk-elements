@@ -25,7 +25,7 @@ export class NotificationComponent implements OnInit {
   constructor(private providers: SdkProviders) { }
 
   ngOnInit() {
-    const lang = this.providers.Storage.Get('Localization_Lang');
+    const lang = this.providers.Storage.Get('Localization_Settings', 'Language');
 
     if (lang) {
       this.providers.Http.Get('assets/locale/interface/' + lang + '.json').subscribe(response => {

@@ -28,7 +28,7 @@ export class DatatableComponent implements OnInit {
     this.settings.Texts = {};
     this.settings.Filters = this.settings || [];
     this.settings.RowRedirect = this.settings.RowRedirect || this.settings.RowEdit;
-    const lang = this.providers.Storage.Get('Localization_Lang');
+    const lang = this.providers.Storage.Get('Localization_Settings', 'Language');
 
     if (lang) {
       this.providers.Http.Get('assets/locale/datatable/' + lang + '.json').subscribe(response => {

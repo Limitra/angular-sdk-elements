@@ -59,7 +59,7 @@ export class InputExtend {
     }
 
     this.screenSize = this.providers.Screen.GetSize();
-    const lang = this.providers.Storage.Get('Localization_Lang');
+    const lang = this.providers.Storage.Get('Localization_Settings', 'Language');
 
     this.generateName();
     if (this.value && this.input) {
