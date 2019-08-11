@@ -45,8 +45,8 @@ export class LoginComponent implements OnInit {
   onStateChange(event: any) {
     if (event) {
       this.state = event.State;
-      if (event.Response && event.Response.ResponseToken) {
-        this.providers.Storage.Set('Authentication_Settings', event.Response.ResponseToken, 'Token');
+      if (event.Response && event.Response.Text) {
+        this.providers.Storage.Set('Authentication_Settings', event.Response.Text, 'Token');
       }
     }
   }
