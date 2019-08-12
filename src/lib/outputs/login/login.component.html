@@ -15,7 +15,7 @@
               </div>
               <div class="col-6">
                 <button class="btn btn-outline-dark pull-right" [disabled]="state&&state.Enabled===false?true:null" (click)="state?state.Action():''">
-                  <i class="fa fa-{{state&&state.Spinner?'refresh fa-spin':'sign-in-alt'}}"></i> <span class="d-none d-sm-inline ml-2">{{textSource.LoginAction}}</span>
+                  <i class="fa fa-{{state&&state.Spinner?'refresh fa-spin':'sign-in-alt'}}"></i> <span class="d-none d-sm-inline ml-2">{{textSource.LogIn}}</span>
                 </button>
               </div>
             </div>

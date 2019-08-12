@@ -1,3 +1,12 @@
+.topbar a.menu-item {
+  color: inherit !important;
+  cursor: pointer;
+}
+
+.topbar a.menu-item:active {
+  color: #fff !important;
+}
+
 .topbar .nav-item.dropdown .dropdown-toggle::after {
   width: 1rem;
   text-align: center;

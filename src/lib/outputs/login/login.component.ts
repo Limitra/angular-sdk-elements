@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
         UserName: 'Username',
         Password: 'Password',
         KeepSession: 'Keep it',
-        LoginAction: 'Log In'
+        LogIn: 'Log In'
       };
     }
   }
@@ -48,17 +48,16 @@ export class LoginComponent implements OnInit {
       this.state = event.State;
       if (event.Response && event.Response.Status === 200 && event.Response.Text) {
         const expire = new Date().getTime() + (((jwt ? jwt.TimeOut : undefined) || 15) * 60 * 1000);
-        this.providers.Storage.Set('Authentication_Settings', {
-          Token: event.Response.Text,
-          TimeOut: jwt ? jwt.TimeOut : undefined,
-          KeepSession: this.model.KeepSession,
-          Expire: expire
-        });
+        this.providers.Storage.Set('Authentication_Settings', event.Response.Text, 'Token');
+        this.providers.Storage.Set('Authentication_Settings', jwt ? jwt.TimeOut : undefined, 'TimeOut');
+        this.providers.Storage.Set('Authentication_Settings', this.model.KeepSession, 'KeepSession');
+        this.providers.Storage.Set('Authentication_Settings', expire, 'Expire');
+
         this.state.Enabled = false;
         this.state.Spinner = true;
         setTimeout(() => {
           this.providers.Router.Navigate('/');
-        }, 2000);
+        }, (jwt ? jwt.Delay : undefined) || 2000);
       }
     }
   }
