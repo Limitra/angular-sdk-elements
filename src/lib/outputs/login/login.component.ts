@@ -43,10 +43,22 @@ export class LoginComponent implements OnInit {
   }
 
   onStateChange(event: any) {
+    const jwt = this.providers.Storage.Get('Authentication_Settings');
     if (event) {
       this.state = event.State;
-      if (event.Response && event.Response.Text) {
-        this.providers.Storage.Set('Authentication_Settings', event.Response.Text, 'Token');
+      if (event.Response && event.Response.Status === 200 && event.Response.Text) {
+        const expire = new Date().getTime() + (((jwt ? jwt.TimeOut : undefined) || 15) * 60 * 1000);
+        this.providers.Storage.Set('Authentication_Settings', {
+          Token: event.Response.Text,
+          TimeOut: jwt ? jwt.TimeOut : undefined,
+          KeepSession: this.model.KeepSession,
+          Expire: expire
+        });
+        this.state.Enabled = false;
+        this.state.Spinner = true;
+        setTimeout(() => {
+          this.providers.Router.Navigate('/');
+        }, 2000);
       }
     }
   }
