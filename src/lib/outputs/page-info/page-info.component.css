@@ -1,3 +1,8 @@
+.route-disabled {
+  text-decoration: none;
+  cursor: text;
+}
+
 div.direction-wrapper {
     padding-left: 1.5rem;
 }
