@@ -34,18 +34,25 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   ngAfterViewInit() {
     this.api = this.providers.Storage.Get('API_Settings');
     this.init();
-    this.initSource(true, false);
+    this.initSource(true);
   }
 
   preInit() {
-    this.initSource(true, true);
+    if (this.multiple) {
+      this.selecteds = this.filteredSource.filter(x => this.value
+        ? (this.value.filter(y => y == x[this.valuekey]).length > 0)
+        : false).map(x => x[this.valuekey]);
+    } else {
+      this.selected = this.filteredSource.filter(x => this.value ? this.value == x[this.valuekey] : false)[0];
+    }
   }
 
-  initSource(init: boolean, reset: boolean) {
+  initSource(reset: boolean) {
+    this.page = reset ? 1 : this.page;
     const params: any = { page: this.page };
     if (this.length) { params.length = this.length; }
     if (this.searchText) { params.search = this.searchText.toLowerCase(); }
-    if (this.value) { params.value = this.value; }
+    if (this.value) { params.values = this.value; }
     const domain = this.domain || (this.api ? this.api.Domain : '');
     const source = domain + this.source + '?' + this.providers.Url.Serialize(params);
     this.providers.Http.Get(source).subscribe(response => {
@@ -54,22 +61,12 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
       } else {
         this.filteredSource = this.filteredSource.concat(response.Data.Source);
       }
-      if (init) {
-        if (this.multiple) {
-          this.selecteds = this.filteredSource.filter(x => this.value
-            ? (this.value.filter(y => y == x[this.valuekey]).length > 0)
-            : false).map(x => x[this.valuekey]);
-        } else {
-          this.selected = this.filteredSource.filter(x => this.value ? this.value == x[this.valuekey] : false)[0];
-        }
-      }
+      this.preInit();
     }, () => {
-      if (init) {
-        if (this.multiple) {
-          this.selecteds = this.value;
-        } else {
-          this.selected = this.value;
-        }
+      if (this.multiple) {
+        this.selecteds = this.value;
+      } else {
+        this.selected = this.value;
       }
     });
   }
@@ -77,7 +74,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   scroll(event) {
     if (event.target.scrollTop === event.target.scrollTopMax) {
       this.page++;
-      this.initSource(false, false);
+      this.initSource(false);
     }
   }
 
@@ -86,7 +83,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
       if (this.multiple) {
         const values: Array<any> = this.input.nativeElement.value.split(',') || [];
         this.value = values;
-      } else  {
+      } else {
         this.value = this.input.nativeElement.value;
       }
       this.valueChange.emit(this.value);
@@ -123,7 +120,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   searchValue() {
     if (this.source) {
       this.page = 1;
-      this.initSource(false, true);
+      this.initSource(true);
     }
   }
 
