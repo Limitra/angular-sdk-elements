@@ -47,7 +47,7 @@ export class InputExtend {
         }
         this.input.nativeElement.value = this.formatValue(this.value);
         this.preInit();
-        this.validate();
+        this.validate(false);
       });
 
       this.valueChange.subscribe(value => {
@@ -254,7 +254,7 @@ export class InputExtend {
     this.validate();
   }
 
-  public validate() {
+  public validate(forceValue: boolean = true) {
     let value = this.input.nativeElement.value || '';
     let mask = this.mask;
     if (this.mask) {
@@ -271,7 +271,9 @@ export class InputExtend {
         this.valueChange.emit(this.value);
       }
     } else {
-      this.forceValue();
+      if (forceValue) {
+        this.forceValue();
+      }
     }
 
     if ((!value || this.isEmpty() || (mask ? value.length !== mask.length : false)) && this.required) {
