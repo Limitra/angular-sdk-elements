@@ -84,7 +84,8 @@ export class PageInfoComponent implements OnInit {
         if (currentId) {
           const page: any = {
             id: currentId, name: current.data ? current.data.name : '',
-            title: current.data && current.data.title ? current.data.title : parentTitle, path: current.path, parentId: ownerId
+            title: current.data && current.data.title ? current.data.title : parentTitle, path: current.path, parentId: ownerId,
+            disabled: current.data ? current.data.disabled : false
           };
           this.routes.push(page);
           page.path = this.parentPathMap(currentId);
