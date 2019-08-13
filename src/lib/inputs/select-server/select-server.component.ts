@@ -38,12 +38,12 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   }
 
   preInit() {
+    const value = this.multiple ? (this.value || []) : this.value;
+
     if (this.multiple) {
-      this.selecteds = this.filteredSource.filter(x => this.value
-        ? (this.value.filter(y => y == x[this.valuekey]).length > 0)
-        : false).map(x => x[this.valuekey]);
+      this.selecteds = value;
     } else {
-      this.selected = this.filteredSource.filter(x => this.value ? this.value == x[this.valuekey] : false)[0];
+      this.selected = value;
     }
   }
 
@@ -128,7 +128,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     this.search.nativeElement.focus();
     if (option && option[this.valuekey]) {
       if (this.multiple) {
-        const selected = this.selecteds.filter(x => x === option[this.valuekey])[0];
+        const selected = this.selecteds.filter(x => x == option[this.valuekey])[0];
         if (!selected) {
           this.selecteds.push(option[this.valuekey]);
         } else {
