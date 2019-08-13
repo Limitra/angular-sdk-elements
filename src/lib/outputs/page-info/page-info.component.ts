@@ -72,7 +72,7 @@ export class PageInfoComponent implements OnInit {
     const partials = url.split('/');
     partials.push('');
     partials.forEach(partial => {
-      let current = routes.filter(x => x.path === partial)[0];
+      let current = routes.filter(x => x.path === partial && (x.data && x.data.skip ? false : true))[0];
       const parameters = this.pattern ? this.pattern.split(':') : [];
       parameters.forEach(parameter => {
         if (!current) {
