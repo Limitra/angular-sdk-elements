@@ -392,6 +392,7 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
 
   public downloadFiles() {
     this.files.forEach(file => {
+      clearInterval(file.Interval);
       const index = this.files.indexOf(file);
       if (file.Path) {
         file.Name = file.Path.substring(file.Path.lastIndexOf('/') + 1);
