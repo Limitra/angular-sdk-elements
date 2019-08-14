@@ -146,7 +146,7 @@ export class InputFileComponent extends InputExtend implements OnInit {
 
   validate() {
     this.input.nativeElement.value = 'validate';
-    super.validate();
+    super.validate(false);
     this.input.nativeElement.value = '';
     this.initSortable();
   }
