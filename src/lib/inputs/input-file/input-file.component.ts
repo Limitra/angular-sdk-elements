@@ -118,6 +118,10 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
   }
 
   preInit() {
+    if (this.files && Array.isArray(this.files)) {
+      this.files.forEach(file => { clearInterval(file.Interval); });
+    }
+
     this.files = Array.isArray(this.value) ? this.value.map(x => {
       return { Path: x };
     }) : (this.value ? [{ Path: this.value }] : [{}]);
