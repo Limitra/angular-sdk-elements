@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {InputExtend} from '../../extends/input-extend';
 import {SdkProviders} from '@limitra/sdk-core';
 
@@ -7,7 +7,7 @@ import {SdkProviders} from '@limitra/sdk-core';
   templateUrl: './input-file.component.html',
   styleUrls: ['./input-file.component.css']
 })
-export class InputFileComponent extends InputExtend implements OnInit {
+export class InputFileComponent extends InputExtend implements OnInit, OnDestroy {
   constructor(public providers: SdkProviders) { super(providers); }
 
   @Input() domain: string;
@@ -131,6 +131,14 @@ export class InputFileComponent extends InputExtend implements OnInit {
         }
       });
     });
+  }
+
+  ngOnDestroy() {
+    if (this.files && this.files.length > 0) {
+      this.files.forEach(file => {
+        clearInterval(file.Interval);
+      });
+    }
   }
 
   preInit() {
@@ -399,14 +407,6 @@ export class InputFileComponent extends InputExtend implements OnInit {
     }
   }
 
-  private loadFile(file: any, call: (result) => void) {
-    const reader = new FileReader();
-    reader.onload = (event: any) => {
-      call(event.target.result);
-    };
-    reader.readAsDataURL(file);
-  }
-
   public uploadFiles() {
     if (!this.progress && this.canUpload) {
       const files = this.files.filter(x => !x.Uploaded && x.File);
@@ -421,6 +421,14 @@ export class InputFileComponent extends InputExtend implements OnInit {
       };
       recursive();
     }
+  }
+
+  private loadFile(file: any, call: (result) => void) {
+    const reader = new FileReader();
+    reader.onload = (event: any) => {
+      call(event.target.result);
+    };
+    reader.readAsDataURL(file);
   }
 
   private uploadFile(file: any, load: () => void) {
