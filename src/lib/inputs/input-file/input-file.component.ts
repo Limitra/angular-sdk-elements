@@ -106,30 +106,6 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
       this.audioMaxLength = this.audioMaxLength || this.fileProvider.Settings.MaxLength.Audio;
       this.videoMaxLength = this.videoMaxLength || this.fileProvider.Settings.MaxLength.Video;
       this.documentMaxLength = this.documentMaxLength || this.fileProvider.Settings.MaxLength.Document;
-
-      this.files.forEach(file => {
-        const index = this.files.indexOf(file);
-        if (file.Path) {
-          file.Name = file.Path.substring(file.Path.lastIndexOf('/') + 1);
-          file.Text = file.Name;
-          this.downloadFile(file.Path, false, (xhr) => {
-            file.Uploaded = true;
-            file.Valid = true;
-            if (xhr.status === 200) {
-              file.Size = xhr.response.size;
-              file.Type = xhr.response.type;
-              file.CanPreview = this.canPreview(xhr.response.type);
-              file.Text = file.Text + ' (' + this.formatBytes(file.Size) + ')' + ' ' + file.Type;
-            } else {
-              file.Text = file.Text + ' [E: ' + xhr.status + ']';
-            }
-
-            if (index === this.files.length - 1) {
-              this.validate();
-            }
-          });
-        }
-      });
     });
   }
 
@@ -145,10 +121,17 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
     this.files = Array.isArray(this.value) ? this.value.map(x => {
       return { Path: x };
     }) : (this.value ? [{ Path: this.value }] : [{}]);
+
+    if (Array.isArray(this.files) && this.files.length === 0) {
+      this.files = [{}];
+    }
+
+    this.downloadFiles();
   }
 
   forceValue() {
-    this.value = this.files.filter(x => x.Uploaded && x.Path).map(x => x.Path);
+    const values = this.files.filter(x => x.Uploaded && x.Path).map(x => x.Path);
+    this.value = this.multiple ? values : values[0];
     this.valueChange.emit(this.value);
   }
 
@@ -407,6 +390,32 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
     }
   }
 
+  public downloadFiles() {
+    this.files.forEach(file => {
+      const index = this.files.indexOf(file);
+      if (file.Path) {
+        file.Name = file.Path.substring(file.Path.lastIndexOf('/') + 1);
+        file.Text = file.Name;
+        this.downloadFile(file.Path, false, (xhr) => {
+          file.Uploaded = true;
+          file.Valid = true;
+          if (xhr.status === 200) {
+            file.Size = xhr.response.size;
+            file.Type = xhr.response.type;
+            file.CanPreview = this.canPreview(xhr.response.type);
+            file.Text = file.Text + ' (' + this.formatBytes(file.Size) + ')' + ' ' + file.Type;
+          } else {
+            file.Text = file.Text + ' [E: ' + xhr.status + ']';
+          }
+
+          if (index === this.files.length - 1) {
+            this.validate();
+          }
+        });
+      }
+    });
+  }
+
   public uploadFiles() {
     if (!this.progress && this.canUpload) {
       const files = this.files.filter(x => !x.Uploaded && x.File);
@@ -416,6 +425,8 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
           counter++;
           if (counter < files.length) {
             recursive();
+          } else {
+            this.forceValue();
           }
         });
       };
