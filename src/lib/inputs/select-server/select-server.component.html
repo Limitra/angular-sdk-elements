@@ -14,7 +14,7 @@
 
         <div *ngIf="filteredSource&&filteredSource.length>0" class="select-options" (scroll)="scroll($event)">
           <div *ngFor="let option of filteredSource" class="select-option" (mousedown)="focus = true;checkOption(option)">
-            <i class="fa fa-{{((multiple?(selecteds.includes(option[valuekey])||selecteds.includes(option[valuekey].toString())):(selected?option[valuekey]==selected[valuekey]:false))?'check-':'') + (multiple?'square':'circle')}}"></i>
+            <i class="fa fa-{{((multiple?(selecteds.includes(option[valuekey])||selecteds.includes(option[valuekey].toString())):(selected?option[valuekey]==selected:false))?'check-':'') + (multiple?'square':'circle')}}"></i>
             <span class="text-nowrap"> {{option[textkey]}}</span>
           </div>
         </div>
