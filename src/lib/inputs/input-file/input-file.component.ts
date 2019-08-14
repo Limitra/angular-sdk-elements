@@ -492,9 +492,17 @@ export class InputFileComponent extends InputExtend implements OnInit {
   }
 
   private setAuthHeader(xhr: XMLHttpRequest) {
-    const header = this.providers.Storage.Get('Authorization_Header');
-    if (header) {
-      xhr.setRequestHeader('Authorization', header);
+    const jwt = this.providers.Http.Initialize();
+    const localization = this.providers.Storage.Get('Localization_Settings') || {};
+
+    if (jwt && jwt.Token) {
+      xhr.setRequestHeader('Authorization', jwt.Token);
+    }
+    if (localization.Language) {
+      xhr.setRequestHeader('Language', localization.Language);
+    }
+    if (localization.TimeZone || localization.TimeZone === 0) {
+      xhr.setRequestHeader('TimeZone', localization.TimeZone.toString());
     }
   }
 
