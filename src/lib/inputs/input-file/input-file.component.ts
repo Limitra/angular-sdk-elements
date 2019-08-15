@@ -64,7 +64,7 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
   @ViewChild('documentPreview', { static: false }) documentPreview: ElementRef;
 
   ngOnInit() {
-    this.preInit();
+    this.preInit(true);
     const apiSettings = this.providers.Storage.Get('API_Settings') || {};
     const fileProvider = apiSettings.File ? apiSettings.File : {};
     this.fileProvider = {
@@ -117,20 +117,24 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
     }
   }
 
-  preInit() {
-    if (this.files && Array.isArray(this.files)) {
-      this.files.forEach(file => { clearInterval(file.Interval); });
+  preInit(changed: boolean) {
+    if (changed) {
+      if (this.files && Array.isArray(this.files)) {
+        this.files.forEach(file => {
+          clearInterval(file.Interval);
+        });
+      }
+
+      this.files = Array.isArray(this.value) ? this.value.map(x => {
+        return {Path: x};
+      }) : (this.value ? [{Path: this.value}] : [{}]);
+
+      if (Array.isArray(this.files) && this.files.length === 0) {
+        this.files = [{}];
+      }
+
+      this.downloadFiles();
     }
-
-    this.files = Array.isArray(this.value) ? this.value.map(x => {
-      return { Path: x };
-    }) : (this.value ? [{ Path: this.value }] : [{}]);
-
-    if (Array.isArray(this.files) && this.files.length === 0) {
-      this.files = [{}];
-    }
-
-    this.downloadFiles();
   }
 
   forceValue() {

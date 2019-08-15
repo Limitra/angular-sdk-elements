@@ -33,7 +33,7 @@ export class InputExtend {
   public screenSize: number;
   public screenSizes = ScreenSize;
 
-  preInit() {
+  preInit(changed: boolean = false) {
 
   }
 
@@ -41,12 +41,14 @@ export class InputExtend {
     if (this.form) {
       this.form.errors = this.form.errors || [];
       this.form.modelChange.subscribe(model => {
+        let changed = false;
         if (this.value !== model[this.property]) {
           this.value = model[this.property];
           this.valueChange.emit(this.value);
+          changed = true;
         }
         this.input.nativeElement.value = this.formatValue(this.value);
-        this.preInit();
+        this.preInit(changed);
         this.validate(false);
       });
 
