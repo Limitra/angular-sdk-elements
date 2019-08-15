@@ -37,8 +37,8 @@ export class TopBarComponent implements OnInit {
 
     if (this.profile && api && api.Domain) {
       this.providers.Http.Get(api.Domain + '/' + this.profile).subscribe(response => {
-        this.myProfile.FullName = response.FullName;
-        this.myProfile.Image = response.Image;
+        this.myProfile.DisplayName = response.DisplayName;
+        this.myProfile.Picture = response.Picture;
       });
     }
   }
