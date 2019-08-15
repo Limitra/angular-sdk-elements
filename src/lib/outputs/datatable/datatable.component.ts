@@ -201,6 +201,14 @@ export class DatatableComponent implements OnInit {
                 Icon: badge.Icon
               };
             }
+            if (column.Image) {
+              colObj.Image = {
+                Source: this.settings.Params.Domain + '/' + (this.api && this.api.File ? this.api.File.Download : '') + '/' + nowValue,
+                Width: column.Image.Width,
+                Height: column.Image.Height,
+                Circle: column.Image.Circle
+              };
+            }
 
             if (column.Nested) {
               column.Nested.forEach(nest => {
@@ -422,6 +430,7 @@ export class DatatableComponent implements OnInit {
   }
 
   private valOfObj(obj: any, column: any, effect: boolean = true): any {
+    const colLen = { Calculate: column.Image ? false : true, Char: column.Image ? (column.Image.Char || column.Image.Width / 3) : 0 };
     const field = column.Field || '';
     if (field.includes('.')) {
       const partials = field.split('.');
@@ -434,7 +443,11 @@ export class DatatableComponent implements OnInit {
       obj = obj[field];
     }
     if (effect) {
-      this.pushColumnLen(column, (obj ? obj.toString().length : 0));
+      if (colLen.Calculate) {
+        this.pushColumnLen(column, (obj ? obj.toString().length : 0));
+      } else {
+        this.pushColumnLen(column, colLen.Char);
+      }
     }
     return obj;
   }

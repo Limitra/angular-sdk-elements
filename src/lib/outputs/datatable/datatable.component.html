@@ -55,13 +55,14 @@
         </div>
       </td>
       <td *ngFor="let column of data.Columns" class="{{column.Position?'text-'+column.Position:''}}" title="{{column.Badge?column.Badge.Value:column.Value}}">
-        <div *ngIf="!column.Badge">{{column.Value}}<br></div>
+        <div *ngIf="!column.Badge&&!column.Image">{{column.Value}}<br></div>
         <div *ngIf="column.Badge">
           <span class="badge badge-{{column.Badge.Status}}">
             <i *ngIf="column.Badge.Icon" class="{{column.Badge.Icon}}"></i>
             {{column.Badge.Value}}
           </span>
         </div>
+        <img *ngIf="column.Image&&column.Image.Source" class="{{column.Image.Circle?'rounded-circle':'rounded'}}" [src]="column.Image.Source" [style.width.px]="column.Image.Width" [style.height.px]="column.Image.Height">
         <small *ngFor="let nest of column.Nested"><strong>{{nest.Title}} :</strong> {{nest.Value}} <br></small>
       </td>
     </tr>
