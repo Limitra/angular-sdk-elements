@@ -1,3 +1,10 @@
+.topbar .display-name {
+  max-width: 120px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .topbar a.menu-item {
   color: inherit !important;
   cursor: pointer;

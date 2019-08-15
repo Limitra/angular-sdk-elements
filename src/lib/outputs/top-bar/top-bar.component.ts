@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { SdkProviders } from '@limitra/sdk-core';
 
 declare const $: any;
@@ -8,7 +8,7 @@ declare const $: any;
   templateUrl: './top-bar.component.html',
   styleUrls: ['./top-bar.component.css']
 })
-export class TopBarComponent implements OnInit {
+export class TopBarComponent implements OnInit, OnDestroy {
   constructor(private providers: SdkProviders) { }
 
   @Input() profile: string;
@@ -17,6 +17,9 @@ export class TopBarComponent implements OnInit {
   texts: any = {};
 
   document: any = {};
+
+  private interval: any;
+
   ngOnInit() {
     this.document = document;
     this.myProfile.Path = this.providers.Storage.Get('Authentication_Settings', 'Profile');
@@ -36,11 +39,21 @@ export class TopBarComponent implements OnInit {
     }
 
     if (this.profile && api && api.Domain) {
-      this.providers.Http.Get(api.Domain + '/' + this.profile).subscribe(response => {
-        this.myProfile.DisplayName = response.DisplayName;
-        this.myProfile.Picture = response.Picture;
-      });
+      const loop = () => {
+        this.providers.Http.Get(api.Domain + '/' + this.profile).subscribe(response => {
+          this.myProfile.DisplayName = response.DisplayName;
+          if (api.File && api.File.Download) {
+            this.myProfile.Picture = api.Domain + '/' + api.File.Download + response.Picture;
+          }
+        });
+      };
+      setInterval(() => { loop(); }, 10000);
+      loop();
     }
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.interval);
   }
 
   logOut() {
