@@ -43,7 +43,9 @@ export class FormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.route && this.model) {
       this.subscribe = this.route.params.subscribe(param => {
-        this.model.ID = param.id;
+        if (param.id) {
+          this.model.ID = param.id;
+        }
       });
     }
 
@@ -83,7 +85,7 @@ export class FormComponent implements OnInit, OnDestroy {
     const state: any = {
       Enabled: this.isValid && !this.hasProgress, Spinner: this.hasProgress,
       Action: () => {
-        if (this.model.ID) {
+        if (this.model.ID || this.model.ID === 0) {
           this.putAction();
         } else {
           this.postAction();
@@ -124,7 +126,7 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   private getAction() {
-    if (this.model && this.model.ID) {
+    if (this.model && (this.model.ID || this.model.ID === 0)) {
       const source = this.domain + this.providers.String.Replace(this.source
         + (this.get ? '/' + this.get + '/' + this.model.ID : ''), '//', '/');
       this.hasProgress = true;
