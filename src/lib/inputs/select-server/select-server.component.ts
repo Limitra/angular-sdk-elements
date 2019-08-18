@@ -22,6 +22,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   @Input() valuekey: string = 'Value';
 
   @ViewChild('search', {static: false}) search: ElementRef;
+  @ViewChild('show', {static: false}) show: ElementRef;
 
   private api: any;
   private page = 1;
@@ -142,6 +143,10 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
 
       this.validate();
     }
+  }
+
+  focusInput() {
+    this.show.nativeElement.focus();
   }
 
   localizeReplace(message: string): string {
