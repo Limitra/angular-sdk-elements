@@ -17,7 +17,7 @@
           <span>{{menu.Name}}</span></a>
       </li>
       <li class="nav-item {{parentIsActive(menu)?'active':''}}" *ngSwitchCase="types.Parent">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" [attr.data-target]="'#parent_'+menu.ID" aria-expanded="true" [attr.aria-controls]="'parent_'+menu.ID">
+        <a class="nav-link {{parentIsActive(menu)?'':'collapsed'}}" href="#" data-toggle="collapse" [attr.data-target]="'#parent_'+menu.ID" aria-expanded="true" [attr.aria-controls]="'parent_'+menu.ID">
           <i *ngIf="menu.Icon" class="{{menu.Icon}}"></i>
           <span>{{menu.Name}}</span>
         </a>
