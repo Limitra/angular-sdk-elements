@@ -54,7 +54,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     if (this.searchText) { params.search = this.searchText.toLowerCase(); }
     if (this.value) { params.values = this.value; }
     const domain = this.domain || (this.api ? this.api.Domain : '');
-    const source = domain + this.source + '?' + this.providers.Url.Serialize(params);
+    const source = domain + this.source + (this.source.includes('?') ? '&' : '?') + this.providers.Url.Serialize(params);
     this.providers.Http.Get(source).subscribe(response => {
       if (reset) {
         this.filteredSource = response.Data.Source;
