@@ -20,6 +20,7 @@ export class FormComponent implements OnInit, OnDestroy {
   @Input() post: any = 'post';
 
   @Output() modelChange = new EventEmitter();
+  @Output() modelLoad = new EventEmitter();
   @Output() stateChange = new EventEmitter();
 
   public response: any;
@@ -138,6 +139,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
         this.noProgress();
         this.modelChange.emit(this.model);
+        this.modelLoad.emit(this.model);
         if (response.Notification) {
           this.notification.push(response.Notification);
         }
