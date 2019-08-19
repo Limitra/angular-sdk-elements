@@ -41,21 +41,25 @@ export class InputExtend {
     if (this.form) {
       this.form.errors = this.form.errors || [];
       this.form.modelChange.subscribe(model => {
-        let changed = false;
-        if (this.value !== model[this.property]) {
-          this.value = model[this.property];
-          this.valueChange.emit(this.value);
-          changed = true;
+        if (this.property) {
+          let changed = false;
+          if (this.value !== model[this.property]) {
+            this.value = model[this.property];
+            this.valueChange.emit(this.value);
+            changed = true;
+          }
+          this.input.nativeElement.value = this.formatValue(this.value);
+          this.preInit(changed);
+          this.validate(false);
         }
-        this.input.nativeElement.value = this.formatValue(this.value);
-        this.preInit(changed);
-        this.validate(false);
       });
 
       this.valueChange.subscribe(value => {
-        if (value !== this.form.model[this.property]) {
-          this.form.model[this.property] = value;
-          this.form.modelChange.emit(this.form.model);
+        if (this.property) {
+          if (value !== this.form.model[this.property]) {
+            this.form.model[this.property] = value;
+            this.form.modelChange.emit(this.form.model);
+          }
         }
       });
     }
