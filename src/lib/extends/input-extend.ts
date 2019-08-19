@@ -296,6 +296,10 @@ export class InputExtend {
       this.removeFormError(null, true);
     }
 
+    this.checkState(value);
+  }
+
+  public checkState(value: any = null) {
     if (this.form) {
       if (!value) {
         this.form.errors.filter(x => x.Name === this.name && x.Solved).forEach(error => {
