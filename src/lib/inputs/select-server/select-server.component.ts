@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {InputExtend} from '../../extends/input-extend';
 import {SdkProviders} from '@limitra/sdk-core';
 
@@ -22,7 +22,6 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   @Input() valuekey: string = 'Value';
 
   @ViewChild('search', {static: false}) search: ElementRef;
-  @ViewChild('show', {static: false}) show: ElementRef;
 
   private api: any;
   private page = 1;
@@ -143,10 +142,6 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
 
       this.validate();
     }
-  }
-
-  focusInput() {
-    this.show.nativeElement.focus();
   }
 
   localizeReplace(message: string): string {
