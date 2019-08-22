@@ -4,5 +4,5 @@
   "lib": {
     "entryFile": "src/sdk-elements.module.ts"
   },
-  "whitelistedNonPeerDependencies": ["limitra", "angular", "bootstrap", "font-awesome", "jquery", "popper.js", "rxjs", "zone.js"]
+  "whitelistedNonPeerDependencies": ["limitra", "angular", "bootstrap", "font-awesome", "jquery", "popper.js", "rxjs", "zone.js", "ckeditor"]
 }

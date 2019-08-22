@@ -32,6 +32,8 @@
     "@angular/forms": "^8.2.0",
     "@angular/platform-browser": "^8.2.0",
     "@limitra/sdk-core": "file:../../dist/sdk-core",
+    "@ckeditor/ckeditor5-angular": "^1.1.0",
+    "@ckeditor/ckeditor5-build-decoupled-document": "^12.3.1",
     "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
     "jquery": "^3.4.1",

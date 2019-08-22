@@ -18,6 +18,7 @@ import { InputFileComponent } from './lib/inputs/input-file/input-file.component
 import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
+import {CKEditorModule} from '@ckeditor/ckeditor5-angular';
 import { PageInfoComponent } from './lib/outputs/page-info/page-info.component';
 import { CardComponent } from './lib/outputs/card/card.component';
 import { FormComponent } from './lib/outputs/form/form.component';
@@ -29,6 +30,7 @@ import { TemplateComponent } from './lib/outputs/template/template.component';
 import { ContentComponent } from './lib/outputs/content/content.component';
 import { WrapperComponent } from './lib/outputs/wrapper/wrapper.component';
 import { LoginComponent } from './lib/outputs/login/login.component';
+import { InputEditorComponent } from './lib/inputs/input-editor/input-editor.component';
 
 export * from './lib/extends/input-extend';
 export * from './lib/definitions/side-menu-types';
@@ -47,7 +49,8 @@ export * from './lib/outputs/datatable/datatable.component';
   imports: [
     FormsModule,
     BrowserModule,
-    RouterModule
+    RouterModule,
+    CKEditorModule
   ],
   providers: [],
   declarations: [
@@ -55,13 +58,13 @@ export * from './lib/outputs/datatable/datatable.component';
     InputPasswordComponent, InputPhoneComponent, InputEmailComponent, SelectClientComponent,
     SelectServerComponent, InputNumberComponent, InputChoiceComponent, InputFileComponent, PageInfoComponent,
     CardComponent, FormComponent, NotificationComponent, SideMenuComponent, TopBarComponent, FooterComponent,
-    TemplateComponent, ContentComponent, WrapperComponent, LoginComponent],
-  exports: [FormsModule, BrowserModule, RouterModule,
+    TemplateComponent, ContentComponent, WrapperComponent, LoginComponent, InputEditorComponent],
+  exports: [FormsModule, BrowserModule, RouterModule, CKEditorModule,
     OutsideClickDirective, InputDateComponent, DatatableComponent, InputTextComponent,
     InputPasswordComponent, InputPhoneComponent, InputEmailComponent, SelectClientComponent,
     SelectServerComponent, InputNumberComponent, InputChoiceComponent, InputFileComponent, PageInfoComponent,
     CardComponent, FormComponent, NotificationComponent, SideMenuComponent, TopBarComponent, FooterComponent,
-    TemplateComponent, ContentComponent, WrapperComponent, LoginComponent]
+    TemplateComponent, ContentComponent, WrapperComponent, LoginComponent, InputEditorComponent]
 })
 export class SdkElementsModule {
   static forRoot(): ModuleWithProviders {
