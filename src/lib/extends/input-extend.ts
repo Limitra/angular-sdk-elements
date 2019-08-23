@@ -68,8 +68,11 @@ export class InputExtend {
     const lang = this.providers.Storage.Get('Localization_Settings', 'Language');
 
     this.generateName();
-    if (this.value && this.input) {
-      this.input.nativeElement.value = this.formatValue(this.value);
+
+    const maskCall = () => {
+      if (this.value && this.input) {
+        this.input.nativeElement.value = this.formatValue(this.value);
+      }
     }
 
     if (lang) {
@@ -78,6 +81,7 @@ export class InputExtend {
         if (call) {
           call();
         }
+        maskCall();
         this.validate();
       });
     } else {
@@ -116,6 +120,7 @@ export class InputExtend {
         if (call) {
           call();
         }
+        maskCall();
         this.validate();
       });
     }
