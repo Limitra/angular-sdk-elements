@@ -418,7 +418,7 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
           }
 
           if (index === this.files.length - 1) {
-            this.validate();
+            setTimeout(() => { this.validate(); });
           }
         });
       }
