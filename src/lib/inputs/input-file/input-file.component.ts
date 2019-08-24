@@ -399,9 +399,9 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
   }
 
   public downloadFiles() {
+    let counter = 0;
     this.files.forEach(file => {
       clearInterval(file.Interval);
-      const index = this.files.indexOf(file);
       if (file.Path) {
         file.Name = file.Path.substring(file.Path.lastIndexOf('/') + 1);
         file.Text = file.Name;
@@ -416,9 +416,10 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
           } else {
             file.Text = file.Text + ' [E: ' + xhr.status + ']';
           }
+          counter++;
 
-          if (index === this.files.length - 1) {
-            setTimeout(() => { this.validate(); });
+          if (counter === this.files.length) {
+            this.validate();
           }
         });
       }
