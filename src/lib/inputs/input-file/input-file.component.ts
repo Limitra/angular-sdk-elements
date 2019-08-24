@@ -555,6 +555,9 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
     this.dragging.Index = targetIndex;
     this.files = this.files.sort((x, y) => x.Index - y.Index);
     this.validate();
+    if (!this.hasError) {
+      this.forceValue();
+    }
   }
 
   private initSortable() {
