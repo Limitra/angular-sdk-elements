@@ -81,7 +81,6 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   onResize(event: any) {
     if ($(window).width() < 768) {
       $('.sidebar .collapse').collapse('hide');
-      this.removeToggled();
     }
   }
 
