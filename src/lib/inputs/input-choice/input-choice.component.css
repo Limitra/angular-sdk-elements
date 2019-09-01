@@ -2,10 +2,10 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  display: inline-flex;
+  display: inline;
   padding: 0;
   cursor: pointer;
-  top: 5px;
+  top: -1px;
   left: 4px;
   position: relative;
   max-width: calc(100% - 14px);
