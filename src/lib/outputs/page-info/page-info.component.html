@@ -9,11 +9,11 @@
             </a>
         </div>
         <div class="col-6">
-            <div class="pull-right">
+            <div class="pull-right" (lim-os-click)="historyFocus=false">
                 <a [routerLink]="page&&page.parent&&page.parent.path"
                    class="history-button text-secondary {{page&&page.parent&&page.parent.path?'':'disabled'}}"><i
                         class="fa fa-arrow-circle-up"></i></a>
-                <a (click)="historyFocus=!historyFocus" (lim-os-click)="historyFocus=false" class="history-button {{history.length==0?'disabled':''}}"><i
+                <a (click)="historyFocus=!historyFocus" class="history-button {{history.length==0?'disabled':''}}"><i
                         class="fa fa-history ml-2"></i></a>
                 <div *ngIf="historyFocus&&history.length>0" class="history-list">
                     <div *ngFor="let route of history" class="history-item">
