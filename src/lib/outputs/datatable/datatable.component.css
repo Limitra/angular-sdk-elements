@@ -7,6 +7,10 @@ table.dataTable {
   border-spacing: 0
 }
 
+table td.row-zone {
+  display: contents;
+}
+
 table.dataTable td, table.dataTable th {
   -webkit-box-sizing: content-box;
   box-sizing: content-box
