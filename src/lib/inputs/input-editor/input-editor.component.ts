@@ -33,7 +33,7 @@ export class InputEditorComponent extends InputExtend implements OnInit {
   }
 
   preInit(changed?: boolean) {
-    if (changed) {
+    if (changed && this.ckeditor.editorInstance) {
       this.ckeditor.editorInstance.setData(this.value);
     }
   }
