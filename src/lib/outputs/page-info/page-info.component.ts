@@ -53,7 +53,7 @@ export class PageInfoComponent implements OnInit {
     const history: any = { name: '' };
     routes.forEach((route, index) => {
       history.name += route.name;
-      history.path = route.path;
+      history.path = '/' + routes[0].routeUrl;
       if (index < this.routes.length - 1) {
         history.name += ' ▸ ';
       }
@@ -85,7 +85,7 @@ export class PageInfoComponent implements OnInit {
           const page: any = {
             id: currentId, name: current.data ? current.data.name : '',
             title: current.data && current.data.title ? current.data.title : parentTitle, path: current.path, parentId: ownerId,
-            disabled: current.data ? current.data.disabled : false
+            disabled: current.data ? current.data.disabled : false, routeUrl: url
           };
           this.routes.push(page);
           page.path = this.parentPathMap(currentId);
@@ -93,7 +93,8 @@ export class PageInfoComponent implements OnInit {
           this.page = page;
         }
         if (current.children && current.children.length > 0) {
-          this.detectRoutes(current.children, url.replace(partial, ''), currentId, (current.data ? current.data.title : parentTitle));
+          this.detectRoutes(current.children, url.replace(partial, ''), currentId
+            || (this.routes && this.routes.length > 0 ? this.routes.length : null), (current.data ? current.data.title : parentTitle));
         }
       }
     });
@@ -103,8 +104,8 @@ export class PageInfoComponent implements OnInit {
     let path = '';
     const recursive = (recursiveId: number) => {
       const route = this.routes.filter(x => x.id === recursiveId)[0];
-      if (route) {
-        path = '/' + route.path + path;
+      if (route && route.path && !path.includes(route.path)) {
+        path = (route.path[0] !== '/' ? '/' : '') + route.path + path;
         if (route.parentId) {
           recursive(route.parentId);
         }
