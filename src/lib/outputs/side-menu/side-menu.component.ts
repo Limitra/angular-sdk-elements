@@ -35,6 +35,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
       this.interval = setInterval(load, 30000);
       load();
     }
+    this.removeToggled();
   }
 
   ngOnDestroy() {
@@ -80,6 +81,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   onResize(event: any) {
     if ($(window).width() < 768) {
       $('.sidebar .collapse').collapse('hide');
+      this.removeToggled();
     }
   }
 
@@ -90,6 +92,14 @@ export class SideMenuComponent implements OnInit, OnDestroy {
       $('.scroll-to-top').fadeIn();
     } else {
       $('.scroll-to-top').fadeOut();
+    }
+  }
+
+  private removeToggled() {
+    if ($(window).width() < 768) {
+      if (!$('.sidebar').hasClass('toggled')) {
+        $('.sidebar').toggleClass('toggled');
+      }
     }
   }
 }

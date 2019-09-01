@@ -8,7 +8,7 @@ table.dataTable {
 }
 
 table td.row-zone {
-  display: contents;
+  width: calc(100% - 40px);
 }
 
 table.dataTable td, table.dataTable th {
