@@ -119,15 +119,15 @@
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="applicationUser" role="button" data-toggle="dropdown"
          aria-haspopup="true" aria-expanded="false">
-        <span class="mr-2 d-none d-lg-inline text-gray-600 small display-name">{{myProfile.DisplayName?myProfile.DisplayName:'... ...'}}</span>
-        <img class="img-profile rounded-circle" [attr.src]="myProfile.Picture?myProfile.Picture:''">
+        <span class="mr-2 d-none d-lg-inline text-gray-600 small display-name">{{profileObj.DisplayName?profileObj.DisplayName:'... ...'}}</span>
+        <img class="img-profile rounded-circle" [attr.src]="profileObj.Picture?profileObj.Picture:''">
       </a>
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="applicationUser">
-        <a *ngIf="myProfile.Path" class="dropdown-item menu-item" [routerLink]="myProfile.Path">
+        <a *ngFor="let link of profileObj.Links" class="dropdown-item menu-item" [routerLink]="link.Path">
           <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-          {{texts.Profile}}
+          {{link.Text}}
         </a>
-        <div *ngIf="myProfile.Path" class="dropdown-divider"></div>
+        <div *ngIf="profileObj.Links.length > 0" class="dropdown-divider"></div>
         <a class="dropdown-item menu-item" (click)="logOut()">
           <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
           {{texts.LogOut}}

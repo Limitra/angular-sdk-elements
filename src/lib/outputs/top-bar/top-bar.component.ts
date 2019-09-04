@@ -13,7 +13,8 @@ export class TopBarComponent implements OnInit, OnDestroy {
 
   @Input() profile: string;
 
-  myProfile: any = {};
+  profileObj: any = { Links: [] };
+  links: Array<any> = [];
   texts: any = {};
 
   document: any = {};
@@ -22,7 +23,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.document = document;
-    this.myProfile.Path = this.providers.Storage.Get('Authentication_Settings', 'Profile');
+    this.profileObj.Links = this.providers.Storage.Get('Authentication_Settings', 'Profile') || [];
 
     const api = this.providers.Storage.Get('API_Settings');
     const lang = this.providers.Storage.Get('Localization_Settings', 'Language');
@@ -33,17 +34,16 @@ export class TopBarComponent implements OnInit, OnDestroy {
       });
     } else {
       this.texts = {
-        LogOut: 'Log Out',
-        Profile: 'Profile'
+        LogOut: 'Log Out'
       };
     }
 
     if (this.profile && api && api.Domain) {
       const loop = () => {
         this.providers.Http.Get(api.Domain + '/' + this.profile).subscribe(response => {
-          this.myProfile.DisplayName = response.DisplayName;
+          this.profileObj.DisplayName = response.DisplayName;
           if (api.File && api.File.Download) {
-            this.myProfile.Picture = api.Domain + '/' + api.File.Download + response.Picture;
+            this.profileObj.Picture = api.Domain + '/' + api.File.Download + response.Picture;
           }
         });
       };
