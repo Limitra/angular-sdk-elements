@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
         this.state.Enabled = false;
         this.state.Spinner = true;
         setTimeout(() => {
-          if (jwt && jwt.Home && jwt.Token) {
+          if (jwt && jwt.Home) {
             this.providers.Router.Navigate(jwt.Home);
           }
         }, (jwt ? jwt.Delay : undefined) || 2000);
