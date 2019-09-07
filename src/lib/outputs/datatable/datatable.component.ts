@@ -193,7 +193,7 @@ export class DatatableComponent implements OnInit {
               colObj.Value = nowValue;
             }
             if (column.Badge) {
-              const badge = column.Badge(colObj.Value);
+              const badge = column.Badge(colObj.Value, data);
               colObj.Badge = {
                 Status: badge.Status === 'auto' ? (colObj.Value === true ? 'success'
                   : (colObj.Value !== false ? 'warning' : 'danger')) : badge.Status,
