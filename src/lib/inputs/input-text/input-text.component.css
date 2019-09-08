@@ -4,7 +4,7 @@ label {
   white-space: nowrap;
 }
 
-input {
+input, textarea {
   padding-left: 25px !important;
 }
 
