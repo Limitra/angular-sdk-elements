@@ -430,7 +430,7 @@ export class DatatableComponent implements OnInit {
   }
 
   private valOfObj(obj: any, column: any, effect: boolean = true): any {
-    const colLen = { Calculate: column.Image || (column.Badge && column.Badge.Char) ? false : true, Char: column.Image ? (column.Image.Char || column.Image.Width / 3) : (column.Badge && column.Badge.Char ? column.Badge.Char : 0) };
+    const colLen = { Calculate: column.Image || column.Char ? false : true, Char: column.Image ? (column.Image.Char || column.Image.Width / 3) : column.Char || 0 };
     const field = column.Field || '';
     if (field.includes('.')) {
       const partials = field.split('.');
