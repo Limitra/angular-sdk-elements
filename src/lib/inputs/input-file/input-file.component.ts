@@ -344,6 +344,7 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
         this.files[index] = {};
       }
       this.preview = undefined;
+      this.forceValue();
     } else {
       this.focus = false;
       file.Xhr.abort();
