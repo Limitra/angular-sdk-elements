@@ -10,6 +10,8 @@ import {SdkProviders} from '@limitra/sdk-core';
 export class InputTextComponent extends InputExtend implements AfterViewInit {
   constructor(public providers: SdkProviders) { super(providers); }
 
+  @Input() type: string;
+
   @Input() minlength = 0;
   @Input() maxlength = 50;
 
