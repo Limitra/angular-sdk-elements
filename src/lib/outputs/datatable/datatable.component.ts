@@ -383,11 +383,11 @@ export class DatatableComponent implements OnInit {
         const width = col.MaxChar * 100 / totalChar;
         if (width < 3) {
           col.Width = 3;
-        } else if (this.settings.Columns.length >= 4 && width > 50) {
+        } else if (this.settings.Columns.length >= 6 && width > 50) {
           col.Width = 50;
-        } else if (this.settings.Columns.length === 3 && width > 65) {
+        } else if (this.settings.Columns.length === 5 && width > 65) {
           col.Width = 65;
-        } else if (this.settings.Columns.length === 2 && width > 80) {
+        } else if (this.settings.Columns.length === 4 && width > 80) {
           col.Width = 80;
         } else {
           col.Width = width;
