@@ -278,8 +278,8 @@ export class DatatableComponent implements OnInit {
       const len = parseInt(this.settings.Params.Page, 0);
       if (!this.settings.Params.Page || this.settings.Params.Page < 0 || !len) {
         this.settings.Params.Page = 1;
-        this.setStoredParams('Page', this.settings.Params.Page);
       }
+      this.setStoredParams('Page', this.settings.Params.Page);
       this.initTable();
     }
   }
@@ -306,7 +306,7 @@ export class DatatableComponent implements OnInit {
   private reCalcPage() {
     if (this.settings && this.settings.Response && this.settings.Params) {
       if (this.settings.Response.Page.Length === 0 && this.settings.Params.Page > 1) {
-        this.settings.Params.Page--;
+        this.settings.Params.Page = this.settings.Params.Page - 1;
         this.validatePage();
       }
     }
