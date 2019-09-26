@@ -22,7 +22,8 @@ export class InputDateComponent extends InputExtend implements AfterViewInit {
   }
 
   keyboardQuery(event: KeyboardEvent): boolean {
-    return !((event.shiftKey || (event.keyCode < 48 || event.keyCode > 57)) && (event.keyCode < 96 || event.keyCode > 105));
+    return !((event.shiftKey || (event.keyCode < 48
+      || event.keyCode > 57)) && (event.keyCode < 96 || event.keyCode > 105));
   }
 
   forceValue() {
@@ -78,7 +79,10 @@ export class InputDateComponent extends InputExtend implements AfterViewInit {
     this.input.nativeElement.selectionStart = start;
     this.input.nativeElement.selectionEnd = start;
 
-    this.value = new Date(getYear().Value, getMonth().Value, getDay().Value).getTime();
+    const timezone = this.providers.Storage.Get('Localization_Settings', 'TimeZone') || 0;
+    const date = new Date(getYear().Value, getMonth().Value - 1, getDay().Value);
+    date.setTime(date.getTime() + (timezone * 60 * 1000));
+    this.value = date.getTime();
     this.valueChange.emit(this.value);
   }
 
@@ -100,7 +104,6 @@ export class InputDateComponent extends InputExtend implements AfterViewInit {
 
   formatValue(value: any): string {
     const date = new Date(value);
-
     let formatted = '';
     if (this.mask && date && (date instanceof Date) && value) {
       const day = this.mask.indexOf('d');
@@ -109,7 +112,7 @@ export class InputDateComponent extends InputExtend implements AfterViewInit {
 
       const array = [
         {Index: day, Value: date.getDate()},
-        {Index: month, Value: date.getMonth() + 1 },
+        {Index: month, Value: date.getMonth() + 1},
         {Index: year, Value: date.getFullYear()}];
 
       let index = 0;

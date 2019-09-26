@@ -278,9 +278,6 @@ export class InputExtend {
       if (forceValue) {
         if (value.length === mask.length) {
           this.forceValue();
-        } else {
-          this.value = undefined;
-          this.valueChange.emit(this.value);
         }
       }
     } else {
