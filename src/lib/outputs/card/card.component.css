@@ -36,6 +36,11 @@
     font-weight: bold;
 }
 
+.group-card-wrapper .group-card-header .group-card-title a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .group-card-wrapper .group-card-header .group-card-tools {
     width: max-content;
     max-width: 40%;
