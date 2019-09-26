@@ -102,7 +102,7 @@ export class InputDateComponent extends InputExtend implements AfterViewInit {
     const date = new Date(value);
 
     let formatted = '';
-    if (date) {
+    if (this.mask && date && (date instanceof Date) && value) {
       const day = this.mask.indexOf('d');
       const month = this.mask.indexOf('m');
       const year = this.mask.indexOf('y');
@@ -131,7 +131,6 @@ export class InputDateComponent extends InputExtend implements AfterViewInit {
                 valid = true;
               }
             }
-
           }
         } else {
           index = index + 1;
