@@ -14,6 +14,8 @@ export class CardComponent implements OnInit {
   texts: any;
   collapsed: boolean;
 
+  @Input() link: string;
+
   private lang: string;
 
   constructor(private providers: SdkProviders) {

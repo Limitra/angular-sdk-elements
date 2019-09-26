@@ -1,7 +1,10 @@
 <div class="group-card-wrapper">
     <div class="group-card-header">
-        <div class="group-card-title">
+        <div *ngIf="!link" class="group-card-title" title="{{title}}">
             <i class="{{icon}}"></i> {{title}}
+        </div>
+        <div *ngIf="link" class="group-card-title">
+          <a [routerLink]="link" title="{{title}}"><i class="{{icon}}"></i> {{title}}</a>
         </div>
         <div class="group-card-tools">
             <div class="btn-group btn-group-sm wrapper">
