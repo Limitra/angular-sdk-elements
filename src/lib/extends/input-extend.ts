@@ -275,11 +275,13 @@ export class InputExtend {
         value = this.providers.String.Replace(value, ' ', '');
       });
 
-      if (value.length === mask.length) {
-        this.forceValue();
-      } else {
-        this.value = undefined;
-        this.valueChange.emit(this.value);
+      if (forceValue) {
+        if (value.length === mask.length) {
+          this.forceValue();
+        } else {
+          this.value = undefined;
+          this.valueChange.emit(this.value);
+        }
       }
     } else {
       if (forceValue) {
