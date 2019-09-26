@@ -60,8 +60,8 @@ export class PageInfoComponent implements OnInit {
     });
     if (history.name && history.path) {
       history.name = (history.name.length > 30
-          ? (history.name.substring(0, 15) + '...' + history.name.substring(history.name.length - 16, history.name.length))
-          : history.name);
+        ? (history.name.substring(0, 15) + '...' + history.name.substring(history.name.length - 16, history.name.length))
+        : history.name);
 
       this.history.unshift(history);
     }
@@ -91,6 +91,16 @@ export class PageInfoComponent implements OnInit {
           page.path = this.parentPathMap(currentId);
           page.parent = this.routes.filter(x => x.id === page.parentId)[0];
           this.page = page;
+
+          page.routeUrl.split('/').forEach(routePartial => {
+            if (!page.path.includes(routePartial)) {
+              page.path.split('/').forEach(pathPartial => {
+                if (this.pattern.split(':').map(x => ':' + x).includes(pathPartial)) {
+                  page.path = page.path.replace(pathPartial, routePartial);
+                }
+              });
+            }
+          });
         }
         if (current.children && current.children.length > 0) {
           this.detectRoutes(current.children, url.replace(partial, ''), currentId
