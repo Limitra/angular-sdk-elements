@@ -5,7 +5,7 @@
       <i *ngIf="validationMessages" class="fa fa-{{hasError?'exclamation-triangle text-danger':'check-circle text-success'}} valid-status"></i>
       <input #input type="hidden">
       <input class="form-control form-control-sm show" attr.placeholder="{{placeholder||(validationMessages?validationMessages.SelectDefaultText:'')}}" (mousedown)="focus?focus=false:''"
-             value="{{multiple?(validationMessages&&selecteds?validationMessages.SelectMultiText.replace('[$Length]', selecteds.length):''):(selected&&selected.Text?selected.Text:'')}}" (keyup)="$event.stopPropagation();" (click)="search?search.nativeElement.focus():''" (focusin)="focus=true;" readonly>
+             value="{{validationMessages?validationMessages.SelectMultiText.replace('[$Length]', multiple&&selecteds?selecteds.length:(selected?1:0)):''}}" (keyup)="$event.stopPropagation();" (click)="search?search.nativeElement.focus():''" (focusin)="focus=true;" readonly>
       <i *ngIf="value" class="fa fa-times remove-value" (click)="removeValue()"></i>
       <div *ngIf="focus" class="select-focus-wrapper">
         <div class="select-search">
@@ -13,9 +13,9 @@
         </div>
 
         <div *ngIf="filteredSource&&filteredSource.length>0" class="select-options">
-          <div *ngFor="let option of filteredSource" class="select-option" (mousedown)="focus = true; checkOption(option)">
-            <i class="fa fa-{{((multiple?(selecteds.includes(option)):(option==selected))?'check-':'') + (multiple?'square':'circle')}}"></i>
-            <span class="text-nowrap"> {{option.Text}}</span>
+          <div *ngFor="let option of filteredSource" class="select-option" (mousedown)="focus = true;checkOption(option)">
+            <i class="fa fa-{{((multiple?(selecteds.includes(option[valuekey])||selecteds.includes(option[valuekey].toString())):(selected?option[valuekey]==selected:false))?'check-':'') + (multiple?'square':'circle')}}"></i>
+            <span class="text-nowrap"> {{option[textkey]}}</span>
           </div>
         </div>
 

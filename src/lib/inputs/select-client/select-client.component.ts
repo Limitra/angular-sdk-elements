@@ -15,6 +15,9 @@ export class SelectClientComponent extends InputExtend implements AfterViewInit 
   @Input() minlength: number;
   @Input() maxlength: number;
 
+  @Input() textkey = 'Text';
+  @Input() valuekey = 'Value';
+
   @ViewChild('search', {static: false}) search: ElementRef;
 
   public selected: any;
@@ -30,9 +33,11 @@ export class SelectClientComponent extends InputExtend implements AfterViewInit 
   preInit() {
     this.filteredSource = this.source || [];
     if (this.multiple) {
-      this.selecteds = this.filteredSource.filter(x => this.value ? this.value.includes(x.Value) : false);
+      this.selecteds = this.filteredSource.filter(x =>
+        (this.value && this.value.length > 0) ? (this.value.includes(x[this.valuekey])
+          || this.value.includes(x[this.valuekey].toString)) : false).map(x => x[this.valuekey]);
     } else {
-      this.selected = this.filteredSource.filter(x => this.value ? this.value === x.Value : false)[0];
+      this.selected = this.filteredSource.filter(x => this.value ? this.value == x[this.valuekey] : false).map(x => x[this.valuekey])[0];
     }
   }
 
@@ -78,24 +83,25 @@ export class SelectClientComponent extends InputExtend implements AfterViewInit 
   searchValue() {
     const search = this.searchText;
     if (this.source) {
-      this.filteredSource = this.source.filter(x => (x && x.Text ? x.Text.toLowerCase().includes(search.toLowerCase()) : false));
+      this.filteredSource = this.source.filter(x => (x && x[this.textkey]
+        ? x[this.textkey].toLowerCase().includes((search || '').toLowerCase()) : false));
     }
   }
 
   checkOption(option: any) {
     this.search.nativeElement.focus();
-    if (option && option.Value) {
+    if (option && option[this.valuekey]) {
       if (this.multiple) {
-        const selected = this.selecteds.filter(x => x.Value === option.Value)[0];
+        const selected = this.selecteds.filter(x => x == option[this.valuekey])[0];
         if (!selected) {
-          this.selecteds.push(option);
+          this.selecteds.push(option[this.valuekey]);
         } else {
           this.selecteds.splice(this.selecteds.indexOf(selected), 1);
         }
-        this.input.nativeElement.value = this.selecteds.map(x => x.Value);
+        this.input.nativeElement.value = this.selecteds;
       } else {
-        this.selected = option;
-        this.input.nativeElement.value = option.Value;
+        this.selected = option[this.valuekey];
+        this.input.nativeElement.value = option[this.valuekey];
       }
 
       this.validate();
