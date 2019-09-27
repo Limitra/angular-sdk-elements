@@ -26,8 +26,6 @@ export class InputChoiceComponent extends InputExtend implements OnInit {
   public selected: any;
   public selecteds: Array<any>;
 
-  public enableDesc: boolean;
-
   ngOnInit() {
     this.preInit();
     this.init();
@@ -36,12 +34,15 @@ export class InputChoiceComponent extends InputExtend implements OnInit {
   preInit() {
     this.potential = this.potential || true;
     this.source = this.source || [{ Summary: this.summary, Description: this.description, Value: this.potential }];
-    this.enableDesc = this.source.filter(x => x.Description).length > 0;
     if (this.multiple) {
       this.selecteds = this.value || [];
     } else {
       this.selected = this.value;
     }
+  }
+
+  isEnableDesc(): boolean {
+    return this.source.filter(x => x.Description).length > 0;
   }
 
   castValue(data: any): any {
