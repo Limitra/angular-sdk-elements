@@ -383,12 +383,12 @@ export class DatatableComponent implements OnInit {
         const width = col.MaxChar * 100 / totalChar;
         if (width < 3) {
           col.Width = 3;
-        } else if (this.settings.Columns.length >= 6 && width > 50) {
+        } else if (this.settings.Columns.length >= 6 && width > 35) {
+          col.Width = 35;
+        } else if (this.settings.Columns.length === 5 && width > 50) {
           col.Width = 50;
-        } else if (this.settings.Columns.length === 5 && width > 65) {
+        } else if (this.settings.Columns.length === 4 && width > 65) {
           col.Width = 65;
-        } else if (this.settings.Columns.length === 4 && width > 80) {
-          col.Width = 80;
         } else {
           col.Width = width;
         }
@@ -430,7 +430,8 @@ export class DatatableComponent implements OnInit {
   }
 
   private valOfObj(obj: any, column: any, effect: boolean = true): any {
-    const colLen = { Calculate: column.Image || column.Char ? false : true, Char: column.Image ? (column.Image.Char || column.Image.Width / 3) : column.Char || 0 };
+    const colLen = { Calculate: column.Image || column.Char ? false : true, Char: column.Image ? (column.Image.Char
+        || column.Image.Width / 3) : (column.Char || 0) };
     const field = column.Field || '';
     if (field.includes('.')) {
       const partials = field.split('.');
