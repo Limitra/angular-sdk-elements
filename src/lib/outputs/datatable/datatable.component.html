@@ -57,7 +57,7 @@
       <td *ngFor="let column of data.Columns" class="{{column.Position?'text-'+column.Position:''}}" title="{{column.Badge?column.Badge.Value:column.Value}}">
         <div *ngIf="!column.Badge&&!column.Image">{{column.Value}}<br></div>
         <div *ngIf="column.Badge">
-          <span class="badge badge-{{column.Badge.Status}}">
+          <span class="{{column.Badge.Status?'badge badge-'+column.Badge.Status:''}}">
             <i *ngIf="column.Badge.Icon" class="{{column.Badge.Icon}}"></i>
             {{column.Badge.Value}}
           </span>
