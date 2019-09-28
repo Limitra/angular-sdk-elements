@@ -55,7 +55,7 @@
         </div>
       </td>
       <td *ngFor="let column of data.Columns" class="{{column.Position?'text-'+column.Position:''}}" title="{{column.Badge?column.Badge.Value:column.Value}}">
-        <div *ngIf="!(column.Badge&&column.Badge.Status)&&!column.Image">{{column.Value}}<br></div>
+        <div *ngIf="!(column.Badge&&column.Badge.Status)&&!column.Image">{{(column.Badge?column.Badge.Value:null)||column.Value}}<br></div>
         <div *ngIf="column.Badge&&column.Badge.Status">
           <span class="badge badge-{{column.Badge.Status}}">
             <i *ngIf="column.Badge.Icon" class="{{column.Badge.Icon}}"></i>
