@@ -15,11 +15,20 @@ export class InputTextComponent extends InputExtend implements AfterViewInit {
   @Input() minlength = 0;
   @Input() maxlength = 50;
 
+  @Input() regex: string;
+  @Input() format: string;
+
   ngAfterViewInit() {
     this.init();
   }
 
   validation(value: any) {
+    if (this.regex && !new RegExp(this.regex).test(value)) {
+      this.addFormError('RegExpError');
+    } else {
+      this.removeFormError('RegExpError');
+    }
+
     if (value.length < this.minlength) {
       this.addFormError('MinLength');
     } else {
@@ -42,6 +51,7 @@ export class InputTextComponent extends InputExtend implements AfterViewInit {
   localizeReplace(message: string): string {
     message = this.providers.String.Replace(message, '[$MinLength]', this.minlength ? this.minlength.toString() : '');
     message = this.providers.String.Replace(message, '[$MaxLength]', this.maxlength ? this.maxlength.toString() : '');
+    message = this.providers.String.Replace(message, '$DataFormat', this.format ? this.format : '');
     return message;
   }
 }

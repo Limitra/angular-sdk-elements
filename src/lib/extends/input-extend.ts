@@ -89,6 +89,7 @@ export class InputExtend {
         this.validationMessages = {
           Required: 'You must fill in this field.',
           ValidError: 'You must enter data in a valid format.',
+          RegExpError: 'You must enter data in a valid format. [$DataFormat]',
           GreaterThan: 'You must enter a value greater than or equal to [$Min].',
           LessThan: 'You must enter a value less than or equal to [$Max].',
           MinLength: 'You must enter at least [$MinLength] characters.',
