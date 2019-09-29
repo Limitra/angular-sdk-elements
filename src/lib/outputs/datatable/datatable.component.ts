@@ -200,7 +200,7 @@ export class DatatableComponent implements OnInit {
                 Value: badge.Value,
                 Icon: badge.Icon
               };
-              this.pushColumnLen(column, colObj.Badge.Value.length + 3);
+              this.pushColumnLen(column, (colObj.Badge.Value ? colObj.Badge.Value.length : 0) + 3);
             }
             if (column.Image) {
               colObj.Image = {
