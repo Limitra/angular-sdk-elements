@@ -34,7 +34,7 @@
 </div>
 
 <div class="table-responsive">
-  <table class="table table-striped table-bordered dataTable" [style.minWidth.px]="1280">
+  <table class="table table-striped table-bordered dataTable" [style.minWidth.px]="980">
     <thead *ngIf="settings&&settings.Columns">
     <tr>
       <th></th>
@@ -45,7 +45,7 @@
     <tbody *ngIf="settings&&settings.Columns&&settings.Response&&settings.Response.Data&&settings.Response.Data.Source" class="{{settings.BulkChoice?'bulk-choice':''}}">
     <tr #row *ngFor="let data of settings.Response.Data.Source" (click)="selectRow(data)" class="{{data.Selected ? 'row-selected' : ''}}" (contextmenu)="openMenu(data, $event)" (lim-os-click)="data.ContextMenu?data.ContextMenu.Focus=false:''">
       <td class="row-zone" [style.width.px]="data.Width" [style.height.px]="data.Height" title="#{{settings.PrimaryKey?data[settings.PrimaryKey]:''}}">
-        <a *ngIf="!this.settings.BulkChoice&&settings.PrimaryKey&&settings.RowRedirect" [routerLink]="settings.RowRedirect+data[settings.PrimaryKey]"></a>
+        <a *ngIf="!this.settings.BulkChoice&&settings.PrimaryKey&&(settings.RowRedirect||settings.RowCall)" [routerLink]="settings.RowRedirect?(settings.RowRedirect+data[settings.PrimaryKey]):(settings.RowCall?settings.RowCall(data):'')"></a>
         <div *ngIf="data.ContextMenu&&data.ContextMenu.Focus&&contextMenu&&contextMenu.length>0" class="context-menu-wrapper" (contextmenu)="$event.stopPropagation();data.ContextMenu.Focus=false" [style.top.px]="data.ContextMenu.PositionY" [style.left.px]="data.ContextMenu.PositionX">
           <ul class="list-group">
             <li *ngFor="let item of contextMenu" class="list-group-item">

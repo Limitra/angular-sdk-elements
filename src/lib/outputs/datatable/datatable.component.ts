@@ -200,6 +200,7 @@ export class DatatableComponent implements OnInit {
                 Value: badge.Value,
                 Icon: badge.Icon
               };
+              this.pushColumnLen(column, colObj.Badge.Value.length + 3);
             }
             if (column.Image) {
               colObj.Image = {
@@ -334,7 +335,7 @@ export class DatatableComponent implements OnInit {
 
   private pushColumnLen(column: any, len: number) {
     if (!column.MaxChar || column.MaxChar < len) {
-      column.MaxChar = len;
+      column.MaxChar = len >= 3 ? len : 3;
     }
   }
 
@@ -380,18 +381,7 @@ export class DatatableComponent implements OnInit {
     if (this.settings && this.settings.Columns) {
       const totalChar = this.settings.Columns.reduce((sum, current) => sum + current.MaxChar, 0);
       this.settings.Columns.forEach(col => {
-        const width = col.MaxChar * 100 / totalChar;
-        if (width < 3) {
-          col.Width = 3;
-        } else if (this.settings.Columns.length >= 6 && width > 35) {
-          col.Width = 35;
-        } else if (this.settings.Columns.length === 5 && width > 50) {
-          col.Width = 50;
-        } else if (this.settings.Columns.length === 4 && width > 65) {
-          col.Width = 65;
-        } else {
-          col.Width = width;
-        }
+        col.Width = col.MaxChar * 100 / totalChar;
       });
       if (this.settings.Response && this.settings.Response.Data && this.settings.Response.Data.Source) {
         setTimeout(() => {
@@ -430,8 +420,7 @@ export class DatatableComponent implements OnInit {
   }
 
   private valOfObj(obj: any, column: any, effect: boolean = true): any {
-    const colLen = { Calculate: column.Image || column.Char ? false : true, Char: column.Image ? (column.Image.Char
-        || column.Image.Width / 3) : (column.Char || 0) };
+    const colLen = { Calculate: column.Image ? false : true, Char: column.Image ? (column.Image.Char || column.Image.Width / 3) : 0 };
     const field = column.Field || '';
     if (field.includes('.')) {
       const partials = field.split('.');
