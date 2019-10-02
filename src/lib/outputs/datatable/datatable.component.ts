@@ -335,7 +335,7 @@ export class DatatableComponent implements OnInit {
 
   private pushColumnLen(column: any, len: number) {
     if (!column.MaxChar || column.MaxChar < len) {
-      column.MaxChar = len >= 3 ? len : 3;
+      column.MaxChar = len >= 5 ? len : 5;
     }
   }
 
