@@ -311,7 +311,7 @@ tbody.bulk-choice tr.row-selected td:last-child {
   border-bottom-width: 1px;
 }
 
-.table-bordered tfoot tr:first-child td {
+.table-bordered tfoot tr:first-child th {
   border-top-width: 0;
 }
 
