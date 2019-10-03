@@ -7,13 +7,17 @@ table.dataTable {
   border-spacing: 0
 }
 
-table td.row-zone {
-  width: calc(100% - 40px) !important;
-}
-
 table.dataTable td, table.dataTable th {
   -webkit-box-sizing: content-box;
   box-sizing: content-box
+}
+
+table.dataTable tr th.head-starter {
+  width: 0px;
+  min-width: 0px;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 table.dataTable td.dataTables_empty, table.dataTable th.dataTables_empty {
@@ -79,41 +83,41 @@ div.dataTables_wrapper div.dataTables_processing {
   padding: 1em 0
 }
 
-table.dataTable thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting, table.dataTable thead > tr > td.sorting_asc, table.dataTable thead > tr > td.sorting_desc, table.dataTable thead > tr > td.sorting {
+table.dataTable .tpart > tr > th.sorting_asc, table.dataTable .tpart > tr > th.sorting_desc, table.dataTable .tpart > tr > th.sorting, table.dataTable .tpart > tr > td.sorting_asc, table.dataTable .tpart > tr > td.sorting_desc, table.dataTable .tpart > tr > td.sorting {
   padding-right: 30px
 }
 
-table.dataTable thead > tr > th:active, table.dataTable thead > tr > td:active {
+table.dataTable .tpart > tr > th:active, table.dataTable .tpart > tr > td:active {
   outline: none
 }
 
-table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_desc, table.dataTable thead .sorting_asc_disabled, table.dataTable thead .sorting_desc_disabled {
+table.dataTable .tpart .sorting, table.dataTable .tpart .sorting_asc, table.dataTable .tpart .sorting_desc, table.dataTable .tpart .sorting_asc_disabled, table.dataTable .tpart .sorting_desc_disabled {
   cursor: pointer;
   position: relative
 }
 
-table.dataTable thead .sorting:before, table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:before, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:before, table.dataTable thead .sorting_desc_disabled:after {
+table.dataTable .tpart .sorting:before, table.dataTable .tpart .sorting:after, table.dataTable .tpart .sorting_asc:before, table.dataTable .tpart .sorting_asc:after, table.dataTable .tpart .sorting_desc:before, table.dataTable .tpart .sorting_desc:after, table.dataTable .tpart .sorting_asc_disabled:before, table.dataTable .tpart .sorting_asc_disabled:after, table.dataTable .tpart .sorting_desc_disabled:before, table.dataTable .tpart .sorting_desc_disabled:after {
   position: absolute;
   bottom: 0.9em;
   display: block;
   opacity: 0.3
 }
 
-table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_desc:before, table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_desc_disabled:before {
+table.dataTable .tpart .sorting:before, table.dataTable .tpart .sorting_asc:before, table.dataTable .tpart .sorting_desc:before, table.dataTable .tpart .sorting_asc_disabled:before, table.dataTable .tpart .sorting_desc_disabled:before {
   right: 1em;
   content: "\2191"
 }
 
-table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {
+table.dataTable .tpart .sorting:after, table.dataTable .tpart .sorting_asc:after, table.dataTable .tpart .sorting_desc:after, table.dataTable .tpart .sorting_asc_disabled:after, table.dataTable .tpart .sorting_desc_disabled:after {
   right: 0.5em;
   content: "\2193"
 }
 
-table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_desc:after {
+table.dataTable .tpart .sorting_asc:before, table.dataTable .tpart .sorting_desc:after {
   opacity: 1
 }
 
-table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_desc_disabled:after {
+table.dataTable .tpart .sorting_asc_disabled:before, table.dataTable .tpart .sorting_desc_disabled:after {
   opacity: 0
 }
 
@@ -127,7 +131,7 @@ div.dataTables_scrollBody table {
   margin-bottom: 0 !important
 }
 
-div.dataTables_scrollBody table thead .sorting:before, div.dataTables_scrollBody table thead .sorting_asc:before, div.dataTables_scrollBody table thead .sorting_desc:before, div.dataTables_scrollBody table thead .sorting:after, div.dataTables_scrollBody table thead .sorting_asc:after, div.dataTables_scrollBody table thead .sorting_desc:after {
+div.dataTables_scrollBody table .tpart .sorting:before, div.dataTables_scrollBody table .tpart .sorting_asc:before, div.dataTables_scrollBody table .tpart .sorting_desc:before, div.dataTables_scrollBody table .tpart .sorting:after, div.dataTables_scrollBody table .tpart .sorting_asc:after, div.dataTables_scrollBody table .tpart .sorting_desc:after {
   display: none
 }
 
@@ -150,7 +154,7 @@ div.dataTables_scrollFoot > .dataTables_scrollFootInner > table {
   }
 }
 
-table.dataTable.table-sm > thead > tr > th {
+table.dataTable.table-sm > .tpart > tr > th {
   padding-right: 20px
 }
 
@@ -216,7 +220,7 @@ table {
   table-layout: fixed;
 }
 
-thead tr th {
+thead tr th, tfoot tr th {
   color: #5d6368;
   white-space: nowrap;
   overflow: hidden;
@@ -228,22 +232,30 @@ tbody tr {
   cursor: pointer;
 }
 
-tbody tr td:first-child .context-menu-wrapper {
+tbody tr .row-zone {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  border: none;
+  max-width: calc(100% - 40px);
+}
+
+tbody tr .row-zone .context-menu-wrapper {
   position: fixed;
   width: max-content;
   height: max-content;
   z-index: 2;
 }
 
-tbody tr td:first-child .context-menu-wrapper a {
+tbody tr .row-zone .context-menu-wrapper a {
   text-decoration: none;
 }
 
-tbody tr td:first-child .context-menu-wrapper .list-group-item {
+tbody tr .row-zone .context-menu-wrapper .list-group-item {
   padding: 0;
 }
 
-tbody tr td:first-child .context-menu-wrapper .list-group-item a {
+tbody tr .row-zone .context-menu-wrapper .list-group-item a {
   padding: 0.75rem 1.25rem;
 }
 
@@ -261,13 +273,6 @@ tbody tr.row-selected td {
 
 tbody tr.row-selected td:first-child {
   background-color: transparent !important;
-}
-
-tbody tr td:first-child {
-  position: absolute;
-  padding: 0;
-  margin: 0;
-  border: none;
 }
 
 tbody a {
@@ -294,7 +299,7 @@ tbody.bulk-choice tr.row-selected td:last-child {
   border-right-color: #fff;
 }
 
-.table-bordered thead th, .table-bordered thead td {
+.table-bordered .tpart th, .table-bordered .tpart td {
   border-bottom-width: 1px;
 }
 
@@ -304,6 +309,10 @@ tbody.bulk-choice tr.row-selected td:last-child {
 
 .table-bordered tbody tr:last-child td {
   border-bottom-width: 1px;
+}
+
+.table-bordered tfoot tr:first-child td {
+  border-top-width: 0;
 }
 
 table.table-bordered.dataTable th:nth-child(2) {
