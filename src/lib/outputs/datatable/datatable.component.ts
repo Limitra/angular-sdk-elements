@@ -14,6 +14,7 @@ export class DatatableComponent implements OnInit {
 
   @ViewChildren('row') rows: QueryList<ElementRef>;
   @ViewChild('notification', { static: false }) notification: NotificationComponent;
+  @ViewChild('canvas', { static: false }) canvas: ElementRef;
 
   private texts: any;
   private api: any;
@@ -184,7 +185,7 @@ export class DatatableComponent implements OnInit {
           data.Columns = [];
           this.settings.Columns.forEach(column => {
             const colObj: any = {Nested: []};
-            this.pushColumnLen(column, column.Title.toString().length);
+            this.pushColumnLen(column, column.Title.toString());
             const nowValue = this.valOfObj(data, column);
             colObj.Position = column.Position;
             if (column.Render) {
@@ -200,7 +201,7 @@ export class DatatableComponent implements OnInit {
                 Value: badge.Value,
                 Icon: badge.Icon
               };
-              this.pushColumnLen(column, (colObj.Badge.Value ? colObj.Badge.Value.length : 0) + 3);
+              this.pushColumnLen(column, colObj.Badge.Value || '');
             }
             if (column.Image) {
               colObj.Image = {
@@ -215,7 +216,7 @@ export class DatatableComponent implements OnInit {
               column.Nested.forEach(nest => {
                 const nestObj = {Title: nest.Title, Value: this.valOfObj(data, nest, false)};
                 colObj.Nested.push(nestObj);
-                this.pushColumnLen(column, (nest.Title.toString().length + nestObj.Value.length));
+                this.pushColumnLen(column, nest.Title.toString() + ' ' + nestObj.Value);
               });
             }
 
@@ -333,9 +334,10 @@ export class DatatableComponent implements OnInit {
     }
   }
 
-  private pushColumnLen(column: any, len: number) {
-    if (!column.MaxChar || column.MaxChar < len) {
-      column.MaxChar = len >= 5 ? len : 5;
+  private pushColumnLen(column: any, text: string, width: number = null) {
+    const colWidth = width || this.getTextWidth(text);
+    if (!column.Width || column.Width < colWidth) {
+      column.Width = colWidth;
     }
   }
 
@@ -379,9 +381,10 @@ export class DatatableComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   public resizeColumns(event: any = null) {
     if (this.settings && this.settings.Columns) {
-      const totalChar = this.settings.Columns.reduce((sum, current) => sum + current.MaxChar, 0);
+      //const totalChar = this.settings.Columns.reduce((sum, current) => sum + current.MaxChar, 0);
       this.settings.Columns.forEach(col => {
-        col.Width = col.MaxChar * 100 / totalChar;
+        console.log(col.Width);
+        //col.Width = col.MaxChar * 100 / totalChar;
       });
       if (this.settings.Response && this.settings.Response.Data && this.settings.Response.Data.Source) {
         setTimeout(() => {
@@ -419,8 +422,14 @@ export class DatatableComponent implements OnInit {
     }
   }
 
+  private getTextWidth(text: string): number {
+    const ctx = this.canvas.nativeElement.getContext('2d');
+    // tslint:disable-next-line:max-line-length
+    ctx.font = '1rem Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
+    return ctx.measureText(text).width;
+  }
+
   private valOfObj(obj: any, column: any, effect: boolean = true): any {
-    const colLen = { Calculate: column.Image ? false : true, Char: column.Image ? (column.Image.Char || column.Image.Width / 3) : 0 };
     const field = column.Field || '';
     if (field.includes('.')) {
       const partials = field.split('.');
@@ -433,10 +442,10 @@ export class DatatableComponent implements OnInit {
       obj = obj[field];
     }
     if (effect) {
-      if (colLen.Calculate) {
-        this.pushColumnLen(column, (obj ? obj.toString().length : 0));
+      if (column.Image) {
+        this.pushColumnLen(column, null, column.Image.Width);
       } else {
-        this.pushColumnLen(column, colLen.Char);
+        this.pushColumnLen(column, (obj ? obj.toString() : ''));
       }
     }
     return obj;

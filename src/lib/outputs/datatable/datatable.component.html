@@ -35,12 +35,12 @@
 
 <div class="table-responsive">
   <table class="table table-striped table-bordered dataTable" [style.minWidth.px]="980">
-    <thead *ngIf="settings&&settings.Columns">
-    <tr>
-      <th></th>
-      <th *ngFor="let column of settings.Columns" [style.width.%]="column.Width"
-          title="{{column.Title}}" (click)="sortColumn(column)"><i class="fa {{column.Direction==='asc' ? 'fa-sort-up' : (column.Direction==='desc' ? 'fa-sort-down' :'fa-sort')}} text-secondary"></i> {{column.Title}}</th>
-    </tr>
+    <thead class="tpart" *ngIf="settings&&settings.Columns">
+      <tr>
+        <th class="head-starter"></th>
+        <th *ngFor="let column of settings.Columns" [style.width.px]="column.Width" class="{{column.Position?'text-'+column.Position:''}}"
+            title="{{column.Title}}" (click)="sortColumn(column)"><i class="fa {{column.Direction==='asc' ? 'fa-sort-up' : (column.Direction==='desc' ? 'fa-sort-down' :'fa-sort')}} text-secondary"></i> {{column.Title}}</th>
+      </tr>
     </thead>
     <tbody *ngIf="settings&&settings.Columns&&settings.Response&&settings.Response.Data&&settings.Response.Data.Source" class="{{settings.BulkChoice?'bulk-choice':''}}">
     <tr #row *ngFor="let data of settings.Response.Data.Source" (click)="selectRow(data)" class="{{data.Selected ? 'row-selected' : ''}}" (contextmenu)="openMenu(data, $event)" (lim-os-click)="data.ContextMenu?data.ContextMenu.Focus=false:''">
@@ -67,6 +67,13 @@
       </td>
     </tr>
     </tbody>
+    <tfoot class="tpart" *ngIf="settings&&settings.Columns&&settings.Response&&settings.Response.Data&&settings.Response.Data.Source&&settings.Response.Data.Source.length>=10">
+      <tr>
+        <th class="head-starter"></th>
+        <th *ngFor="let column of settings.Columns" [style.width.px]="column.Width"
+            title="{{column.Title}}" (click)="sortColumn(column)"><i class="fa {{column.Direction==='asc' ? 'fa-sort-up' : (column.Direction==='desc' ? 'fa-sort-down' :'fa-sort')}} text-secondary"></i> {{column.Title}}</th>
+      </tr>
+    </tfoot>
   </table>
 </div>
 
@@ -117,3 +124,4 @@
     </div>
   </div>
 </div>
+<canvas #canvas class="d-none"></canvas>
