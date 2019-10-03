@@ -72,7 +72,8 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   }
 
   scroll(event) {
-    if (event.target.scrollTop === event.target.scrollTopMax) {
+    const scrollMax = event.target.scrollHeight - event.target.offsetHeight;
+    if (event.target.scrollTop === scrollMax) {
       this.page++;
       this.initSource(false);
     }
