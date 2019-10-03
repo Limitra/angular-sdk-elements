@@ -70,7 +70,7 @@
     <tfoot class="tpart" *ngIf="settings&&settings.Columns&&settings.Response&&settings.Response.Data&&settings.Response.Data.Source&&settings.Response.Data.Source.length>=10">
       <tr>
         <th class="head-starter"></th>
-        <th *ngFor="let column of settings.Columns" [style.width.px]="column.Width"
+        <th *ngFor="let column of settings.Columns" [style.width.px]="column.Width" class="{{column.Position?'text-'+column.Position:''}}"
             title="{{column.Title}}" (click)="sortColumn(column)"><i class="fa {{column.Direction==='asc' ? 'fa-sort-up' : (column.Direction==='desc' ? 'fa-sort-down' :'fa-sort')}} text-secondary"></i> {{column.Title}}</th>
       </tr>
     </tfoot>
