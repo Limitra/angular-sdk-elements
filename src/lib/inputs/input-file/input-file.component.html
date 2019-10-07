@@ -5,7 +5,7 @@
     <div *ngFor="let file of files;let i = index;" class="input-group input-group-sm mb-1 {{hasError?'has-error':''}} {{sortable?'sortable':''}}" [draggable]="sortable" (dragstart)="onDrag(file, $event)" (drop)="onDrop(file)" (dragover)="sortable?$event.preventDefault():''">
       <i *ngIf="sortable" class="fa fa-2x sort-number">{{(file.Index||0)+1}}</i>
       <i *ngIf="!sortable" class="fa fa-{{file.Valid?'check-circle':'exclamation-triangle'}} {{file.Valid?(hasError?'text-warning':'text-success'):'text-danger'}} valid-status"></i>
-      <input #inputFile type="file" (change)="fileChange(file, inputFile)">
+      <input #inputFile type="file" (change)="fileChange(file, inputFile)" [multiple]="multiple?true:null">
       <input class="form-control form-control-sm" placeholder="{{validationMessages?validationMessages.FileDefaultText:''}}" [value]="file&&file.Text?file.Text:''" [title]="file&&file.Text?file.Text:''" readonly />
       <div *ngIf="file.UploadPercent||file.Uploaded" class="upload-progress bottom" [style.width.%]="file.Uploaded?100:file.UploadPercent"></div>
       <div class="input-group-append">
