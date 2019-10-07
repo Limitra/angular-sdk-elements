@@ -251,20 +251,32 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
     if (!this.progress) {
       clearInterval(file.Interval);
       const index = this.files.indexOf(file);
-      if (input.files && input.files.length > 0 && input.files[0].name) {
-        const selected = input.files[0];
-        const obj = {
-          Name: selected.name,
-          Size: selected.size,
-          Type: selected.type,
-          CanPreview: this.canPreview(selected.type),
-          Text: selected.name + ' (' + this.formatBytes(selected.size) + ')' + ' ' + selected.type,
-          Valid: this.fileTypeIsValid(selected.type) && this.fileSizeIsValid(selected.type, selected.size),
-          File: selected
-        };
-        this.files[index] = obj;
-      } else {
-        this.files[index] = {};
+      if (input.files && input.files.length > 0) {
+        Array.from(input.files).forEach((inFile, subIndex) => {
+          const selected: any = inFile;
+          if (selected.name) {
+            const obj = {
+              Name: selected.name,
+              Size: selected.size,
+              Type: selected.type,
+              CanPreview: this.canPreview(selected.type),
+              Text: selected.name + ' (' + this.formatBytes(selected.size) + ')' + ' ' + selected.type,
+              Valid: this.fileTypeIsValid(selected.type) && this.fileSizeIsValid(selected.type, selected.size),
+              File: selected
+            };
+            if (this.files.length > index + subIndex) {
+              this.files[index + subIndex] = obj;
+            } else {
+              this.files.splice(index + subIndex, 0, obj);
+            }
+          } else {
+            if (this.files.length > index + subIndex) {
+              this.files[index + subIndex] = {};
+            } else {
+              this.files.splice(index + subIndex, 0, {});
+            }
+          }
+        });
       }
       this.validate();
     }
