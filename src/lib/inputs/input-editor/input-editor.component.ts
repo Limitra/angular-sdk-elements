@@ -39,7 +39,7 @@ export class InputEditorComponent extends InputExtend implements OnInit {
   }
 
   ngOnInit() {
-    this.config.toolbar = [ 'fontFamily', 'fontSize', 'heading', 'bold', 'italic', 'link', 'alignment', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo' ];
+    this.config.toolbar = [ 'fontSize', 'heading', 'bold', 'italic', 'link', 'alignment', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo' ];
     let lang = this.providers.Storage.Get('Localization_Settings', 'Language');
     if (lang) {
       lang = lang.split('-')[0];
