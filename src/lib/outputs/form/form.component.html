@@ -1,2 +1,8 @@
-<ng-content></ng-content>
+<div class="row text-center model-ring" *ngIf="!modelLoaded">
+  <div class="model-dual-ring"></div>
+</div>
+
+<div [ngClass]="modelLoaded?'':'model-loading'">
+  <ng-content></ng-content>
+</div>
 <lim-notification #notification top="10" left="10"></lim-notification>
