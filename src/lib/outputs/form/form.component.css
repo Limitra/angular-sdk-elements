@@ -1,0 +1,37 @@
+.model-loading {
+  visibility: hidden;
+  position: fixed;
+}
+
+.model-ring {
+  margin-top: 64px;
+  margin-bottom: 64px;
+}
+
+.model-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  margin: auto;
+}
+
+.model-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 14px;
+  border-radius: 50%;
+  border: 6px solid rgba(0,0,0,.5);
+  border-color: rgba(0,0,0,.5) transparent;
+  animation: model-dual-ring 1.2s linear infinite;
+}
+
+@keyframes model-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

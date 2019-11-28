@@ -25,6 +25,8 @@ export class FormComponent implements OnInit, OnDestroy {
 
   public response: any;
 
+  modelLoaded = false;
+
   texts: any;
   hasProgress: boolean;
   isValid: boolean;
@@ -143,7 +145,10 @@ export class FormComponent implements OnInit, OnDestroy {
         if (response.Notification) {
           this.notification.push(response.Notification);
         }
+        setTimeout(() => { this.modelLoaded = true; }, 500);
       });
+    } else {
+      this.modelLoaded = true;
     }
   }
 
