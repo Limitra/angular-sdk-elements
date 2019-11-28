@@ -1,6 +1,6 @@
 {
   "name": "@limitra/sdk-elements",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "The Limitra Angular Sdk Elements enables you to use the full-stack elements for Angular projects in a practical, functional and non-repetitive way and to achieve optimized results.",
   "author": "Limitra <pom@limitra.com> (https://github.com/Limitra)",
   "contributors": [
