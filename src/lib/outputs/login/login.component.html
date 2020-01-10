@@ -1,29 +1,35 @@
 <div class="login-wrapper" [style.backgroundImage]="'url('+background+')'">
-  <div class="login-layer">
-    <div class="row">
-      <div class="col-md-4 offset-md-4 login-card">
-        <span class="login-header"><i *ngIf="icon" class="{{icon}} mr-3"></i> {{brand}}</span>
-        <div class="login-body">
-          <lim-form #form [(model)]="model" [source]="source" (stateChange)="onStateChange($event)">
-            <lim-input-email *ngIf="email" label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="100"></lim-input-email>
-            <lim-input-text *ngIf="!email" label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="50"></lim-input-text>
-            <lim-input-password label="{{textSource.Password}}" property="Password" [form]="form" required="true" maxlength="50"></lim-input-password>
-            <hr>
-            <div class="row">
-              <div class="col-6">
-                <lim-input-choice summary="{{textSource.KeepSession}}" property="KeepSession" [form]="form"></lim-input-choice>
-              </div>
-              <div class="col-6">
-                <button class="btn btn-outline-dark pull-right" [disabled]="state&&state.Enabled===false?true:null" (click)="state?state.Action():''">
-                  <i class="fa fa-{{state&&state.Spinner?'refresh fa-spin':'sign-in-alt'}}"></i> <span class="d-none d-sm-inline ml-2">{{textSource.LogIn}}</span>
-                </button>
-              </div>
+  <div class="login-layer {{theme}}">
+    <div #loginCard class="login-card">
+      <span *ngIf="!logo" class="login-header">
+        <i *ngIf="icon" class="{{icon}} mr-3"></i> {{brand}}
+      </span>
+      <span *ngIf="logo" class="login-header">
+        <img [src]="logo">
+      </span>
+      <div class="login-body">
+        <lim-form #form [(model)]="model" [source]="source" (stateChange)="onStateChange($event)">
+          <lim-input-email *ngIf="email" label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="100"></lim-input-email>
+          <lim-input-text *ngIf="!email" label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="50"></lim-input-text>
+          <lim-input-password label="{{textSource.Password}}" property="Password" [form]="form" required="true" maxlength="50"></lim-input-password>
+          <hr>
+          <div class="row">
+            <div class="col-6">
+              <lim-input-choice summary="{{textSource.KeepSession}}" property="KeepSession" [form]="form"></lim-input-choice>
             </div>
-            <span class="login-copyright">
-              {{copyright}} <a *ngIf="link" href="{{link}}" target="_blank"> {{author}}</a> {{year}}
-            </span>
-          </lim-form>
-        </div>
+            <div class="col-6">
+              <button class="btn btn-outline-{{theme=='light'?'dark':'light'}} pull-right" [disabled]="state&&state.Enabled===false?true:null" (click)="state?state.Action():''">
+                <i class="fa fa-{{state&&state.Spinner?'refresh fa-spin':'sign-in-alt'}}"></i> <span class="d-none d-sm-inline ml-2">{{textSource.LogIn}}</span>
+              </button>
+            </div>
+          </div>
+          <hr *ngIf="malttext||salttext">
+          <a class="login-main-alt" *ngIf="malttext" [routerLink]="maltlink"><i *ngIf="malticon" class="fa fa-{{malticon}}"></i> {{malttext}}</a>
+          <a class="login-sub-alt" *ngIf="salttext" [routerLink]="saltlink"><i *ngIf="salticon" class="fa fa-{{salticon}}"></i> {{salttext}}</a>
+          <span class="login-copyright">
+            {{copyright}} <a *ngIf="link" href="{{link}}" target="_blank"> {{author}}</a> - {{year}}
+          </span>
+        </lim-form>
       </div>
     </div>
   </div>

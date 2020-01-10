@@ -1,13 +1,23 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {SdkProviders} from '@limitra/sdk-core';
 import {FormComponent} from '../form/form.component';
 
 @Component({
   selector: 'lim-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
   @Input() model: any = {};
   @Input() email: boolean;
   @Input() source: string;
@@ -17,12 +27,25 @@ export class LoginComponent implements OnInit {
   @Input() copyright = 'Copyright ©';
   @Input() author: string;
   @Input() link: string;
+  @Input() logo: string;
   @Input() year: number = new Date().getFullYear();
+  @Input() theme = 'light';
+  @Input() bgform = '#fff';
+  @Input() bglayer: string;
+
+  @Input() maltlink: string;
+  @Input() malttext: string;
+  @Input() malticon: string;
+
+  @Input() saltlink: string;
+  @Input() salttext: string;
+  @Input() salticon: string;
 
   public state: any;
   public textSource: any = {};
 
   @ViewChild('form', { static: false }) form: FormComponent;
+  @ViewChild('loginCard', { static: false }) loginCard: ElementRef;
 
   constructor(private providers: SdkProviders) { }
 
@@ -40,6 +63,10 @@ export class LoginComponent implements OnInit {
         LogIn: 'Log In'
       };
     }
+  }
+
+  ngAfterViewInit() {
+    this.onResize();
   }
 
   onStateChange(event: any) {
@@ -62,5 +89,11 @@ export class LoginComponent implements OnInit {
         }, (jwt ? jwt.Delay : undefined) || 2000);
       }
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any = null) {
+    const elmHeight = this.loginCard.nativeElement.offsetHeight;
+    this.loginCard.nativeElement.style.cssText = 'margin-top: ' + (window.innerHeight - elmHeight) / 2 + 'px !important';
   }
 }
