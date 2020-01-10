@@ -105,7 +105,7 @@ input.form-control {
   font-size: 0.75rem;
 }
 
-a.login-main-alt {
+a.login-first-alt {
   font-weight: bold;
   display: block;
   text-align: center;
@@ -113,26 +113,26 @@ a.login-main-alt {
   font-size: 10pt;
 }
 
-.login-layer.light .login-main-alt {
+.login-layer.light .login-first-alt {
   color: #212529;
 }
 
-.login-layer.dark .login-main-alt {
+.login-layer.dark .login-first-alt {
   color: #f7f7f7;
 }
 
-a.login-sub-alt {
+a.login-second-alt {
   margin-top: 2px;
   display: block;
   text-align: center;
   font-size: 9pt;
 }
 
-.login-layer.light .login-sub-alt {
+.login-layer.light .login-second-alt {
   color: #212529;
 }
 
-.login-layer.dark .login-sub-alt {
+.login-layer.dark .login-second-alt {
   color: #f7f7f7;
 }
 
