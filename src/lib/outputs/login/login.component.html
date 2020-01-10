@@ -9,23 +9,37 @@
       </span>
       <div class="login-body">
         <lim-form #form [(model)]="model" [source]="source" (stateChange)="onStateChange($event)">
+          <div *ngFor="let input of inputs">
+            <lim-input-text *ngIf="input.Type=='Text'" label="{{textSource[input.Field]}}" property="{{input.Field}}" [form]="form" [required]="input.Required" [maxlength]="input.MaxLength"></lim-input-text>
+            <lim-input-phone *ngIf="input.Type=='Phone'" label="{{textSource[input.Field]}}" property="{{input.Field}}" [form]="form" [required]="input.Required"></lim-input-phone>
+            <lim-input-number *ngIf="input.Type=='Number'" label="{{textSource[input.Field]}}" property="{{input.Field}}" [form]="form" [required]="input.Required" [fixed]="input.Fixed" [min]="input.Min" [max]="input.Max"></lim-input-number>
+            <lim-input-date *ngIf="input.Type=='Date'" label="{{textSource[input.Field]}}" property="{{input.Field}}" [form]="form" [required]="input.Required" [min]="input.Min" [max]="input.Max"></lim-input-date>
+          </div>
+          <hr *ngIf="inputs.length>0">
           <lim-input-email *ngIf="email" label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="100"></lim-input-email>
           <lim-input-text *ngIf="!email" label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="50"></lim-input-text>
-          <lim-input-password label="{{textSource.Password}}" property="Password" [form]="form" required="true" maxlength="50"></lim-input-password>
+          <lim-input-password *ngIf="type!='forgot'" label="{{textSource.Password}}" property="Password" [form]="form" required="true" maxlength="50"></lim-input-password>
           <hr>
           <div class="row">
             <div class="col-6">
-              <lim-input-choice summary="{{textSource.KeepSession}}" property="KeepSession" [form]="form"></lim-input-choice>
+              <lim-input-choice *ngIf="type=='login'" summary="{{textSource.KeepSession}}" property="KeepSession" [form]="form"></lim-input-choice>
             </div>
             <div class="col-6">
               <button class="btn btn-outline-{{theme=='light'?'dark':'light'}} pull-right" [disabled]="state&&state.Enabled===false?true:null" (click)="state?state.Action():''">
-                <i class="fa fa-{{state&&state.Spinner?'refresh fa-spin':'sign-in-alt'}}"></i> <span class="d-none d-sm-inline ml-2">{{textSource.LogIn}}</span>
+                <i class="fa fa-{{state&&state.Spinner?'refresh fa-spin':(type=='register'?'registered':(type=='forgot'?'key':'sign-in-alt'))}}"></i> <span class="d-none d-sm-inline ml-1">
+                {{type=='register'?textSource.Register:(type=='forgot'?textSource.Forgot:textSource.LogIn)}}
+              </span>
               </button>
             </div>
           </div>
-          <hr *ngIf="malttext||salttext">
-          <a class="login-main-alt" *ngIf="malttext" [routerLink]="maltlink"><i *ngIf="malticon" class="fa fa-{{malticon}}"></i> {{malttext}}</a>
-          <a class="login-sub-alt" *ngIf="salttext" [routerLink]="saltlink"><i *ngIf="salticon" class="fa fa-{{salticon}}"></i> {{salttext}}</a>
+          <hr *ngIf="register||forgot">
+          <a *ngIf="type=='login'" class="login-first-alt" [routerLink]="register"><i class="fa fa-registered"></i> {{textSource.RegisterLink}}</a>
+          <a *ngIf="type=='register'" class="login-first-alt" [routerLink]="login"><i class="fa fa-sign-in-alt"></i> {{textSource.LoginLink}}</a>
+          <a *ngIf="type=='forgot'" class="login-first-alt" [routerLink]="login"><i class="fa fa-sign-in-alt"></i> {{textSource.AlreadyLink}}</a>
+
+          <a *ngIf="type=='login'" class="login-second-alt" [routerLink]="forgot">{{textSource.ForgotLink}}</a>
+          <a *ngIf="type=='register'" class="login-second-alt" [routerLink]="forgot">{{textSource.ForgotLink}}</a>
+          <a *ngIf="type=='forgot'" class="login-second-alt" [routerLink]="register">{{textSource.RegisterLink}}</a>
           <span class="login-copyright">
             {{copyright}} <a *ngIf="link" href="{{link}}" target="_blank"> {{author}}</a> - {{year}}
           </span>

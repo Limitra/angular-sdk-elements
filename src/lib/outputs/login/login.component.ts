@@ -33,13 +33,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
   @Input() bgform = '#fff';
   @Input() bglayer: string;
 
-  @Input() maltlink: string;
-  @Input() malttext: string;
-  @Input() malticon: string;
+  @Input() type = 'login';
 
-  @Input() saltlink: string;
-  @Input() salttext: string;
-  @Input() salticon: string;
+  @Input() register: string;
+  @Input() forgot: string;
+  @Input() login: string;
+
+  @Input() inputs: Array<any> = [];
 
   public state: any;
   public textSource: any = {};
@@ -54,19 +54,27 @@ export class LoginComponent implements OnInit, AfterViewInit {
     if (lang) {
       this.providers.Http.Get('assets/locale/interface/' + lang + '.json').subscribe(response => {
         this.textSource = response;
+        this.ngAfterViewInit();
       });
     } else {
       this.textSource = {
         UserName: 'Username',
         Password: 'Password',
         KeepSession: 'Keep it',
-        LogIn: 'Log In'
+        LogIn: 'Log In',
+        Register: 'Register',
+        Forgot: 'Recover',
+        LoginLink: 'Want to login ?',
+        AlreadyLink: 'Already have an account ?',
+        RegisterLink: 'Don\'t have an account yet ?',
+        ForgotLink: 'Having access problems ?'
       };
+      this.ngAfterViewInit();
     }
   }
 
   ngAfterViewInit() {
-    this.onResize();
+    setTimeout(() => { this.onResize(); });
   }
 
   onStateChange(event: any) {
@@ -74,19 +82,22 @@ export class LoginComponent implements OnInit, AfterViewInit {
     if (event) {
       this.state = event.State;
       if (event.Response && event.Response.Status === 200 && event.Response.Text) {
-        const expire = new Date().getTime() + (((jwt ? jwt.TimeOut : undefined) || 15) * 60 * 1000);
-        this.providers.Storage.Set('Authentication_Settings', event.Response.Text, 'Token');
-        this.providers.Storage.Set('Authentication_Settings', jwt ? jwt.TimeOut : undefined, 'TimeOut');
-        this.providers.Storage.Set('Authentication_Settings', this.model.KeepSession, 'KeepSession');
-        this.providers.Storage.Set('Authentication_Settings', expire, 'Expire');
+        if (this.type === 'login') {
+          const expire = new Date().getTime() + (((jwt ? jwt.TimeOut : undefined) || 15) * 60 * 1000);
+          this.providers.Storage.Set('Authentication_Settings', event.Response.Text, 'Token');
+          this.providers.Storage.Set('Authentication_Settings', jwt ? jwt.TimeOut : undefined, 'TimeOut');
+          this.providers.Storage.Set('Authentication_Settings', this.model.KeepSession, 'KeepSession');
+          this.providers.Storage.Set('Authentication_Settings', expire, 'Expire');
+
+          setTimeout(() => {
+            if (jwt && jwt.Home) {
+              this.providers.Router.Navigate(jwt.Home);
+            }
+          }, (jwt ? jwt.Delay : undefined) || 2000);
+        }
 
         this.state.Enabled = false;
         this.state.Spinner = true;
-        setTimeout(() => {
-          if (jwt && jwt.Home) {
-            this.providers.Router.Navigate(jwt.Home);
-          }
-        }, (jwt ? jwt.Delay : undefined) || 2000);
       }
     }
   }
