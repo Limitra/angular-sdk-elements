@@ -6,13 +6,13 @@
   width: 100%;
   height: 100%;
   position: absolute;
-  background-size: 100% 100%;
+  background-size: cover;
 }
 
 .login-layer {
   width: 100%;
   height: 100%;
-  background-color: #00000080;
+  position: absolute;
 }
 
 .login-header {
@@ -20,10 +20,6 @@
   display: block;
   height: 120px;
   line-height: 120px;
-  background-color: rgba(0, 0, 0, 0.65);
-  margin-top: -20px;
-  margin-left: -20px;
-  margin-right: -20px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -33,20 +29,71 @@
   text-align: center;
 }
 
+.login-header img {
+  max-width: 330px;
+  max-height: 80px;
+}
+
+.login-body {
+  padding: 20px;
+}
+
+.login-layer.light .login-header {
+  border-bottom: 2px solid #00000036;
+}
+
+.login-layer.dark .login-header {
+  background-color: #00000080;
+  border-bottom: 2px solid #000000ad;
+}
+
+.login-layer.light {
+  background-color: #ffffff29;
+}
+
+.login-layer.dark {
+  background-color: #00000080;
+}
+
+.login-layer.light .login-body {
+}
+
+.login-layer.dark .login-body {
+  background-color: #00000036;
+}
+
+input.form-control {
+  background-color: transparent !important;
+}
+
+.input-group-text {
+  background-color: transparent !important;
+}
+
+.login-layer.light label, .login-layer.light input.form-control, .login-layer.light .input-group-text i,
+.login-layer.light i.eye-show, .login-layer.light .choice-box i {
+  color: #434648 !important;
+}
+
+.login-layer.dark label, .login-layer.dark input.form-control, .login-layer.dark .input-group-text i,
+.login-layer.dark i.eye-show, .login-layer.dark .choice-box i {
+  color: #f7f7f7 !important;
+}
+
 .login-card {
-  padding:20px;
-  border: 2px solid rgba(0, 0, 0, 0.73);
   border-radius: 4px;
-  position: absolute;
-  top: 50%;
-  left: calc(50% - 20px);
-  margin: 0;
-  transform: translate(-50%, -50%);
-  margin-left: 20px !important;
-  margin-right: 20px !important;
+  position: relative;
+  margin: auto;
   width: calc(100% - 40px) !important;
   max-width: 420px;
-  background-color: #ffffffe6;
+}
+
+.login-layer.light .login-card {
+  border: 2px solid #00000036;
+}
+
+.login-layer.dark .login-card {
+  border: 2px solid #000000ad;
 }
 
 .login-copyright {
@@ -58,7 +105,53 @@
   font-size: 0.75rem;
 }
 
-.login-copyright a {
-  color: #212529;
+a.login-main-alt {
   font-weight: bold;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  font-size: 10pt;
+}
+
+.login-layer.light .login-main-alt {
+  color: #212529;
+}
+
+.login-layer.dark .login-main-alt {
+  color: #f7f7f7;
+}
+
+a.login-sub-alt {
+  margin-top: 2px;
+  display: block;
+  text-align: center;
+  font-size: 9pt;
+}
+
+.login-layer.light .login-sub-alt {
+  color: #212529;
+}
+
+.login-layer.dark .login-sub-alt {
+  color: #f7f7f7;
+}
+
+.login-copyright a {
+  font-weight: bold;
+}
+
+.login-layer.light .login-copyright, .login-layer.light .login-copyright a {
+  color: #212529;
+}
+
+.login-layer.dark .login-copyright, .login-layer.dark .login-copyright a {
+  color: #f7f7f7;
+}
+
+.login-layer.light hr {
+  border-top: 1px solid #24242430;
+}
+
+.login-layer.dark hr {
+  border-top: 1px solid #ffffff8a;
 }
