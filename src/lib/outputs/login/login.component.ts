@@ -41,6 +41,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   @Input() inputs: Array<any> = [];
 
+  public height: number;
   public state: any;
   public textSource: any = {};
 
@@ -104,7 +105,18 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any = null) {
-    const elmHeight = this.loginCard.nativeElement.offsetHeight;
-    this.loginCard.nativeElement.style.cssText = 'margin-top: ' + (window.innerHeight - elmHeight) / 2 + 'px !important';
+    const cardHeight = this.loginCard.nativeElement.offsetHeight;
+    let elmHeight = window.innerHeight - cardHeight;
+    const range = 20;
+    if (elmHeight < range) {
+      elmHeight = range;
+    }
+
+    if (cardHeight + range > window.innerHeight) {
+      this.height = cardHeight + range;
+    } else {
+      this.height = window.innerHeight;
+    }
+    this.loginCard.nativeElement.style.cssText = 'margin-top: ' + (elmHeight) / 2 + 'px !important;' + 'margin-bottom: ' + (elmHeight) / 2 + 'px !important';
   }
 }
