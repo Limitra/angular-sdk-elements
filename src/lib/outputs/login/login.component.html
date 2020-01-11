@@ -25,7 +25,7 @@
               <lim-input-choice *ngIf="type=='login'" summary="{{textSource.KeepSession}}" property="KeepSession" [form]="form"></lim-input-choice>
             </div>
             <div class="col-6">
-              <button class="btn btn-outline-{{theme=='light'?'dark':'light'}} pull-right" [disabled]="state&&state.Enabled===false?true:null" (click)="state?state.Action():''">
+              <button #submit class="btn btn-outline-{{theme=='light'?'dark':'light'}} pull-right" [disabled]="state&&state.Enabled===false?true:null" (click)="state?state.Action():''">
                 <i class="fa fa-{{state&&state.Spinner?'refresh fa-spin':(type=='register'?'registered':(type=='forgot'?'key':'sign-in-alt'))}}"></i> <span class="d-none d-sm-inline ml-1">
                 {{type=='register'?textSource.Register:(type=='forgot'?textSource.Forgot:textSource.LogIn)}}
               </span>

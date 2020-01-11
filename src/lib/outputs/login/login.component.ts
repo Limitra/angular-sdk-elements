@@ -47,6 +47,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   @ViewChild('form', { static: false }) form: FormComponent;
   @ViewChild('loginCard', { static: false }) loginCard: ElementRef;
+  @ViewChild('submit', { static: false }) submit: ElementRef;
 
   constructor(private providers: SdkProviders) { }
 
@@ -101,6 +102,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.state.Spinner = true;
       }
     }
+  }
+
+  @HostListener('document:keydown.enter', ['$event'])
+  onSubmit(event: KeyboardEvent) {
+    this.submit.nativeElement.click();
   }
 
   @HostListener('window:resize', ['$event'])
