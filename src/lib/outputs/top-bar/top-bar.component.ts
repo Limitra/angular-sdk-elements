@@ -47,7 +47,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
           }
         });
       };
-      setInterval(() => { loop(); }, 10000);
+      this.interval = setInterval(() => { loop(); }, 10000);
       loop();
     }
   }
