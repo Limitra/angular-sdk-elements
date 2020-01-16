@@ -2,6 +2,11 @@
   color: #212529;
 }
 
+.login-title {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14pt;
+}
+
 .login-wrapper {
   width: 100%;
   position: absolute;
@@ -38,12 +43,12 @@
 }
 
 .login-layer.light .login-header {
-  border-bottom: 2px solid #00000036;
+  border-bottom: 1px solid #00000036;
 }
 
 .login-layer.dark .login-header {
   background-color: #00000080;
-  border-bottom: 2px solid #000000ad;
+  border-bottom: 1px solid #000000ad;
 }
 
 .login-layer.light {
@@ -71,7 +76,7 @@ input.form-control {
 
 .login-layer.light label, .login-layer.light input.form-control, .login-layer.light .input-group-text i,
 .login-layer.light i.eye-show, .login-layer.light .choice-box i {
-  color: #434648 !important;
+  color: #595d60 !important;
 }
 
 .login-layer.dark label, .login-layer.dark input.form-control, .login-layer.dark .input-group-text i,
@@ -88,11 +93,11 @@ input.form-control {
 }
 
 .login-layer.light .login-card {
-  border: 2px solid #00000036;
+  border: 1px solid #00000036;
 }
 
 .login-layer.dark .login-card {
-  border: 2px solid #000000ad;
+  border: 1px solid #000000ad;
 }
 
 .login-copyright {
