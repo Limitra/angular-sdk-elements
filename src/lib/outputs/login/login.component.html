@@ -9,16 +9,28 @@
       </span>
       <div class="login-body">
         <lim-form #form [(model)]="model" [source]="source" (stateChange)="onStateChange($event)">
+          <label class="font-weight-bold text-center d-block text-center login-title">
+            <i class="fa fa-{{type=='register'?'registered':(type=='forgot'?'key':(type=='recover'?'recycle':'sign-in-alt'))}}"></i>
+            <span class="d-none d-sm-inline ml-1">
+              {{type=='register'?textSource.RegisterTitle:(type=='forgot'?textSource.ForgotTitle:(type=='recover'?textSource.RecoverTitle:textSource.LogInTitle))}}
+            </span>
+          </label>
+          <hr>
           <div *ngFor="let input of inputs">
-            <lim-input-text *ngIf="input.Type=='Text'" label="{{textSource[input.Field]}}" property="{{input.Field}}" [form]="form" [required]="input.Required" [maxlength]="input.MaxLength"></lim-input-text>
+            <lim-input-text *ngIf="input.Type=='Text'" label="{{textSource[input.Field]}}" property="{{input.Field}}" [form]="form" [required]="input.Required" [maxlength]="input.MaxLength" ></lim-input-text>
+            <lim-input-password *ngIf="input.Type=='Password'" label="{{textSource[input.Field]}}" property="{{input.Field}}" [form]="form" [required]="input.Required" [maxlength]="input.MaxLength" [digit]="input.Digit" [special]="input.Special" [uppercase]="input.UpperCase" [lowercase]="input.LowerCase"></lim-input-password>
             <lim-input-phone *ngIf="input.Type=='Phone'" label="{{textSource[input.Field]}}" property="{{input.Field}}" [form]="form" [required]="input.Required"></lim-input-phone>
             <lim-input-number *ngIf="input.Type=='Number'" label="{{textSource[input.Field]}}" property="{{input.Field}}" [form]="form" [required]="input.Required" [fixed]="input.Fixed" [min]="input.Min" [max]="input.Max"></lim-input-number>
             <lim-input-date *ngIf="input.Type=='Date'" label="{{textSource[input.Field]}}" property="{{input.Field}}" [form]="form" [required]="input.Required" [min]="input.Min" [max]="input.Max"></lim-input-date>
           </div>
           <hr *ngIf="inputs.length>0">
-          <lim-input-email *ngIf="email" label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="100"></lim-input-email>
-          <lim-input-text *ngIf="!email" label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="50"></lim-input-text>
-          <lim-input-password *ngIf="type!='forgot'" label="{{textSource.Password}}" property="Password" [form]="form" required="true" maxlength="50"></lim-input-password>
+          <div *ngIf="type!='recover'">
+            <lim-input-email *ngIf="email" label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="100"></lim-input-email>
+            <lim-input-text *ngIf="!email" label="{{textSource.UserName}}" property="UserName" [form]="form" required="true" maxlength="50"></lim-input-text>
+          </div>
+          <lim-input-password *ngIf="type=='login'" label="{{textSource.Password}}" property="Password" [form]="form" required="true" maxlength="50"></lim-input-password>
+          <lim-input-password *ngIf="type=='register'" label="{{textSource.Password}}" property="Password" [form]="form" required="true" minlength="8" digit="1" special="1" uppercase="1" lowercase="1" maxlength="50"></lim-input-password>
+          <lim-input-password *ngIf="type=='recover'" label="{{textSource.NewPassword}}" property="NewPassword" [form]="form" required="true" maxlength="50"></lim-input-password>
           <hr>
           <div class="row">
             <div class="col-6">
@@ -26,19 +38,18 @@
             </div>
             <div class="col-6">
               <button #submit class="btn btn-outline-{{theme=='light'?'dark':'light'}} pull-right" [disabled]="state&&state.Enabled===false?true:null" (click)="state?state.Action():''">
-                <i class="fa fa-{{state&&state.Spinner?'refresh fa-spin':(type=='register'?'registered':(type=='forgot'?'key':'sign-in-alt'))}}"></i> <span class="d-none d-sm-inline ml-1">
-                {{type=='register'?textSource.Register:(type=='forgot'?textSource.Forgot:textSource.LogIn)}}
+                <i class="fa fa-{{state&&state.Spinner?'refresh fa-spin':(type=='register'?'registered':(type=='forgot'?'key':(type=='recover'?'recycle':'sign-in-alt')))}}"></i> <span class="d-none d-sm-inline ml-1">
+                {{type=='register'?textSource.Register:(type=='forgot'?textSource.Forgot:(type=='recover'?textSource.Recover:textSource.LogIn))}}
               </span>
               </button>
             </div>
           </div>
           <hr *ngIf="register||forgot">
           <a *ngIf="type=='login'" class="login-first-alt" [routerLink]="register"><i class="fa fa-registered"></i> {{textSource.RegisterLink}}</a>
-          <a *ngIf="type=='register'" class="login-first-alt" [routerLink]="login"><i class="fa fa-sign-in-alt"></i> {{textSource.LoginLink}}</a>
+          <a *ngIf="type=='register'||type=='recover'" class="login-first-alt" [routerLink]="login"><i class="fa fa-sign-in-alt"></i> {{textSource.LoginLink}}</a>
           <a *ngIf="type=='forgot'" class="login-first-alt" [routerLink]="login"><i class="fa fa-sign-in-alt"></i> {{textSource.AlreadyLink}}</a>
 
-          <a *ngIf="type=='login'" class="login-second-alt" [routerLink]="forgot">{{textSource.ForgotLink}}</a>
-          <a *ngIf="type=='register'" class="login-second-alt" [routerLink]="forgot">{{textSource.ForgotLink}}</a>
+          <a *ngIf="type=='login'||type=='register'||type=='recover'" class="login-second-alt" [routerLink]="forgot">{{textSource.ForgotLink}}</a>
           <a *ngIf="type=='forgot'" class="login-second-alt" [routerLink]="register">{{textSource.RegisterLink}}</a>
           <span class="login-copyright">
             {{copyright}} <a *ngIf="link" href="{{link}}" target="_blank"> {{author}}</a> - {{year}}

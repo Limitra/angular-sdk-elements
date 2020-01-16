@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import {SdkProviders} from '@limitra/sdk-core';
 import {FormComponent} from '../form/form.component';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'lim-login',
@@ -40,16 +41,18 @@ export class LoginComponent implements OnInit, AfterViewInit {
   @Input() login: string;
 
   @Input() inputs: Array<any> = [];
+  @Input() endpoint: string;
 
   public height: number;
   public state: any;
   public textSource: any = {};
 
-  @ViewChild('form', { static: false }) form: FormComponent;
-  @ViewChild('loginCard', { static: false }) loginCard: ElementRef;
-  @ViewChild('submit', { static: false }) submit: ElementRef;
+  @ViewChild('form', {static: false}) form: FormComponent;
+  @ViewChild('loginCard', {static: false}) loginCard: ElementRef;
+  @ViewChild('submit', {static: false}) submit: ElementRef;
 
-  constructor(private providers: SdkProviders) { }
+  constructor(private providers: SdkProviders, private route: ActivatedRoute) {
+  }
 
   ngOnInit() {
     const lang = this.providers.Storage.Get('Localization_Settings', 'Language');
@@ -62,10 +65,16 @@ export class LoginComponent implements OnInit, AfterViewInit {
       this.textSource = {
         UserName: 'Username',
         Password: 'Password',
+        NewPassword: 'New Password',
         KeepSession: 'Keep it',
         LogIn: 'Log In',
         Register: 'Register',
-        Forgot: 'Recover',
+        Forgot: 'Forgot',
+        Recover: 'Recover',
+        LogInTitle: 'Account Log In',
+        RegisterTitle: 'Account Register',
+        ForgotTitle: 'Forgot Password',
+        RecoverTitle: 'Account Recover',
         LoginLink: 'Want to login ?',
         AlreadyLink: 'Already have an account ?',
         RegisterLink: 'Don\'t have an account yet ?',
@@ -76,7 +85,31 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    setTimeout(() => { this.onResize(); });
+    setTimeout(() => {
+      this.onResize();
+    });
+    if (this.endpoint) {
+      this.route.queryParams.subscribe(params => {
+        const key = params.key;
+        this.model.Token = key;
+        const api = this.providers.Storage.Get('API_Settings');
+        const jwt = this.providers.Storage.Get('Authentication_Settings');
+        if (jwt) {
+          const domain = (api ? api.Domain : undefined);
+          if (domain) {
+            this.providers.Http.Post(domain + this.endpoint, {Token: key}).subscribe(response => {
+              this.form.notification.push({
+                Status: response.Status,
+                Title: response.Title,
+                Message: response.Message
+              });
+            }, () => {
+              this.providers.Router.Navigate(jwt.Login);
+            });
+          }
+        }
+      });
+    }
   }
 
   onStateChange(event: any) {
