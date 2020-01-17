@@ -381,10 +381,10 @@ export class DatatableComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   public resizeColumns(event: any = null) {
     if (this.settings && this.settings.Columns) {
-      //const totalChar = this.settings.Columns.reduce((sum, current) => sum + current.MaxChar, 0);
+      // const totalChar = this.settings.Columns.reduce((sum, current) => sum + current.MaxChar, 0);
       this.settings.Columns.forEach(col => {
-        console.log(col.Width);
-        //col.Width = col.MaxChar * 100 / totalChar;
+        // console.log(col.Width);
+        // col.Width = col.MaxChar * 100 / totalChar;
       });
       if (this.settings.Response && this.settings.Response.Data && this.settings.Response.Data.Source) {
         setTimeout(() => {
