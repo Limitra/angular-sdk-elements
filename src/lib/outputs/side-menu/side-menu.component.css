@@ -77,7 +77,7 @@
 .sidebar .nav-item .collapse {
   position: absolute;
   left: calc(6.5rem + 1.5rem / 2);
-  z-index: 5;
+  z-index: 1001;
   top: 2px;
 }
 
@@ -212,7 +212,6 @@
   .sidebar .nav-item .collapse {
     position: relative;
     left: 0;
-    z-index: 1;
     top: 0;
     -webkit-animation: none;
     animation: none;
@@ -275,7 +274,6 @@
   .sidebar.toggled .nav-item .collapse {
     position: absolute;
     left: calc(6.5rem + 1.5rem / 2);
-    z-index: 5;
     top: 2px;
     -webkit-animation-name: growIn;
     animation-name: growIn;
