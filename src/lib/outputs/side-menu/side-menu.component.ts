@@ -9,7 +9,7 @@ declare const $: any;
   templateUrl: './side-menu.component.html',
   styleUrls: ['./side-menu.component.css']
 })
-export class SideMenuComponent implements OnInit, OnDestroy {
+export class SideMenuComponent implements OnInit {
   @Input() source: string;
   @Input() icon: string;
   @Input() brand: string;
@@ -17,7 +17,6 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 
   types = SideMenuTypes;
   menus: Array<any> = [];
-  interval: any;
   window: any;
 
   constructor(private providers: SdkProviders) {
@@ -27,19 +26,11 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const api = this.providers.Storage.Get('API_Settings');
     if (api && api.Domain && this.source) {
-      const load = () => {
-        this.providers.Http.Get(api.Domain + this.source).subscribe(response => {
-          this.menus = response;
-        });
-      };
-      this.interval = setInterval(load, 30000);
-      load();
+      this.providers.Http.Get(api.Domain + this.source).subscribe(response => {
+        this.menus = response;
+      });
     }
     this.removeToggled();
-  }
-
-  ngOnDestroy() {
-    clearInterval(this.interval);
   }
 
   setToggle() {
