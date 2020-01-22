@@ -22,17 +22,18 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   @Input() valuekey: string = 'Value';
 
   @ViewChild('search', {static: false}) search: ElementRef;
-
-  private api: any;
   private page = 1;
   public searchText: string;
   public filteredSource: Array<any> = [];
 
-  public selected: any;
+  public selected: any = {};
   public selecteds: Array<any> = [];
 
+  public textPreview: string = '';
+
   ngAfterViewInit() {
-    this.api = this.providers.Storage.Get('API_Settings');
+    const api = this.providers.Storage.Get('API_Settings');
+    this.domain = this.domain || (api ? api.Domain : '');
     this.init();
     this.initSource(true);
   }
@@ -45,6 +46,27 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     } else {
       this.selected = value;
     }
+    this.textInit();
+  }
+
+  textInit() {
+    if (this.value) {
+      if (this.multiple) {
+        this.textPreview = this.validationMessages ? this.validationMessages
+          .SelectMultiText.replace('[$Length]', this.selecteds ? this.selecteds.length : 0) : '';
+      } else {
+        if (this.value) {
+          const params: any = { ids : [this.value] };
+          const source = this.domain + this.source + (this.source.includes('?') ? '&' : '?') + this.providers.Url.Serialize(params);
+          this.providers.Http.Get(source).subscribe(response => {
+            const dataSource = response.Data.Source;
+            if (dataSource.length > 0) {
+              this.textPreview = dataSource[0][this.textkey];
+            }
+          });
+        }
+      }
+    }
   }
 
   initSource(reset: boolean) {
@@ -53,8 +75,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     if (this.length) { params.length = this.length; }
     if (this.searchText) { params.search = this.searchText.toLowerCase(); }
     if (this.value) { params.values = this.value; }
-    const domain = this.domain || (this.api ? this.api.Domain : '');
-    const source = domain + this.source + (this.source.includes('?') ? '&' : '?') + this.providers.Url.Serialize(params);
+    const source = this.domain + this.source + (this.source.includes('?') ? '&' : '?') + this.providers.Url.Serialize(params);
     this.providers.Http.Get(source).subscribe(response => {
       if (reset) {
         this.filteredSource = response.Data.Source;
