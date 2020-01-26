@@ -66,11 +66,11 @@
   background-color: #00000036;
 }
 
-input.form-control {
+.login-body input.form-control {
   background-color: transparent !important;
 }
 
-.input-group-text {
+.login-body .input-group-text {
   background-color: transparent !important;
 }
 
