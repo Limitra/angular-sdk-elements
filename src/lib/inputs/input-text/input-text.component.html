@@ -3,7 +3,7 @@
   <div class="{{label&&inline?'col-md-10':'col-md-12'}}">
     <div class="input-group input-group-sm {{hasError?'has-error':''}}">
       <i *ngIf="validationMessages" class="fa fa-{{hasError?'exclamation-triangle text-danger':'check-circle text-success'}} valid-status"></i>
-      <input *ngIf="type!=='textarea'" #input class="form-control form-control-sm" placeholder="{{placeholder}}" (keyup)="$event.stopPropagation()" (focusin)="focus=true" (focusout)="focus=false" />
+      <input [disabled]="disabled" *ngIf="type!=='textarea'" #input class="form-control form-control-sm" placeholder="{{placeholder}}" (keyup)="$event.stopPropagation()" (focusin)="focus=true" (focusout)="focus=false" />
       <textarea *ngIf="type==='textarea'" #input class="form-control form-control-sm" placeholder="{{placeholder}}" (keyup)="$event.stopPropagation()" (focusin)="focus=true" (focusout)="focus=false"></textarea>
       <div *ngIf="focus&&form&&errors.length>0" class="validation-messages">
         <div *ngFor="let error of errors" class="validation-message">
