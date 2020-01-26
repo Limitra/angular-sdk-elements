@@ -161,7 +161,11 @@ export class DatatableComponent implements OnInit {
       this.settings.Params.MaxLength = this.settings.Params.MaxLength || 500;
       this.settings.Params.Length = stored.Length || (this.settings.Params.Length || 10);
       this.settings.Params.Page = stored.Page || (this.settings.Params.Page || 1);
-      this.settings.Params.Sort = stored.Sort || (this.settings.Params.Sort || []);
+      this.settings.Params.Sort = stored.Sort || this.settings.Params.Sort;
+      if (!this.settings.Params.Sort) {
+        this.settings.Params.Sort = [this.settings.PrimaryKey + ',desc'];
+        this.setStoredParams('Sort', this.settings.Params.Sort);
+      }
       this.settings.Params.Search = stored.Search || this.settings.Params.Search;
       this.settings.Params.Domain = this.settings.Params.Domain || (this.api ? this.api.Domain : undefined);
 
@@ -215,6 +219,9 @@ export class DatatableComponent implements OnInit {
             if (column.Nested) {
               column.Nested.forEach(nest => {
                 const nestObj = {Title: nest.Title, Value: this.valOfObj(data, nest, false)};
+                if (nest.Render) {
+                  nestObj.Value = nest.Render(nestObj.Value, data);
+                }
                 colObj.Nested.push(nestObj);
                 this.pushColumnLen(column, nest.Title.toString() + ' ' + nestObj.Value);
               });
