@@ -24,6 +24,7 @@ export class InputExtend {
   @Input() required: boolean;
 
   @Input() inline = false;
+  @Input() disabled: boolean;
 
   public focus: boolean;
   public name: string;
