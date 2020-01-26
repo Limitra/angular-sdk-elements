@@ -189,7 +189,7 @@ export class DatatableComponent implements OnInit {
             const nowValue = this.valOfObj(data, column);
             colObj.Position = column.Position;
             if (column.Render) {
-              colObj.Value = column.Render(nowValue);
+              colObj.Value = column.Render(nowValue, data);
             } else {
               colObj.Value = nowValue;
             }
