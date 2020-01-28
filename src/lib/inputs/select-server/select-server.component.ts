@@ -136,6 +136,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     this.input.nativeElement.value = '';
     this.selected = undefined;
     this.selecteds = [];
+    this.textPreview = '';
     this.validate();
   }
 
