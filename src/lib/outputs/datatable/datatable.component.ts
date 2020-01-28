@@ -72,7 +72,7 @@ export class DatatableComponent implements OnInit {
         && this.settings.Response.Data.Source && this.settings.Response.Data.Source.length > 0) {
       this.contextMenu = [];
       this.settings.Response.Data.Source = this.settings.Response.Data.Source.map(x => {
-        x.ContextMenu = { Focus: false }
+        x.ContextMenu = { Focus: false };
         return x;
       });
 
@@ -429,7 +429,11 @@ export class DatatableComponent implements OnInit {
     }
   }
 
-  private getTextWidth(text: string): number {
+  private getTextWidth(txtVal: string): number {
+    let text = '';
+    try {
+      text = txtVal.replace(/(<([^>]+)>)/ig, '');
+    } catch { text = txtVal; }
     const ctx = this.canvas.nativeElement.getContext('2d');
     // tslint:disable-next-line:max-line-length
     ctx.font = '1rem Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
