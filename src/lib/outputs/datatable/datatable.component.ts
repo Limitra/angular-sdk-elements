@@ -155,6 +155,13 @@ export class DatatableComponent implements OnInit {
     this.providers.Storage.Set('DT_' + this.settings.Definition, stored);
   }
 
+  private setDefaultSort() {
+    if (!this.settings.Params.Sort || this.settings.Params.Sort.length === 0) {
+      this.settings.Params.Sort = [this.settings.PrimaryKey + ',desc'];
+      this.setStoredParams('Sort', this.settings.Params.Sort);
+    }
+  }
+
   private initTable() {
     if (this.settings && this.settings.Params && this.settings.Columns) {
       const stored = this.getStoredParams();
@@ -162,10 +169,7 @@ export class DatatableComponent implements OnInit {
       this.settings.Params.Length = stored.Length || (this.settings.Params.Length || 10);
       this.settings.Params.Page = stored.Page || (this.settings.Params.Page || 1);
       this.settings.Params.Sort = stored.Sort || this.settings.Params.Sort;
-      if (!this.settings.Params.Sort) {
-        this.settings.Params.Sort = [this.settings.PrimaryKey + ',desc'];
-        this.setStoredParams('Sort', this.settings.Params.Sort);
-      }
+      this.setDefaultSort();
       this.settings.Params.Search = stored.Search || this.settings.Params.Search;
       this.settings.Params.Domain = this.settings.Params.Domain || (this.api ? this.api.Domain : undefined);
 
@@ -367,10 +371,13 @@ export class DatatableComponent implements OnInit {
       column.Direction = column.Direction || '';
       column.Direction = column.Direction === 'asc' ? 'desc' : (column.Direction === 'desc' ? '' : 'asc');
 
-      const current = this.settings.Params.Sort.filter(x => x.split(',')[0] === column.Field)[0];
-      if (current) {
-        const index = this.settings.Params.Sort.indexOf(current);
-        this.settings.Params.Sort.splice(index, 1);
+      const removes = this.settings.Params.Sort.filter(x => x.split(',')[0] === column.Field ||
+        (column.Field !== this.settings.PrimaryKey && x.split(',')[0] === this.settings.PrimaryKey));
+      if (removes.length > 0) {
+        removes.forEach(current => {
+          const index = this.settings.Params.Sort.indexOf(current);
+          this.settings.Params.Sort.splice(index, 1);
+        });
       }
 
       if (column.Direction === 'asc' || column.Direction === 'desc') {
