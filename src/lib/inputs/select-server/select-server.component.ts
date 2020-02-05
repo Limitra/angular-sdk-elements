@@ -38,7 +38,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     this.initSource(true);
   }
 
-  preInit() {
+  preInit(changed: boolean = true) {
     const value = this.multiple ? (this.value || []) : this.value;
 
     if (this.multiple) {
@@ -46,7 +46,10 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     } else {
       this.selected = value;
     }
-    this.textInit();
+
+    if (changed) {
+      this.textInit();
+    }
   }
 
   textInit() {
@@ -139,6 +142,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     this.selected = undefined;
     this.selecteds = [];
     this.validate();
+    this.preInit();
   }
 
   searchValue() {
@@ -166,6 +170,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
 
       this.validate();
     }
+    this.preInit();
   }
 
   localizeReplace(message: string): string {
