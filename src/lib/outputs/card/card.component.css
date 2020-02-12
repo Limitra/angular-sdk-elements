@@ -9,6 +9,11 @@
   font-weight: bold;
 }
 
+.dropdown-menu.show {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
 .group-card-wrapper button {
     white-space: nowrap;
     -ms-text-overflow: ellipsis;

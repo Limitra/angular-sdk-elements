@@ -19,7 +19,7 @@
                         <div *ngFor="let btn of (button.Primary||[]).slice(1)">
                             <div *ngIf="btn.IsDivider" class="dropdown-divider"></div>
                             <h6 *ngIf="btn.IsHeader" class="dropdown-header"><i class="{{btn.Icon}}"></i> {{btn.Text}}</h6>
-                            <button *ngIf="!btn.IsHeader&&!btn.IsDivider" class="dropdown-item" [routerLink]="btn.Link||null" (click)="btn.Action?btn.Action():$event.stopPropagation()"><i class="{{btn.Icon}}"></i> {{btn.Text}}</button>
+                            <button *ngIf="!btn.IsHeader&&!btn.IsDivider" class="dropdown-item" [routerLink]="btn.Link||null" (click)="btn.Action?btn.Action(btn):$event.stopPropagation()"><i class="{{btn.Icon}}"></i> {{btn.Text}}</button>
                         </div>
                         <div class="dropdown-divider"></div>
                     </div>
