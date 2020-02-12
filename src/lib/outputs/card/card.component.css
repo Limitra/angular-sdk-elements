@@ -5,6 +5,10 @@
     margin: 10px;
 }
 
+.dropdown-header {
+  font-weight: bold;
+}
+
 .group-card-wrapper button {
     white-space: nowrap;
     -ms-text-overflow: ellipsis;
