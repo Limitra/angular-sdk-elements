@@ -67,6 +67,12 @@ export class DatatableComponent implements OnInit {
     this.initTable();
   }
 
+  public refresh(src: string = null) {
+    const source = src ? src : this.settings.Params.Source;
+    this.settings.Params.Source = source;
+    this.validateSearch();
+  }
+
   public openMenu(data: any, event: any) {
     if (this.settings && this.settings.Response && this.settings.Response.Data
         && this.settings.Response.Data.Source && this.settings.Response.Data.Source.length > 0) {
@@ -163,7 +169,7 @@ export class DatatableComponent implements OnInit {
   }
 
   private initTable() {
-    if (this.settings && this.settings.Params && this.settings.Columns) {
+    if (this.settings && this.settings.Params && this.settings.Params.Source && this.settings.Columns) {
       const stored = this.getStoredParams();
       this.settings.Params.MaxLength = this.settings.Params.MaxLength || 500;
       this.settings.Params.Length = stored.Length || (this.settings.Params.Length || 10);
@@ -183,7 +189,12 @@ export class DatatableComponent implements OnInit {
       }
       this.settings.Params.Page = params.page;
 
-      const qs = '?' + this.providers.Url.Serialize(params);
+      let additionQs = this.settings.Params.QueryString || '';
+      if (additionQs) {
+        additionQs = '&' + additionQs;
+      }
+
+      const qs = '?' + this.providers.Url.Serialize(params) + additionQs;
       this.settings.HasProcess = true;
       const source = this.settings.Params.Domain + this.providers.String.Replace('/' + this.settings.Params.Source, '//', '/');
       this.providers.Http.Get(source + qs).subscribe(response => {
@@ -248,13 +259,15 @@ export class DatatableComponent implements OnInit {
   }
 
   private initButtons() {
-    this.card.button.Primary = [];
-    const buttons = this.settings.NewButtons || [
-      { Icon: 'fa fa-plus', Text: this.texts.TableNewRow, Link: this.settings.NewRow }
-    ];
-    buttons.forEach(button => {
-      this.card.button.Primary.push(button);
-    });
+    if (!this.card.button.custom) {
+      this.card.button.Primary = [];
+      const buttons = this.settings.NewButtons || [
+        {Icon: 'fa fa-plus', Text: this.texts.TableNewRow, Link: this.settings.NewRow}
+      ];
+      buttons.forEach(button => {
+        this.card.button.Primary.push(button);
+      });
+    }
   }
 
   private initTexts() {
