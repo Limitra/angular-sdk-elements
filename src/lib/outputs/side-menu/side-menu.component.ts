@@ -15,6 +15,9 @@ export class SideMenuComponent implements OnInit {
   @Input() brand: string;
   @Input() note: string;
 
+  @Input() amblem: string;
+  @Input() logo: string;
+
   @Input() color = 'dark';
   @Input() theme = 'dark';
 
