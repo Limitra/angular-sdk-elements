@@ -1,9 +1,9 @@
 <ul class="navbar-nav bg-gradient-{{color}} sidebar sidebar-{{theme}} accordion" id="sidebar-menu" (mousewheel)="setScroll($event)" (wheel)="setScroll($event)">
   <a class="sidebar-brand d-flex align-items-center justify-content-center" routerLink="/">
     <div *ngIf="icon" class="sidebar-brand-icon rotate-n-15"><i class="{{icon}}"></i></div>
-    <img *ngIf="amblem" class="mb-1" [attr.src]="amblem">
+    <img *ngIf="amblem" class="sidebar-amblem" [attr.src]="amblem">
     <div *ngIf="brand" class="sidebar-brand-text mx-3">{{brand}} <sup>{{note}}</sup></div>
-    <div *ngIf="logo" class="sidebar-brand-text logo"><img [attr.src]="logo"></div>
+    <div *ngIf="logo" class="sidebar-brand-text sidebar-logo"><img [attr.src]="logo"></div>
   </a>
   <ng-container *ngFor="let menu of menus;let i=index;">
     <ng-container [ngSwitch]="menu.TypeID">

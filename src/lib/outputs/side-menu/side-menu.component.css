@@ -193,8 +193,16 @@
   display: none;
 }
 
-.sidebar .sidebar-brand .sidebar-brand-text.logo {
+.sidebar .sidebar-brand .sidebar-brand-text.sidebar-logo {
   margin-left: 0.5px;
+}
+
+.sidebar.toggled .sidebar-amblem {
+  margin-bottom: 0;
+}
+
+.sidebar .sidebar-amblem {
+  margin-bottom: .25rem;
 }
 
 .sidebar hr.sidebar-divider {
