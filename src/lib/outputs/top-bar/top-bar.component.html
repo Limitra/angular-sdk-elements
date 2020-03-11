@@ -117,10 +117,10 @@
 <!--    </li>-->
     <div class="topbar-divider d-none d-sm-block"></div>
     <li class="nav-item dropdown no-arrow">
-      <a class="nav-link dropdown-toggle" href="#" id="applicationUser" role="button" data-toggle="dropdown"
-         aria-haspopup="true" aria-expanded="false">
+      <a class="nav-link dropdown-toggle" href="#" id="applicationUser" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="mr-2 d-none d-lg-inline text-gray-600 small display-name">{{profileObj.DisplayName?profileObj.DisplayName:'... ...'}}</span>
-        <img class="img-profile rounded-circle" [attr.src]="profileObj.Picture?profileObj.Picture:''">
+        <img *ngIf="profileObj.Picture" class="img-profile rounded-circle" [attr.src]="profileObj.Picture?profileObj.Picture:''">
+        <i *ngIf="!profileObj.Picture" class="fa fa-2x fa-user-circle"></i>
       </a>
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="applicationUser">
         <a *ngFor="let link of profileObj.Links" class="dropdown-item menu-item" [routerLink]="link.Path">
