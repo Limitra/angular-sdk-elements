@@ -74,7 +74,7 @@ export class InputExtend {
       if (this.value && this.input) {
         this.input.nativeElement.value = this.formatValue(this.value);
       }
-    }
+    };
 
     if (lang) {
       this.providers.Http.Get('assets/locale/validation/' + lang + '.json').subscribe(response => {
@@ -199,7 +199,6 @@ export class InputExtend {
       event.stopPropagation();
       if (this.isDefaultKey(event)) {
         if ((event.keyCode === 8 || event.keyCode === 46)
-          && this.input.nativeElement.value[this.input.nativeElement.selectionStart] !== ' '
           && this.input.nativeElement.selectionStart === this.input.nativeElement.selectionEnd) {
           event.preventDefault();
           const start = this.input.nativeElement.selectionStart - (event.keyCode === 8 ? 1 : 0);
