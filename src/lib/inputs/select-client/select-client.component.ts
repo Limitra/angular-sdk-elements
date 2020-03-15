@@ -21,6 +21,7 @@ export class SelectClientComponent extends InputExtend implements AfterViewInit 
   @ViewChild('search', {static: false}) search: ElementRef;
 
   public selected: any;
+  public selectedText: string;
   public selecteds: Array<any> = [];
   public searchText: string;
   public filteredSource: Array<any> = [];
@@ -38,6 +39,7 @@ export class SelectClientComponent extends InputExtend implements AfterViewInit 
           || this.value.includes(x[this.valuekey].toString)) : false).map(x => x[this.valuekey]);
     } else {
       this.selected = this.filteredSource.filter(x => this.value ? this.value == x[this.valuekey] : false).map(x => x[this.valuekey])[0];
+      this.selectedText = this.filteredSource.filter(x => this.value ? this.value == x[this.valuekey] : false).map(x => x[this.textkey])[0] || '';
     }
   }
 
@@ -76,6 +78,7 @@ export class SelectClientComponent extends InputExtend implements AfterViewInit 
   removeValue() {
     this.input.nativeElement.value = '';
     this.selected = undefined;
+    this.selectedText = '';
     this.selecteds = [];
     this.validate();
   }
@@ -101,10 +104,24 @@ export class SelectClientComponent extends InputExtend implements AfterViewInit 
         this.input.nativeElement.value = this.selecteds;
       } else {
         this.selected = option[this.valuekey];
+        this.selectedText = option[this.textkey];
         this.input.nativeElement.value = option[this.valuekey];
       }
 
       this.validate();
+    }
+  }
+
+  keyDown(event: any) {
+    if (event.key === 'Enter') {
+      if (this.filteredSource && this.filteredSource.length > 0) {
+        this.checkOption(this.filteredSource[0]);
+        this.focus = false;
+      }
+    }
+
+    if (event.key === 'Escape') {
+      this.focus = false;
     }
   }
 
