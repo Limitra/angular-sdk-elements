@@ -1,9 +1,9 @@
 <lim-notification #notification top="10" left="10"></lim-notification>
 
 <div class="row">
-  <div class="col-sm-10 col-md-9 col-lg-10 mt-2 mt-sm-0 pr-md-0">
+  <div class="col-md-9 col-lg-10 mt-2 mt-sm-0 pr-md-0">
     <div class="input-group">
-      <div class="input-group-prepend">
+      <div class="input-group-prepend d-md-none d-lg-block">
         <span class="input-group-text"><i class="fa fa-search"></i></span>
       </div>
       <input *ngIf="settings&&settings.Params" type="text" class="form-control form-control-sm" [(ngModel)]="settings.Params.Search"
