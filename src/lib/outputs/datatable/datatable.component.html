@@ -1,15 +1,15 @@
 <lim-notification #notification top="10" left="10"></lim-notification>
 
 <div class="row">
-  <div class="col-12 col-sm-2 col-lg-1 pr-sm-0">
-    <button *ngIf="settings&&settings.Definition" class="btn btn-sm btn-block btn-outline-secondary text-nowrap {{settings.Filters&&settings.Filters.length>0?'':'disabled'}}" attr.data-toggle="{{'modal'}}" attr.data-target="{{settings.Filters&&settings.Filters.length>0?'#filter_' + settings.Definition:''}}">
-      <i class="fa fa-filter"></i>
-    </button>
-  </div>
-  <div class="col-12 col-sm-10 col-md-7 col-lg-9 mt-2 mt-sm-0 pr-md-0">
-    <input *ngIf="settings&&settings.Params" type="text" class="form-control form-control-sm" [(ngModel)]="settings.Params.Search"
-           (change)="validateSearch()" (keyup)="$event.stopPropagation()"
-           placeholder="{{settings && settings.Texts ? settings.Texts.SearchPlaceHolder : ''}}">
+  <div class="col-sm-10 col-md-9 col-lg-10 mt-2 mt-sm-0 pr-md-0">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="fa fa-search"></i></span>
+      </div>
+      <input *ngIf="settings&&settings.Params" type="text" class="form-control form-control-sm" [(ngModel)]="settings.Params.Search"
+             (change)="validateSearch()" (keyup)="$event.stopPropagation()"
+             placeholder="{{settings && settings.Texts ? settings.Texts.SearchPlaceHolder : ''}}">
+    </div>
   </div>
   <div class="col-md-3 col-lg-2 mt-2 mt-md-0">
     <div class="btn-group btn-group-sm btn-block">
