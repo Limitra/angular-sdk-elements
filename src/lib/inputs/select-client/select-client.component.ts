@@ -33,12 +33,11 @@ export class SelectClientComponent extends InputExtend implements AfterViewInit 
 
   preInit() {
     this.filteredSource = this.source || [];
+    const value = this.multiple ? (this.value || []) : this.value;
     if (this.multiple) {
-      this.selecteds = this.filteredSource.filter(x =>
-        (this.value && this.value.length > 0) ? (this.value.includes(x[this.valuekey])
-          || this.value.includes(x[this.valuekey].toString)) : false).map(x => x[this.valuekey]);
+      this.selecteds = value;
     } else {
-      this.selected = this.filteredSource.filter(x => this.value ? this.value == x[this.valuekey] : false).map(x => x[this.valuekey])[0];
+      this.selected = value;
       this.selectedText = this.filteredSource.filter(x => this.value ? this.value == x[this.valuekey] : false).map(x => x[this.textkey])[0] || '';
     }
   }
