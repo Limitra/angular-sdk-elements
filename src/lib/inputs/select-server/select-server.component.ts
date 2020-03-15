@@ -173,6 +173,19 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     this.preInit();
   }
 
+  keyDown(event: any) {
+    if (event.key === 'Enter') {
+      if (this.filteredSource && this.filteredSource.length > 0) {
+        this.checkOption(this.filteredSource[0]);
+        this.focus = false;
+      }
+    }
+
+    if (event.key === 'Escape') {
+      this.focus = false;
+    }
+  }
+
   localizeReplace(message: string): string {
     message = this.providers.String.Replace(message, '[$MinLength]', this.minlength ? this.minlength.toString() : '');
     message = this.providers.String.Replace(message, '[$MaxLength]', this.maxlength ? this.maxlength.toString() : '');

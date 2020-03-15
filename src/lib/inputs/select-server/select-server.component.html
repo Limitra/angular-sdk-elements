@@ -9,7 +9,7 @@
       <i *ngIf="value" class="fa fa-times remove-value" (click)="removeValue()"></i>
       <div *ngIf="focus" class="select-focus-wrapper">
         <div class="select-search">
-          <input #search [(ngModel)]="searchText" (input)="searchValue()" class="form-control form-control-sm search" placeholder="{{(validationMessages?validationMessages.SelectSearchText:'')}}">
+          <input #search [(ngModel)]="searchText" (input)="searchValue()" class="form-control form-control-sm search" (keydown)="keyDown($event)" placeholder="{{(validationMessages?validationMessages.SelectSearchText:'')}}">
         </div>
 
         <div *ngIf="filteredSource&&filteredSource.length>0" class="select-options" (scroll)="scroll($event)">
