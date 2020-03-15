@@ -27,7 +27,7 @@ export class DatatableComponent implements OnInit {
     this.api = this.providers.Storage.Get('API_Settings');
     this.settings = this.settings || {};
     this.settings.Texts = {};
-    this.settings.Filters = this.settings || [];
+    this.settings.Filters = this.settings.Filters || {};
     this.settings.RowRedirect = this.settings.RowRedirect || this.settings.RowEdit;
     const lang = this.providers.Storage.Get('Localization_Settings', 'Language');
 
@@ -194,7 +194,12 @@ export class DatatableComponent implements OnInit {
         additionQs = '&' + additionQs;
       }
 
-      const qs = '?' + this.providers.Url.Serialize(params) + additionQs;
+      let filterQs = this.providers.Url.Serialize(this.settings.Filters);
+      if (filterQs) {
+        filterQs = '&' + filterQs;
+      }
+
+      const qs = '?' + this.providers.Url.Serialize(params) + additionQs + filterQs;
       this.settings.HasProcess = true;
       const source = this.settings.Params.Domain + this.providers.String.Replace('/' + this.settings.Params.Source, '//', '/');
       this.providers.Http.Get(source + qs).subscribe(response => {
