@@ -79,9 +79,7 @@ export class InputDateComponent extends InputExtend implements AfterViewInit {
     this.input.nativeElement.selectionStart = start;
     this.input.nativeElement.selectionEnd = start;
 
-    const timezone = this.providers.Storage.Get('Localization_Settings', 'TimeZone') || 0;
     const date = new Date(getYear().Value, getMonth().Value - 1, getDay().Value);
-    date.setTime(date.getTime() + (timezone * 60 * 1000));
     this.value = date.getTime();
     this.valueChange.emit(this.value);
   }
