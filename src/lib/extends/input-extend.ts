@@ -38,6 +38,10 @@ export class InputExtend {
 
   }
 
+  overrideHasValue(value: any): boolean {
+    return value;
+  }
+
   init(call: () => void = null) {
     if (this.form) {
       this.form.errors = this.form.errors || [];
@@ -71,7 +75,7 @@ export class InputExtend {
     this.generateName();
 
     const maskCall = () => {
-      if (this.value && this.input) {
+      if (this.overrideHasValue(this.value) && this.input) {
         this.input.nativeElement.value = this.formatValue(this.value);
       }
     };
@@ -293,11 +297,11 @@ export class InputExtend {
       this.removeFormError('Required');
     }
 
-    if (value) {
+    if (this.overrideHasValue(value)) {
       this.validation(value, mask);
     }
 
-    if (!value && !this.required) {
+    if (!this.overrideHasValue(value) && !this.required) {
       this.removeFormError(null, true);
     }
 
