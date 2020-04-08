@@ -26,6 +26,10 @@ export class InputNumberComponent extends InputExtend implements AfterViewInit {
     });
   }
 
+  overrideHasValue(): boolean {
+    return this.value || this.value == 0;
+  }
+
   validation(value: number) {
     value = this.value;
     if (value < this.min) {
