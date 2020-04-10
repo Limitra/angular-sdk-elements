@@ -12,6 +12,8 @@ export class DatatableComponent implements OnInit {
   @Input() settings: any = {};
   @Input() card: CardComponent;
 
+  @Input() fontForColWidth = '0.7 rem';
+
   @ViewChildren('row') rows: QueryList<ElementRef>;
   @ViewChild('notification', { static: false }) notification: NotificationComponent;
   @ViewChild('canvas', { static: false }) canvas: ElementRef;
@@ -461,7 +463,7 @@ export class DatatableComponent implements OnInit {
     } catch { text = txtVal; }
     const ctx = this.canvas.nativeElement.getContext('2d');
     // tslint:disable-next-line:max-line-length
-    ctx.font = '1rem Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
+    ctx.font = this.fontForColWidth + ' Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
     return ctx.measureText(text).width;
   }
 
