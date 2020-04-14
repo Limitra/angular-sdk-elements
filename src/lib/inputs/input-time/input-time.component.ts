@@ -13,6 +13,9 @@ export class InputTimeComponent extends InputExtend implements AfterViewInit {
   @Input() min: number;
   @Input() max: number;
 
+  @Input() status = true;
+  @Input() icon = true;
+
   @ViewChild('supportInput', {static: false}) supportInput: ElementRef;
 
   constructor(public providers: SdkProviders) {
