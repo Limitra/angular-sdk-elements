@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {SdkProviders} from '@limitra/sdk-core';
 import {InputExtend} from '../../extends/input-extend';
 
@@ -8,16 +8,38 @@ import {InputExtend} from '../../extends/input-extend';
   styleUrls: ['./input-date.component.css']
 })
 export class InputDateComponent extends InputExtend implements AfterViewInit {
+  public supported = true;
+
   @Input() min: number;
   @Input() max: number;
 
+  @ViewChild('supportInput', {static: false}) supportInput: ElementRef;
+
   constructor(public providers: SdkProviders) {
     super(providers);
+
+    const browser = this.providers.Device.Get().Browser.toLowerCase();
+    if (browser.includes('msie') || browser.includes('safari')) {
+      this.supported = false;
+    }
+  }
+
+  preInit(changed: boolean = false) {
+    if (this.value) {
+      const date = new Date(this.value);
+      let month: any = (date.getMonth() + 1);
+      month = month < 10 ? '0' + month : month;
+      let day: any = date.getDate();
+      day = day < 10 ? '0' + day : day;
+      const formatted = date.getFullYear() + '-' + month + '-' + day;
+      this.supportInput.nativeElement.value = formatted;
+    }
   }
 
   ngAfterViewInit() {
     this.init(() => {
       this.mask = this.validationMessages.DateMask;
+      this.preInit();
     });
   }
 
@@ -159,5 +181,19 @@ export class InputDateComponent extends InputExtend implements AfterViewInit {
     message = this.providers.String.Replace(message, '[$Min]', this.formatValue(this.min));
     message = this.providers.String.Replace(message, '[$Max]', this.formatValue(this.max));
     return message;
+  }
+
+  setMask(event: any) {
+    if (!this.supported) {
+      super.setMask(event);
+    }
+  }
+
+  setSupportedMask(event: any) {
+    if (this.supported) {
+      const value = new Date(event.target.value);
+      this.input.nativeElement.value = this.formatValue(value.getTime());
+      this.validate();
+    }
   }
 }
