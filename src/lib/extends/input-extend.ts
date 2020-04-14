@@ -104,6 +104,7 @@ export class InputExtend {
           UpperCase: 'You must enter at least [$Uppercase] uppercase characters.',
           LowerCase: 'You must enter at least [$Lowercase] lowercase characters.',
           DateMask: 'dd.mm.yyyy',
+          TimeMask: 'hh:mm',
           PhoneMask: '+(XX) XXX XXX XX XX',
           ImageMaxLength: 'Image files must be less than or equal to [$ImageMaxLength].',
           AudioMaxLength: 'Audio files must be less than or equal to [$AudioMaxLength].',
