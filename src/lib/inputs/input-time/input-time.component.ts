@@ -28,7 +28,7 @@ export class InputTimeComponent extends InputExtend implements AfterViewInit {
   }
 
   preInit(changed: boolean = false) {
-    if (this.value) {
+    if (this.overrideHasValue(this.value)) {
       const hourVal = Math.floor(this.value / 1000 / 60 / 60);
       const minuteVal = Math.floor((this.value - (hourVal * 1000 * 60 * 60)) / 1000 / 60);
       const formatted = (hourVal < 10 ? '0' + hourVal : hourVal) +  ':' + (minuteVal < 10 ? '0' + minuteVal : minuteVal);
@@ -41,6 +41,10 @@ export class InputTimeComponent extends InputExtend implements AfterViewInit {
       this.mask = this.validationMessages.TimeMask;
       this.preInit();
     });
+  }
+
+  overrideHasValue(value: any): boolean {
+    return value || value == 0;
   }
 
   keyboardQuery(event: KeyboardEvent): boolean {
@@ -104,7 +108,7 @@ export class InputTimeComponent extends InputExtend implements AfterViewInit {
 
   formatValue(value: any): string {
     let formatted = '';
-    if (this.mask && value) {
+    if (this.mask && this.overrideHasValue(value)) {
       const hourVal = Math.floor(value / 1000 / 60 / 60);
       const minuteVal = Math.floor((value - (hourVal * 1000 * 60 * 60)) / 1000 / 60);
 
