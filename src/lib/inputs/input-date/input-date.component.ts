@@ -196,6 +196,17 @@ export class InputDateComponent extends InputExtend implements AfterViewInit {
     if (this.supported) {
       const value = new Date(event.target.value);
       this.input.nativeElement.value = this.formatValue(value.getTime());
+      if (value && (value instanceof Date) && value.getTime()) {
+        this.value = value.getTime();
+        if (this.form && this.property) {
+          this.form.model[this.property] = value.getTime();
+        }
+      } else {
+        delete this.value;
+        if (this.form && this.property) {
+          delete this.form.model[this.property];
+        }
+      }
       this.validate();
     }
   }
