@@ -3,9 +3,9 @@
   <div class="{{label&&inline?'col-md-10':'col-md-12'}}">
     <div class="input-group input-group-sm mb-2 {{hasError?'has-error':''}}">
       <i *ngIf="validationMessages&&status" class="fa fa-{{hasError?'exclamation-triangle text-danger':'check-circle text-success'}} valid-status"></i>
-      <input *ngIf="!supported" #input class="form-control form-control-sm {{status?'status':''}}" placeholder="{{placeholder}}" (keyup)="$event.stopPropagation()" (focusin)="focus=true" (focusout)="focus=false" />
+      <input *ngIf="!supported" #input [style.font-size.rem]="fontSize" [style.padding]="padding" class="form-control form-control-sm {{status?'status':''}}" placeholder="{{placeholder}}" (keyup)="$event.stopPropagation()" (focusin)="focus=true" (focusout)="focus=false" />
       <input *ngIf="supported" class="d-none" #input />
-      <input *ngIf="supported" #supportInput type="date" class="form-control form-control-sm {{status?'status':''}}" placeholder="{{placeholder}}" (change)="setSupportedMask($event)" (keyup)="$event.stopPropagation()" (focusin)="focus=true" (focusout)="focus=false" />
+      <input *ngIf="supported" #supportInput [style.font-size.rem]="fontSize" [style.padding]="padding" type="date" class="form-control form-control-sm {{status?'status':''}}" placeholder="{{placeholder}}" (change)="setSupportedMask($event)" (keyup)="$event.stopPropagation()" (focusin)="focus=true" (focusout)="focus=false" />
       <div *ngIf="focus&&form&&errors.length>0" class="validation-messages">
         <div *ngFor="let error of errors" class="validation-message">
           <small class="text-nowrap {{error.Solved?'text-success':'text-danger'}}"><i class="fa fa-{{error.Solved?'check-circle':'exclamation-triangle'}}"></i> {{error.Message}}</small>
