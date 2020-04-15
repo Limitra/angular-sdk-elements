@@ -79,7 +79,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
   private init() {
     this.initButton();
-    if (this.source && this.get) {
+    if (this.get) {
       this.getAction();
     }
   }
@@ -129,7 +129,7 @@ export class FormComponent implements OnInit, OnDestroy {
   };
 
   private getAction() {
-    if (this.model && (this.model.ID || this.model.ID === 0)) {
+    if (this.model && this.source && (this.model.ID || this.model.ID === 0)) {
       const source = this.domain + this.providers.String.Replace(this.source
         + (this.get ? '/' + this.get + '/' + this.model.ID : ''), '//', '/');
       this.hasProgress = true;
