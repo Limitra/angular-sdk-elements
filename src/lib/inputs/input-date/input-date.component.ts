@@ -28,7 +28,7 @@ export class InputDateComponent extends InputExtend implements AfterViewInit {
   }
 
   preInit(changed: boolean = false) {
-    if (this.value) {
+    if (this.overrideHasValue(this.value)) {
       const date = new Date(this.value);
       let month: any = (date.getMonth() + 1);
       month = month < 10 ? '0' + month : month;
