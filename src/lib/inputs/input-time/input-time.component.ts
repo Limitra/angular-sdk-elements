@@ -177,6 +177,17 @@ export class InputTimeComponent extends InputExtend implements AfterViewInit {
         const minuteMillis = parseInt(partials[1], 0) * 60 * 1000;
         const millis = hourMillis + minuteMillis;
         this.input.nativeElement.value = this.formatValue(millis);
+        if (millis) {
+          this.value = millis;
+          if (this.form && this.property) {
+            this.form.model[this.property] = millis;
+          }
+        } else {
+          delete this.value;
+          if (this.form && this.property) {
+            delete this.form.model[this.property];
+          }
+        }
         this.validate();
       }
     }
