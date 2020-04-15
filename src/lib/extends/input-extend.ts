@@ -6,6 +6,9 @@ export class InputExtend {
   constructor(public providers: SdkProviders) {
   }
 
+  @Input() fontSize = .875;
+  @Input() padding = '';
+
   @ViewChild('input', {static: false}) input: ElementRef;
 
   @Input() label: string;
