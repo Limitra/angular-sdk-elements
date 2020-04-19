@@ -12,6 +12,8 @@ export class DatatableComponent implements OnInit {
   @Input() settings: any = {};
   @Input() card: CardComponent;
 
+  @Input() search = true;
+
   @Input() fontForColWidth = '0.7 rem';
 
   @ViewChildren('row') rows: QueryList<ElementRef>;
@@ -70,6 +72,7 @@ export class DatatableComponent implements OnInit {
   }
 
   public refresh(src: string = null) {
+    this.settings.Params = this.settings.Params || {};
     const source = src ? src : this.settings.Params.Source;
     this.settings.Params.Source = source;
     this.validateSearch();
