@@ -1673,6 +1673,14 @@ pre code {
   color: #858796;
 }
 
+table thead {
+  font-size: 0.9rem;
+}
+
+table tbody {
+  font-size: 0.9rem;
+}
+
 .table th,
 .table td {
   padding: 0.75rem;
