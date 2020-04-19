@@ -10,7 +10,7 @@
         </div>
         <div class="col-6">
             <div class="pull-right" (lim-os-click)="historyFocus=false">
-                <a [routerLink]="page&&page.parent&&page.parent.path"
+                <a [routerLink]="page&&page.parent&&page.parent.path&&!page.parent.disabled?page.parent.path:null"
                    class="history-button text-secondary {{page&&page.parent&&page.parent.path&&!page.parent.disabled?'':'disabled'}}"><i
                         class="fa fa-arrow-circle-up"></i></a>
                 <a (click)="historyFocus=!historyFocus" class="history-button {{history.length==0?'disabled':''}}"><i
