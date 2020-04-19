@@ -16,7 +16,7 @@ table.dataTable tr th.head-starter {
   width: 0px;
   min-width: 0px;
   margin: 0;
-  padding: 0;
+  padding: 0 !important;
   border: 0;
 }
 
@@ -345,4 +345,8 @@ table.table-bordered.dataTable td:last-child {
 
 .page-button {
   z-index: 0;
+}
+
+.form-control-sm {
+  height: calc(1.5em + .5rem + 1px);
 }
