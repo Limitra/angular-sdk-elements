@@ -14,7 +14,7 @@ export class DatatableComponent implements OnInit {
 
   @Input() search = true;
 
-  @Input() fontForColWidth = '0.7 rem';
+  @Input() fontForColWidth = '0.9rem';
 
   @ViewChildren('row') rows: QueryList<ElementRef>;
   @ViewChild('notification', { static: false }) notification: NotificationComponent;
@@ -381,8 +381,6 @@ export class DatatableComponent implements OnInit {
       this.settings.Columns = this.settings.Columns.map(column => {
         const strCol = stored && stored.Sort ? (stored.Sort.filter(x => x.split(',')[0] === column.Field)[0]) : undefined;
         const nwCol = column;
-        nwCol.MaxChar = undefined;
-        nwCol.Width = undefined;
         nwCol.Direction = strCol ? strCol.split(',')[1] : undefined;
         return nwCol;
       });
@@ -418,11 +416,6 @@ export class DatatableComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   public resizeColumns(event: any = null) {
     if (this.settings && this.settings.Columns) {
-      // const totalChar = this.settings.Columns.reduce((sum, current) => sum + current.MaxChar, 0);
-      this.settings.Columns.forEach(col => {
-        // console.log(col.Width);
-        // col.Width = col.MaxChar * 100 / totalChar;
-      });
       if (this.settings.Response && this.settings.Response.Data && this.settings.Response.Data.Source) {
         setTimeout(() => {
           this.rows.forEach((row: any, index: number) => {
