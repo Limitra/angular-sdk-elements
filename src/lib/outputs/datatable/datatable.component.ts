@@ -222,6 +222,8 @@ export class DatatableComponent implements OnInit {
             } else {
               colObj.Value = nowValue;
             }
+            this.pushColumnLen(column, colObj.Value || '');
+
             if (column.Badge) {
               const badge = column.Badge(colObj.Value, data);
               colObj.Badge = {
