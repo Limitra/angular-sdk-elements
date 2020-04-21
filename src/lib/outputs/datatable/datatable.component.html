@@ -33,7 +33,7 @@
   </div>
 </div>
 
-<div class="table-responsive">
+<div *ngIf="!(!search&&settings&&settings.HasProcess)" class="table-responsive position-relative">
   <table class="table table-sm table-striped table-bordered dataTable">
     <thead class="tpart" *ngIf="settings&&settings.Columns">
       <tr>
@@ -77,7 +77,13 @@
   </table>
 </div>
 
-<nav class="row">
+<div *ngIf="!search&&settings&&settings.HasProcess" class="tloader">
+  <div class="text-center">
+    <i class="fa fa-sync fa-spin"></i>
+  </div>
+</div>
+
+<nav *ngIf="!(!search&&settings&&settings.HasProcess)" class="row">
   <div class="col-md-4 offset-md-4 page-section">
     <div *ngIf="settings&&settings.Response&&settings.Params" class="input-group input-group-sm page-param mx-auto">
       <input type="number" class="form-control form-control-sm" [(ngModel)]="settings.Params.Page" (change)="validatePage()"
@@ -91,7 +97,7 @@
   </div>
 </nav>
 
-<nav class="row mt-2 mt-sm-n3">
+<nav *ngIf="!(!search&&settings&&settings.HasProcess)" class="row mt-2 mt-sm-n3">
   <div class="col-6 mt-sm-n3 page-button">
     <button *ngIf="settings&&settings.Response" class="page-link {{settings.Response.Page.Number > 1 ? '' : 'disabled'}}" (click)="privPage()">
       <span aria-hidden="true">&laquo;</span>
@@ -105,23 +111,4 @@
   </div>
 </nav>
 
-<div *ngIf="settings&&settings.Definition" class="modal fade" role="dialog" id="filter_{{settings.Definition}}">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title text-secondary"><i class="fa fa-filter"></i> {{settings && settings.Texts ? settings.Texts.FilterTitle : ''}}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary"><i class="fa fa-filter"></i> {{settings && settings.Texts ? settings.Texts.FilterAccept : ''}}</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle"></i> {{settings && settings.Texts ? settings.Texts.FilterClose : ''}}</button>
-      </div>
-    </div>
-  </div>
-</div>
 <canvas #canvas class="d-none"></canvas>

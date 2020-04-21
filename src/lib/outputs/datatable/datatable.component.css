@@ -28,6 +28,14 @@ table.dataTable.nowrap th, table.dataTable.nowrap td {
   white-space: nowrap
 }
 
+div.tloader {
+  padding: 10px;
+}
+
+div.tloader i {
+  font-size: 2rem;
+}
+
 div.dataTables_wrapper div.dataTables_length label {
   font-weight: normal;
   text-align: left;
