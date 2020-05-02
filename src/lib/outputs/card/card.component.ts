@@ -39,4 +39,8 @@ export class CardComponent implements OnInit {
       };
     }
   }
+
+  primaryHasSpinner() {
+    return this.button && this.button.Primary ? this.button.Primary.filter(x => x.Spinner).length > 0 : false;
+  }
 }
