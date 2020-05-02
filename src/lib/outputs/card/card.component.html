@@ -12,7 +12,7 @@
                     <button *ngIf="button.Primary&&button.Primary.length>0" type="button" class="btn {{button.Primary[0].Pulse?'live-pulse':''}} btn-{{button.Primary[0].Marked?'secondary':'outline-secondary'}} {{button.Primary&&button.Primary.length>1?'dropdown-toggle':''}}"
                             [attr.data-toggle]="button.Primary&&button.Primary.length>1?'dropdown':null" [routerLink]="button.Primary[0].Link||null"
                             (click)="button.Primary[0].Action?button.Primary[0].Action(button.Primary[0], $event):''" [disabled]="button.Primary[0].Enabled===false?true:null">
-                        <i class="{{button.Primary[0].Spinner?'fa fa-refresh fa-spin':button.Primary[0].Icon}}"></i> <span class="d-none d-sm-inline">{{button.Primary[0].Text?(' '+button.Primary[0].Text):''}}</span>
+                        <i class="{{button.Primary[0].Spinner||primaryHasSpinner()?'fa fa-refresh fa-spin':button.Primary[0].Icon}}"></i> <span class="d-none d-sm-inline">{{button.Primary[0].Text?(' '+button.Primary[0].Text):''}}</span>
                     </button>
                     <div *ngIf="button.Primary&&button.Primary.length>1" class="dropdown-menu dropdown-menu-right">
                         <div class="dropdown-divider"></div>
