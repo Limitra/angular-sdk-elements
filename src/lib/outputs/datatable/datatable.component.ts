@@ -147,10 +147,12 @@ export class DatatableComponent implements OnInit {
         });
       }
 
+      const minusX = 150 - (window.innerWidth - event.clientX);
+      const minusY = 200 - (window.innerHeight - event.clientY);
       data.ContextMenu = {
         Focus: true,
-        PositionX: event.clientX,
-        PositionY: event.clientY
+        PositionX: event.clientX - (minusX > 0 ? minusX + 10 : 0),
+        PositionY: event.clientY - (minusY > 0 ? minusY + 10 : 0),
       };
     }
     return false;
@@ -214,6 +216,8 @@ export class DatatableComponent implements OnInit {
           data.Columns = [];
           this.settings.Columns.forEach(column => {
             const colObj: any = {Nested: []};
+            colObj.Button = column.Button;
+
             this.pushColumnLen(column, column.Title.toString());
             const nowValue = this.valOfObj(data, column);
             colObj.Position = column.Position;

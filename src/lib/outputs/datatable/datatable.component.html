@@ -55,14 +55,17 @@
         </div>
       </td>
       <td *ngFor="let column of data.Columns" class="{{column.Position?'text-'+column.Position:''}}" title="{{column.Badge?column.Badge.Value:column.Value}}">
-        <div *ngIf="!(column.Badge&&column.Badge.Status)&&!column.Image" [innerHTML]="(column.Badge?column.Badge.Value:null)||column.Value"></div>
-        <div *ngIf="column.Badge&&column.Badge.Status">
+        <div *ngIf="!column.Button&&!(column.Badge&&column.Badge.Status)&&!column.Image" [innerHTML]="(column.Badge?column.Badge.Value:null)||column.Value"></div>
+        <div *ngIf="!column.Button&&column.Badge&&column.Badge.Status">
           <span class="badge badge-{{column.Badge.Status}}">
             <i *ngIf="column.Badge.Icon" class="{{column.Badge.Icon}}"></i>
             {{column.Badge.Value}}
           </span>
         </div>
-        <img *ngIf="column.Image&&column.Image.Source" class="{{column.Image.Circle?'rounded-circle':'rounded'}}" [src]="column.Image.Source" [style.width.px]="column.Image.Width" [style.height.px]="column.Image.Height">
+        <div *ngIf="column.Button">
+          <a class="{{column.Button.Class}} row-column-button" [routerLink]="(column.Button.Link?column.Button.Link+data[settings.PrimaryKey]:null)" (click)="column.Button.Action?column.Button.Action(data[settings.PrimaryKey]):null"><i class="{{column.Button.Icon}}"></i> {{column.Button.Text}}</a>
+        </div>
+        <img *ngIf="!column.Button&&column.Image&&column.Image.Source" class="{{column.Image.Circle?'rounded-circle':'rounded'}}" [src]="column.Image.Source" [style.width.px]="column.Image.Width" [style.height.px]="column.Image.Height">
         <small *ngFor="let nest of column.Nested"><strong>{{nest.Title}} : </strong> <div class="d-inline" [innerHTML]="nest.Value"></div> <br></small>
       </td>
     </tr>
