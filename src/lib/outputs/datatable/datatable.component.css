@@ -249,9 +249,12 @@ tbody tr .row-zone {
 }
 
 tbody tr .row-zone .context-menu-wrapper {
+  max-width: 150px !important;
+  max-height: 200px !important;
   position: fixed;
-  width: max-content;
-  height: max-content;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
   z-index: 2;
 }
 
@@ -283,7 +286,7 @@ tbody tr.row-selected td:first-child {
   background-color: transparent !important;
 }
 
-tbody a {
+tbody a:not(.row-column-button) {
   display: block;
   width: 100%;
   height: 100%;
@@ -357,4 +360,15 @@ table.table-bordered.dataTable td:last-child {
 
 .form-control-sm {
   height: calc(1.5em + .5rem + 1px);
+}
+
+.live-pulse {
+  animation: live-pulse-animation 2s infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes live-pulse-animation {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
