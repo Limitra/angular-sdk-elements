@@ -31,6 +31,7 @@ import { ContentComponent } from './lib/outputs/content/content.component';
 import { WrapperComponent } from './lib/outputs/wrapper/wrapper.component';
 import { LoginComponent } from './lib/outputs/login/login.component';
 import { InputEditorComponent } from './lib/inputs/input-editor/input-editor.component';
+import {InputTimeComponent} from './lib/inputs/input-time/input-time.component';
 
 export * from './lib/extends/input-extend';
 export * from './lib/definitions/side-menu-types';
@@ -54,13 +55,13 @@ export * from './lib/outputs/datatable/datatable.component';
   ],
   providers: [],
   declarations: [
-    OutsideClickDirective, InputDateComponent, DatatableComponent, InputTextComponent,
+    OutsideClickDirective, InputDateComponent, InputTimeComponent, DatatableComponent, InputTextComponent,
     InputPasswordComponent, InputPhoneComponent, InputEmailComponent, SelectClientComponent,
     SelectServerComponent, InputNumberComponent, InputChoiceComponent, InputFileComponent, PageInfoComponent,
     CardComponent, FormComponent, NotificationComponent, SideMenuComponent, TopBarComponent, FooterComponent,
     TemplateComponent, ContentComponent, WrapperComponent, LoginComponent, InputEditorComponent],
   exports: [FormsModule, BrowserModule, RouterModule, CKEditorModule,
-    OutsideClickDirective, InputDateComponent, DatatableComponent, InputTextComponent,
+    OutsideClickDirective, InputDateComponent, InputTimeComponent, DatatableComponent, InputTextComponent,
     InputPasswordComponent, InputPhoneComponent, InputEmailComponent, SelectClientComponent,
     SelectServerComponent, InputNumberComponent, InputChoiceComponent, InputFileComponent, PageInfoComponent,
     CardComponent, FormComponent, NotificationComponent, SideMenuComponent, TopBarComponent, FooterComponent,
