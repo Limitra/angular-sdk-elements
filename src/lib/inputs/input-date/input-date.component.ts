@@ -35,7 +35,9 @@ export class InputDateComponent extends InputExtend implements AfterViewInit {
       let day: any = date.getDate();
       day = day < 10 ? '0' + day : day;
       const formatted = date.getFullYear() + '-' + month + '-' + day;
-      this.supportInput.nativeElement.value = formatted;
+      if (this.supported) {
+        this.supportInput.nativeElement.value = formatted;
+      }
     }
   }
 
