@@ -32,7 +32,9 @@ export class InputTimeComponent extends InputExtend implements AfterViewInit {
       const hourVal = Math.floor(this.value / 1000 / 60 / 60);
       const minuteVal = Math.floor((this.value - (hourVal * 1000 * 60 * 60)) / 1000 / 60);
       const formatted = (hourVal < 10 ? '0' + hourVal : hourVal) +  ':' + (minuteVal < 10 ? '0' + minuteVal : minuteVal);
-      this.supportInput.nativeElement.value = formatted;
+      if (this.supported) {
+        this.supportInput.nativeElement.value = formatted;
+      }
     }
   }
 
