@@ -45,12 +45,17 @@
             </div>
           </div>
           <hr *ngIf="register||forgot">
-          <a *ngIf="type=='login'" class="login-first-alt" [routerLink]="register"><i class="fa fa-registered"></i> {{textSource.RegisterLink}}</a>
-          <a *ngIf="type=='register'||type=='recover'" class="login-first-alt" [routerLink]="login"><i class="fa fa-sign-in-alt"></i> {{textSource.LoginLink}}</a>
-          <a *ngIf="type=='forgot'" class="login-first-alt" [routerLink]="login"><i class="fa fa-sign-in-alt"></i> {{textSource.AlreadyLink}}</a>
+          <a *ngIf="!registerLink && type=='login'" class="login-first-alt" [routerLink]="register"><i class="fa fa-registered"></i> {{textSource.RegisterLink}}</a>
+          <a *ngIf="!loginLink && (type=='register'||type=='recover')" class="login-first-alt" [routerLink]="login"><i class="fa fa-sign-in-alt"></i> {{textSource.LoginLink}}</a>
+          <a *ngIf="!loginLink && type=='forgot'" class="login-first-alt" [routerLink]="login"><i class="fa fa-sign-in-alt"></i> {{textSource.AlreadyLink}}</a>
+          <a *ngIf="!forgotLink && (type=='login'||type=='register'||type=='recover')" class="login-second-alt" [routerLink]="forgot">{{textSource.ForgotLink}}</a>
+          <a *ngIf="!registerLink && type=='forgot'" class="login-second-alt" [routerLink]="register">{{textSource.RegisterLink}}</a>
 
-          <a *ngIf="type=='login'||type=='register'||type=='recover'" class="login-second-alt" [routerLink]="forgot">{{textSource.ForgotLink}}</a>
-          <a *ngIf="type=='forgot'" class="login-second-alt" [routerLink]="register">{{textSource.RegisterLink}}</a>
+          <a *ngIf="registerLink && type=='login'" class="login-first-alt" [href]="registerLink" target="_blank"><i class="fa fa-registered"></i> {{textSource.RegisterLink}}</a>
+          <a *ngIf="loginLink && (type=='register'||type=='recover')" class="login-first-alt" [href]="loginLink" target="_blank"><i class="fa fa-sign-in-alt"></i> {{textSource.LoginLink}}</a>
+          <a *ngIf="loginLink && type=='forgot'" class="login-first-alt" [href]="loginLink" target="_blank"><i class="fa fa-sign-in-alt"></i> {{textSource.AlreadyLink}}</a>
+          <a *ngIf="forgotLink && (type=='login'||type=='register'||type=='recover')" class="login-second-alt" [href]="forgotLink" target="_blank">{{textSource.ForgotLink}}</a>
+          <a *ngIf="registerLink && type=='forgot'" class="login-second-alt" [href]="registerLink" target="_blank">{{textSource.RegisterLink}}</a>
           <span class="login-copyright">
             {{copyright}} <a *ngIf="link" href="{{link}}" target="_blank"> {{author}}</a> - {{year}}
           </span>
