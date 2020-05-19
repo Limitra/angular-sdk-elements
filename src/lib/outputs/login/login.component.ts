@@ -51,10 +51,15 @@ export class LoginComponent implements OnInit, AfterViewInit {
   @ViewChild('loginCard', {static: false}) loginCard: ElementRef;
   @ViewChild('submit', {static: false}) submit: ElementRef;
 
+  public registerLink: string;
+  public forgotLink: string;
+  public loginLink: string;
+
   constructor(private providers: SdkProviders, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
+    this.initLinks();
     const lang = this.providers.Storage.Get('Localization_Settings', 'Language');
     if (lang) {
       this.providers.Http.Get('assets/locale/interface/' + lang + '.json').subscribe(response => {
@@ -157,5 +162,19 @@ export class LoginComponent implements OnInit, AfterViewInit {
       this.height = window.innerHeight;
     }
     this.loginCard.nativeElement.style.cssText = 'margin-top: ' + (elmHeight) / 2 + 'px !important;' + 'margin-bottom: ' + (elmHeight) / 2 + 'px !important';
+  }
+
+  initLinks() {
+    if (this.register && this.register.includes('http')) {
+      this.registerLink = this.register;
+    }
+
+    if (this.forgot && this.forgot.includes('http')) {
+      this.forgotLink = this.forgot;
+    }
+
+    if (this.login && this.login.includes('http')) {
+      this.loginLink = this.login;
+    }
   }
 }
