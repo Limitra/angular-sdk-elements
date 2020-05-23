@@ -1,8 +1,8 @@
-import {ElementRef, EventEmitter, HostListener, Input, Output, ViewChild} from '@angular/core';
+import {ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild} from '@angular/core';
 import {SdkProviders} from '@limitra/sdk-core';
 import {ScreenSize} from '@limitra/sdk-core';
 
-export class InputExtend {
+export class InputExtend implements OnDestroy {
   constructor(public providers: SdkProviders) {
   }
 
@@ -43,6 +43,11 @@ export class InputExtend {
 
   overrideHasValue(value: any): boolean {
     return value;
+  }
+
+  ngOnDestroy() {
+    this.removeFormError(null, true);
+    this.checkState();
   }
 
   init(call: () => void = null) {
