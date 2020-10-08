@@ -1,6 +1,6 @@
 {
   "name": "@limitra/sdk-elements",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "The Limitra Angular Sdk Elements enables you to use the full-stack elements for Angular projects in a practical, functional and non-repetitive way and to achieve optimized results.",
   "author": "Limitra <pom@limitra.com> (https://github.com/Limitra)",
   "contributors": [
@@ -31,7 +31,7 @@
     "@angular/core": "^8.2.0",
     "@angular/forms": "^8.2.0",
     "@angular/platform-browser": "^8.2.0",
-    "@limitra/sdk-core": "^0.0.7",
+    "@limitra/sdk-core": "^0.0.8",
     "@ckeditor/ckeditor5-angular": "^1.1.0",
     "@ckeditor/ckeditor5-build-decoupled-document": "^12.3.1",
     "bootstrap": "^4.3.1",
@@ -48,6 +48,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@limitra/sdk-core": "^0.0.6"
+    "@limitra/sdk-core": "^0.0.8"
   }
 }
