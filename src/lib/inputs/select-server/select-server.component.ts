@@ -35,7 +35,11 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     const api = this.providers.Storage.Get('API_Settings');
     this.domain = this.domain || (api ? api.Domain : '');
     this.init();
-    this.initSource(true);
+    if (this.form) {
+      this.form.modelInit.subscribe(model => {
+        this.initSource(true);
+      });
+    }
   }
 
   preInit(changed: boolean = true) {
@@ -80,7 +84,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     const params: any = { page: this.page };
     if (this.length) { params.length = this.length; }
     if (this.searchText) { params.search = this.searchText.toLowerCase(); }
-    if (this.value) { params.values = this.value; }
+    if (this.value) { params.ids = this.value; }
     const source = this.domain + this.source + (this.source.includes('?') ? '&' : '?') + this.providers.Url.Serialize(params);
     this.providers.Http.Get(source).subscribe(response => {
       if (reset) {
