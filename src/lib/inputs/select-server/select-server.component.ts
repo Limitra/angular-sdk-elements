@@ -53,22 +53,23 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   }
 
   textInit() {
-    if (this.value) {
-      if (this.multiple) {
-        this.textPreview = this.validationMessages ? this.validationMessages
-          .SelectMultiText.replace('[$Length]', this.selecteds ? this.selecteds.length : 0) : '';
-      } else {
-        if (this.value) {
-          const params: any = { ids : [this.value] };
-          const source = this.domain + this.source + (this.source.includes('?') ? '&' : '?') + this.providers.Url.Serialize(params);
-          this.providers.Http.Get(source).subscribe(response => {
-            const dataSource = response.Data.Source;
-            if (dataSource.length > 0) {
-              this.textPreview = dataSource[0][this.textkey];
-            }
-          });
+    if (this.multiple ? this.value.length > 0 : this.value) {
+      const params: any = {
+        type: 'text',
+        length: this.length,
+        ids : this.multiple ? this.value : [this.value]
+      };
+      const source = this.domain + this.source + (this.source.includes('?') ? '&' : '?') + this.providers.Url.Serialize(params);
+      this.providers.Http.Get(source).subscribe(response => {
+        const dataSource = response.Data.Source;
+        if (dataSource.length > 0) {
+          if (this.multiple) {
+            this.textPreview = '(' + this.value.length + ') ' + dataSource.map(x => x[this.textkey]).join(', ');
+          } else {
+            this.textPreview = dataSource[0][this.textkey];
+          }
         }
-      }
+      });
     } else {
       this.textPreview = '';
     }

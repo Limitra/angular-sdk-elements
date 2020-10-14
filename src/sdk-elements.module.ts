@@ -68,7 +68,7 @@ export * from './lib/outputs/datatable/datatable.component';
     TemplateComponent, ContentComponent, WrapperComponent, LoginComponent, InputEditorComponent]
 })
 export class SdkElementsModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<SdkElementsModule> {
     return {
       ngModule: SdkElementsModule,
       providers: []
