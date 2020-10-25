@@ -24,6 +24,8 @@ export class FormComponent implements OnInit, OnDestroy {
   @Output() stateChange = new EventEmitter();
   @Output() modelInit = new EventEmitter();
 
+  @Output() change = new EventEmitter();
+
   public response: any;
 
   modelLoaded = false;
@@ -76,6 +78,7 @@ export class FormComponent implements OnInit, OnDestroy {
   onFormChange() {
     this.isValid = this.errors.filter(x => !x.Solved).length === 0;
     this.initButton();
+    this.change.emit();
   }
 
   private init() {
