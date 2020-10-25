@@ -21,6 +21,8 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   @Input() textkey: string = 'Text';
   @Input() valuekey: string = 'Value';
 
+  @Input() early: boolean = false;
+
   @ViewChild('search', {static: false}) search: ElementRef;
   private page = 1;
   public searchText: string;
@@ -35,10 +37,25 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     const api = this.providers.Storage.Get('API_Settings');
     this.domain = this.domain || (api ? api.Domain : '');
     this.init();
+
+    let canInit = true;
+
+    const localInit = () => {
+      if (canInit) {
+        canInit = false;
+        this.initSource(true);
+        setTimeout(() => { canInit = true; }, 1500);
+      }
+    };
+
     if (this.form) {
       this.form.modelInit.subscribe(model => {
-        this.initSource(true);
+        localInit();
       });
+    }
+
+    if (this.early) {
+      localInit();
     }
   }
 
