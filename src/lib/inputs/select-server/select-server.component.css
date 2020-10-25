@@ -55,10 +55,10 @@ input.show {
   margin-top:3px;
   margin-bottom: 3px;
 
-  white-space: nowrap;
   overflow: hidden;
   -ms-text-overflow: ellipsis;
   text-overflow: ellipsis;
+  border-bottom: 1px dashed #c6c6c6;
 }
 
 .select-focus-wrapper {
