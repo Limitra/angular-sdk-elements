@@ -45,6 +45,7 @@ export * from './lib/inputs/input-choice/input-choice.component';
 export * from './lib/inputs/select-client/select-client.component';
 export * from './lib/inputs/select-server/select-server.component';
 export * from './lib/outputs/datatable/datatable.component';
+export * from './lib/outputs/form/form.component';
 
 @NgModule({
   imports: [
