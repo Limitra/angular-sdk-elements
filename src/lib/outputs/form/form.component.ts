@@ -144,13 +144,15 @@ export class FormComponent implements OnInit, OnDestroy {
         }
 
         this.noProgress();
-        this.modelChange.emit(this.model);
-        this.modelLoad.emit(this.model);
-        this.modelInit.emit(true);
         if (response.Notification) {
           this.notification.push(response.Notification);
         }
-        setTimeout(() => { this.modelLoaded = true; }, 500);
+        setTimeout(() => {
+          this.modelLoaded = true;
+          this.modelChange.emit(this.model);
+          this.modelLoad.emit(this.model);
+          this.modelInit.emit(true);
+        }, 500);
       });
     } else {
       this.modelInit.emit(true);
