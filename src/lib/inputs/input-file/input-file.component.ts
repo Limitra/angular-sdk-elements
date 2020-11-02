@@ -56,7 +56,7 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
   public canClear: boolean;
   public progress: boolean;
   public sortable: boolean;
-  public files: Array<any>;
+  public files: Array<any> = [];
 
   @ViewChild('imagePreview', { static: false }) imagePreview: ElementRef;
   @ViewChild('audioPreview', { static: false }) audioPreview: ElementRef;
@@ -64,7 +64,6 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
   @ViewChild('documentPreview', { static: false }) documentPreview: ElementRef;
 
   ngOnInit() {
-    this.preInit(true);
     const apiSettings = this.providers.Storage.Get('API_Settings') || {};
     const fileProvider = apiSettings.File ? apiSettings.File : {};
     this.fileProvider = {
@@ -106,6 +105,7 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
       this.audioMaxLength = this.audioMaxLength || this.fileProvider.Settings.MaxLength.Audio;
       this.videoMaxLength = this.videoMaxLength || this.fileProvider.Settings.MaxLength.Video;
       this.documentMaxLength = this.documentMaxLength || this.fileProvider.Settings.MaxLength.Document;
+      this.preInit(true);
     });
   }
 
