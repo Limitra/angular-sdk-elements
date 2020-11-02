@@ -1,11 +1,11 @@
 :host ::ng-deep .ck-editor__editable_inline {
     min-height: 200px;
-    max-height: 400px;
+    max-height: 250px;
     width: 100%;
 }
 
-:host ckeditor {
-    width: calc(100% - 34px);
+:host .editor-wrapper {
+  width: calc(100% - 29px);
 }
 
 label {
@@ -150,4 +150,48 @@ input {
     /* -- Overrides the default colors used by the ckeditor5-link package. ---------------------- */
 
     --ck-color-link-default: hsl(190, 100%, 75%);
+}
+
+.editor-counter {
+  position: absolute;
+  left: 28px;
+  bottom: 5px;
+  color: #0f6848;
+  font-size: 9pt;
+  font-weight: bold;
+}
+
+.icon-minimize {
+  display: none;
+  position: fixed;
+  right: 15px;
+  top: 52px;
+  z-index: 10;
+  font-size: 13pt;
+  cursor: pointer;
+}
+
+.maximized .icon-minimize {
+  display: block;
+}
+
+.maximized .editor-wrapper {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 5000;
+}
+
+.input-group-append .input-group-text {
+  cursor: pointer;
+}
+
+.maximized .input-group-append {
+  display: none;
+}
+
+.maximized .editor-wrapper, .maximized .ck-editor__editable_inline {
+  height: 100%;
+  max-height: 100%;
 }

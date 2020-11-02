@@ -1,53 +1,142 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import * as DocumentEditor from '@ckeditor/ckeditor5-build-decoupled-document';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {SdkProviders} from '@limitra/sdk-core';
-import {ChangeEvent, CKEditorComponent} from '@ckeditor/ckeditor5-angular';
 import {InputExtend} from '../../extends/input-extend';
+
+declare let CKSource;
+declare let window: any;
 
 @Component({
   selector: 'lim-input-editor',
   templateUrl: './input-editor.component.html',
   styleUrls: ['./input-editor.component.css']
 })
-export class InputEditorComponent extends InputExtend implements OnInit {
-  @ViewChild('ckeditor', { static: false }) ckeditor: CKEditorComponent;
+export class InputEditorComponent extends InputExtend implements AfterViewInit, OnDestroy {
+  wordCount = 0;
+  charCount = 0;
+  maximized = false;
+
+  private ckeditor;
 
   constructor(public providers: SdkProviders) { super(providers); }
 
-  public Editor = DocumentEditor;
-
-  public config: any = { };
-
-  public onReady(editor) {
-    editor.ui.getEditableElement().parentElement.insertBefore(
-      editor.ui.view.toolbar.element,
-      editor.ui.getEditableElement()
-    );
-  }
-
-  public onChange( { editor }: ChangeEvent) {
+  public onChange(data) {
     setTimeout(() => {
-      this.input.nativeElement.value = editor.getData();
+      this.input.nativeElement.value = data;
       this.validate();
     });
   }
 
   preInit(changed?: boolean) {
-    if (changed && this.ckeditor.editorInstance) {
-      this.ckeditor.editorInstance.setData(this.value);
+    if (changed && this.ckeditor) {
+      this.ckeditor.setData(this.value);
     }
   }
 
-  ngOnInit() {
-    this.config.toolbar = [ 'fontSize', 'heading', 'bold', 'italic', 'link', 'alignment', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo' ];
-    let lang = this.providers.Storage.Get('Localization_Settings', 'Language');
-    if (lang) {
-      lang = lang.split('-')[0];
-      if (lang) {
-        this.config.language = lang;
-      }
+  ngOnDestroy() {
+    if (this.ckeditor) {
+      this.ckeditor.destroy().catch(error => {  });
     }
-    this.config.placeholder = this.placeholder;
+  }
+
+  ngAfterViewInit() {
+    const watchdog = new CKSource.Watchdog();
+    window.watchdog = watchdog;
+    watchdog.setCreator(( element, config ) => {
+      return CKSource.Editor
+        .create( element, config )
+        .then( editor => {
+          this.ckeditor = editor;
+          editor.model.document.on('change:data', (evt, data) => {
+            const dataVal = editor.getData();
+            if (dataVal != this.value) {
+              this.onChange(dataVal);
+            }
+          });
+          document.querySelector('.document-editor__toolbar').appendChild( editor.ui.view.toolbar.element );
+          document.querySelector('.ck-toolbar').classList.add( 'ck-reset_all' );
+          return editor;
+        } )
+    } );
+
+    watchdog.setDestructor( editor => {
+      document.querySelector('.document-editor__toolbar').removeChild( editor.ui.view.toolbar.element );
+      return editor.destroy();
+    } );
+
+    watchdog
+      .create(document.querySelector('.editor'), {
+        removePlugins: ['Title'],
+        placeholder: this.placeholder,
+        toolbar: {
+          items: [
+            'undo',
+            'redo',
+            'removeFormat',
+            '|',
+            'heading',
+            '|',
+            'fontSize',
+            'fontFamily',
+            '|',
+            'bold',
+            'italic',
+            'underline',
+            'strikethrough',
+            'highlight',
+            'fontColor',
+            'fontBackgroundColor',
+            'link',
+            '|',
+            'alignment',
+            'indent',
+            'outdent',
+            'horizontalLine',
+            'pageBreak',
+            '|',
+            'numberedList',
+            'bulletedList',
+            'todoList',
+            '|',
+            'imageUpload',
+            'imageInsert',
+            'insertTable',
+            'mediaEmbed',
+            'blockQuote',
+            'codeBlock',
+            '|',
+            'superscript',
+            'subscript',
+            'MathType',
+            'ChemType',
+            'specialCharacters',
+            '|',
+            'code'
+          ]
+        },
+        language: 'tr',
+        image: {
+          toolbar: [
+            'imageTextAlternative',
+            'imageStyle:full',
+            'imageStyle:side'
+          ]
+        },
+        table: {
+          contentToolbar: [
+            'tableColumn',
+            'tableRow',
+            'mergeTableCells',
+            'tableCellProperties',
+            'tableProperties'
+          ]
+        },
+        wordCount: {
+          onUpdate: stats => {
+            this.charCount = stats.characters;
+            this.wordCount = stats.words;
+          }
+        }
+      });
     this.init();
   }
 }

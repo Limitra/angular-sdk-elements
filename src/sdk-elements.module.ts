@@ -18,7 +18,6 @@ import { InputFileComponent } from './lib/inputs/input-file/input-file.component
 import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
-import {CKEditorModule} from '@ckeditor/ckeditor5-angular';
 import { PageInfoComponent } from './lib/outputs/page-info/page-info.component';
 import { CardComponent } from './lib/outputs/card/card.component';
 import { FormComponent } from './lib/outputs/form/form.component';
@@ -51,8 +50,7 @@ export * from './lib/outputs/form/form.component';
   imports: [
     FormsModule,
     BrowserModule,
-    RouterModule,
-    CKEditorModule
+    RouterModule
   ],
   providers: [],
   declarations: [
@@ -61,7 +59,7 @@ export * from './lib/outputs/form/form.component';
     SelectServerComponent, InputNumberComponent, InputChoiceComponent, InputFileComponent, PageInfoComponent,
     CardComponent, FormComponent, NotificationComponent, SideMenuComponent, TopBarComponent, FooterComponent,
     TemplateComponent, ContentComponent, WrapperComponent, LoginComponent, InputEditorComponent],
-  exports: [FormsModule, BrowserModule, RouterModule, CKEditorModule,
+  exports: [FormsModule, BrowserModule, RouterModule,
     OutsideClickDirective, InputDateComponent, InputTimeComponent, DatatableComponent, InputTextComponent,
     InputPasswordComponent, InputPhoneComponent, InputEmailComponent, SelectClientComponent,
     SelectServerComponent, InputNumberComponent, InputChoiceComponent, InputFileComponent, PageInfoComponent,
