@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {SdkProviders} from '@limitra/sdk-core';
 import {InputExtend} from '../../extends/input-extend';
+import {BeforeOnDestroy} from '../../definitions/before-destroy';
 
 declare let CKSource;
 declare let window: any;
@@ -10,7 +11,7 @@ declare let window: any;
   templateUrl: './input-editor.component.html',
   styleUrls: ['./input-editor.component.css']
 })
-export class InputEditorComponent extends InputExtend implements AfterViewInit, OnDestroy {
+export class InputEditorComponent extends InputExtend implements AfterViewInit, BeforeOnDestroy {
   wordCount = 0;
   charCount = 0;
   maximized = false;
@@ -32,10 +33,8 @@ export class InputEditorComponent extends InputExtend implements AfterViewInit, 
     }
   }
 
-  ngOnDestroy() {
-    if (this.ckeditor) {
-      this.ckeditor.destroy().catch(error => {  });
-    }
+  ngBeforeOnDestroy() {
+    window.watchdog.destroy();
   }
 
   ngAfterViewInit() {
@@ -59,7 +58,7 @@ export class InputEditorComponent extends InputExtend implements AfterViewInit, 
     } );
 
     watchdog.setDestructor( editor => {
-      document.querySelector('.document-editor__toolbar').removeChild( editor.ui.view.toolbar.element );
+      document.querySelector('.document-editor__toolbar').removeChild(editor.ui.view.toolbar.element);
       return editor.destroy();
     } );
 

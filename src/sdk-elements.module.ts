@@ -39,6 +39,7 @@ export * from './lib/inputs/input-date/input-date.component';
 export * from './lib/inputs/input-password/input-password.component';
 export * from './lib/inputs/input-phone/input-phone.component';
 export * from './lib/inputs/input-email/input-email.component';
+export * from './lib/inputs/input-file/input-file.component';
 export * from './lib/inputs/input-number/input-number.component';
 export * from './lib/inputs/input-choice/input-choice.component';
 export * from './lib/inputs/select-client/select-client.component';
