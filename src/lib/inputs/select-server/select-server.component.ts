@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {InputExtend} from '../../extends/input-extend';
 import {SdkProviders} from '@limitra/sdk-core';
 
@@ -25,6 +35,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
 
   @ViewChild('search', {static: false}) search: ElementRef;
   private page = 1;
+
   public searchText: string;
   public filteredSource: Array<any> = [];
 
@@ -32,6 +43,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   public selecteds: Array<any> = [];
 
   public textPreview: string = '';
+  public canRemove: boolean = false;
 
   ngAfterViewInit() {
     const api = this.providers.Storage.Get('API_Settings');
@@ -110,12 +122,14 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
         this.filteredSource = this.filteredSource.concat(response.Data.Source);
       }
       this.preInit();
+      setTimeout(() => { this.canRemove = true; }, 1500);
     }, () => {
       if (this.multiple) {
         this.selecteds = this.value;
       } else {
         this.selected = this.value;
       }
+      setTimeout(() => { this.canRemove = true; }, 1500);
     });
   }
 
@@ -160,11 +174,13 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   }
 
   removeValue() {
-    this.input.nativeElement.value = '';
-    this.selected = undefined;
-    this.selecteds = [];
-    this.validate();
-    this.preInit();
+    if (this.canRemove) {
+      this.input.nativeElement.value = '';
+      this.selected = undefined;
+      this.selecteds = [];
+      this.validate();
+      this.preInit();
+    }
   }
 
   searchValue() {
@@ -212,5 +228,10 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
     message = this.providers.String.Replace(message, '[$MinLength]', this.minlength ? this.minlength.toString() : '');
     message = this.providers.String.Replace(message, '[$MaxLength]', this.maxlength ? this.maxlength.toString() : '');
     return message;
+  }
+
+  beginSource() {
+    delete this.searchText;
+    this.searchValue();
   }
 }
