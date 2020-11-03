@@ -4,6 +4,10 @@ lim-template {
   display: flex;
 }
 
+.ck.ck-balloon-panel {
+  z-index: 5100;
+}
+
 :root {
   --blue: #4e73df;
   --indigo: #6610f2;
