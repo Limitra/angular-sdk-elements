@@ -149,19 +149,21 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any = null) {
-    const cardHeight = this.loginCard.nativeElement.offsetHeight;
-    let elmHeight = window.innerHeight - cardHeight;
-    const range = 20;
-    if (elmHeight < range) {
-      elmHeight = range;
-    }
+    setTimeout(() => {
+      const cardHeight = this.loginCard.nativeElement.offsetHeight;
+      let elmHeight = window.innerHeight - cardHeight;
+      const range = 20;
+      if (elmHeight < range) {
+        elmHeight = range;
+      }
 
-    if (cardHeight + range > window.innerHeight) {
-      this.height = cardHeight + range;
-    } else {
-      this.height = window.innerHeight;
-    }
-    this.loginCard.nativeElement.style.cssText = 'margin-top: ' + (elmHeight) / 2 + 'px !important;' + 'margin-bottom: ' + (elmHeight) / 2 + 'px !important';
+      if (cardHeight + range > window.innerHeight) {
+        this.height = cardHeight + range;
+      } else {
+        this.height = window.innerHeight;
+      }
+      this.loginCard.nativeElement.style.cssText = 'margin-top: ' + (elmHeight) / 2 + 'px !important;' + 'margin-bottom: ' + (elmHeight) / 2 + 'px !important';
+    });
   }
 
   initLinks() {
