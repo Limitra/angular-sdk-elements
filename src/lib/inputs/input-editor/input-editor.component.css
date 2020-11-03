@@ -61,7 +61,6 @@
     /* Overrides the border radius setting in the theme. */
     --ck-border-radius: 0px;
     --ck-z-modal: 5100;
-    --ck-z-default: 5000;
 
     /* Overrides the default font size in the theme. */
     --ck-font-size-base: 14px;
