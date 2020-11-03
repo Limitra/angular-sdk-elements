@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {SdkProviders} from '@limitra/sdk-core';
 import {InputExtend} from '../../extends/input-extend';
 import {BeforeOnDestroy} from '../../definitions/before-destroy';
@@ -9,7 +9,8 @@ declare let window: any;
 @Component({
   selector: 'lim-input-editor',
   templateUrl: './input-editor.component.html',
-  styleUrls: ['./input-editor.component.css']
+  styleUrls: ['./input-editor.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class InputEditorComponent extends InputExtend implements AfterViewInit, BeforeOnDestroy {
   wordCount = 0;
