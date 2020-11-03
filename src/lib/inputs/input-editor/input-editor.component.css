@@ -1,31 +1,35 @@
-:host ::ng-deep .ck-editor__editable_inline {
+.lim-editor-styling .ck-editor__editable_inline {
     min-height: 200px;
     max-height: 250px;
     width: 100%;
 }
 
-:host .editor-wrapper {
+.ck.ck-balloon-panel {
+  z-index: 5100;
+}
+
+.lim-editor-styling .editor-wrapper {
   width: calc(100% - 29px);
 }
 
-label {
+.lim-editor-styling label {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 
-input {
+.lim-editor-styling input {
   padding-left: 25px !important;
 }
 
-.validation-message {
+.lim-editor-styling .validation-message {
   display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.validation-messages {
+.lim-editor-styling .validation-messages {
   z-index: 1000;
   width: 100%;
   padding: 2px 5px 5px 10px;
@@ -36,27 +40,28 @@ input {
   margin-right: auto;
 }
 
-.valid-status {
+.lim-editor-styling .valid-status {
   position: absolute;
   z-index: 4;
   bottom: 6px;
   left: 6px;
 }
 
-.ck.ck-editor__editable_inline {
+.lim-editor-styling .ck.ck-editor__editable_inline {
     border: 1px solid #cccccc !important;
 }
 
-:host ::ng-deep .ck.ck-editor__editable_inline {
+.lim-editor-styling .ck.ck-editor__editable_inline {
     background-color: #fff;
     border: 1px solid #ccc !important;
     border-top: 0 !important;
 }
 
-:host ::ng-deep {
+.lim-editor-styling {
     /* Overrides the border radius setting in the theme. */
     --ck-border-radius: 0px;
     --ck-z-modal: 5100;
+    --ck-z-default: 5000;
 
     /* Overrides the default font size in the theme. */
     --ck-font-size-base: 14px;
@@ -152,7 +157,7 @@ input {
     --ck-color-link-default: hsl(190, 100%, 75%);
 }
 
-.editor-counter {
+.lim-editor-styling .editor-counter {
   position: absolute;
   left: 28px;
   bottom: 5px;
@@ -161,7 +166,7 @@ input {
   font-weight: bold;
 }
 
-.icon-minimize {
+.lim-editor-styling .icon-minimize {
   display: none;
   position: fixed;
   right: 15px;
@@ -171,11 +176,11 @@ input {
   cursor: pointer;
 }
 
-.maximized .icon-minimize {
+.lim-editor-styling .maximized .icon-minimize {
   display: block;
 }
 
-.maximized .editor-wrapper {
+.lim-editor-styling .maximized .editor-wrapper {
   width: 100%;
   position: fixed;
   left: 0;
@@ -183,15 +188,15 @@ input {
   z-index: 5000;
 }
 
-.input-group-append .input-group-text {
+.lim-editor-styling .input-group-append .input-group-text {
   cursor: pointer;
 }
 
-.maximized .input-group-append {
+.lim-editor-styling .maximized .input-group-append {
   display: none;
 }
 
-.maximized .editor-wrapper, .maximized .ck-editor__editable_inline {
+.lim-editor-styling .maximized .editor-wrapper, .lim-editor-styling .maximized .ck-editor__editable_inline {
   height: 100%;
   max-height: 100%;
 }
