@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {SdkProviders} from '@limitra/sdk-core';
 import {InputExtend} from '../../extends/input-extend';
 import {BeforeOnDestroy} from '../../definitions/before-destroy';
@@ -9,8 +9,7 @@ declare let window: any;
 @Component({
   selector: 'lim-input-editor',
   templateUrl: './input-editor.component.html',
-  styleUrls: ['./input-editor.component.css'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./input-editor.component.css']
 })
 export class InputEditorComponent extends InputExtend implements AfterViewInit, BeforeOnDestroy {
   wordCount = 0;
@@ -51,6 +50,9 @@ export class InputEditorComponent extends InputExtend implements AfterViewInit, 
             if (dataVal != this.value) {
               this.onChange(dataVal);
             }
+          });
+          editor.editing.view.document.on('change:isFocused', (evt, name, value) => {
+            this.focus = value;
           });
           document.querySelector('.document-editor__toolbar').appendChild( editor.ui.view.toolbar.element );
           document.querySelector('.ck-toolbar').classList.add( 'ck-reset_all' );
