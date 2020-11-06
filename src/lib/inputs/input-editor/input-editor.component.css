@@ -5,7 +5,7 @@
 }
 
 :host .editor-wrapper {
-  width: calc(100% - 29px);
+  width: calc(100% - 30px);
 }
 
 label {
