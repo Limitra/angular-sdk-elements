@@ -22,9 +22,16 @@ input, textarea {
   border: 1px solid #cccccc;
   background-color: #fff;
   position: absolute;
-  margin-top: 33px;
   margin-left:auto;
   margin-right: auto;
+}
+
+.validation-messages.textarea {
+  margin-top: 33px;
+}
+
+.validation-messages.textarea {
+  margin-top: 54px;
 }
 
 .valid-status {
