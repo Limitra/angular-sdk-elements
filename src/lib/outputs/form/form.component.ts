@@ -24,6 +24,9 @@ export class FormComponent implements OnInit, OnDestroy {
   @Output() stateChange = new EventEmitter();
   @Output() modelInit = new EventEmitter();
 
+  @Output() postCompleted = new EventEmitter();
+  @Output() putCompleted = new EventEmitter();
+
   @Output() change = new EventEmitter();
 
   public response: any;
@@ -172,6 +175,7 @@ export class FormComponent implements OnInit, OnDestroy {
         if (response.Notification) {
           this.notification.push(response.Notification);
         }
+        this.putCompleted.emit(response);
       });
     }
   }
@@ -188,6 +192,7 @@ export class FormComponent implements OnInit, OnDestroy {
         if (response.Notification) {
           this.notification.push(response.Notification);
         }
+        this.postCompleted.emit(response);
       });
     }
   }
