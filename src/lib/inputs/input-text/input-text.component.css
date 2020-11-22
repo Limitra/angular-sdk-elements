@@ -26,12 +26,16 @@ input, textarea {
   margin-right: auto;
 }
 
+textarea.form-control {
+  height: 54px;
+}
+
 .validation-messages.text {
   margin-top: 33px;
 }
 
 .validation-messages.textarea {
-  margin-top: 52px;
+  margin-top: 56px;
 }
 
 .valid-status {
