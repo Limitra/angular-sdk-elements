@@ -48,8 +48,6 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   ngAfterViewInit() {
     const api = this.providers.Storage.Get('API_Settings');
     this.domain = this.domain || (api ? api.Domain : '');
-    this.init();
-
     let canInit = true;
 
     const localInit = () => {
@@ -60,15 +58,17 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
       }
     };
 
-    if (this.form) {
-      this.form.modelInit.subscribe(model => {
-        localInit();
-      });
-    }
+    this.init(() => {
+      if (this.form) {
+        this.form.modelInit.subscribe(model => {
+          localInit();
+        });
+      }
 
-    if (this.early) {
-      localInit();
-    }
+      if (this.early) {
+        localInit();
+      }
+    });
   }
 
   preInit(changed: boolean = true) {
