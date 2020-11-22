@@ -337,6 +337,13 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
     }
   }
 
+  public removeFiles() {
+    if (!this.progress && this.canClear) {
+      this.files = [{}];
+      this.validate();
+    }
+  }
+
   public choice(input: any) {
     input.click();
   }

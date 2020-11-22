@@ -90,9 +90,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.onResize();
-    });
+    this.onResize();
+    setTimeout(() => { this.onResize(); }, 500);
     if (this.endpoint) {
       this.route.queryParams.subscribe(params => {
         const key = params.key;
