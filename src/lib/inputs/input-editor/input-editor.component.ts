@@ -29,7 +29,7 @@ export class InputEditorComponent extends InputExtend implements AfterViewInit, 
 
   preInit(changed?: boolean) {
     if (changed && this.ckeditor) {
-      setTimeout(() => { this.ckeditor.setData(this.value); }, 100);
+      this.ckeditor.setData(this.value);
     }
   }
 
@@ -38,6 +38,7 @@ export class InputEditorComponent extends InputExtend implements AfterViewInit, 
   }
 
   ngAfterViewInit() {
+    this.init();
     const watchdog = new CKSource.Watchdog();
     window.watchdog = watchdog;
     watchdog.setCreator(( element, config ) => {
@@ -56,6 +57,7 @@ export class InputEditorComponent extends InputExtend implements AfterViewInit, 
           });
           document.querySelector('.document-editor__toolbar').appendChild( editor.ui.view.toolbar.element );
           document.querySelector('.ck-toolbar').classList.add( 'ck-reset_all' );
+
           return editor;
         } )
     } );
@@ -140,7 +142,6 @@ export class InputEditorComponent extends InputExtend implements AfterViewInit, 
             }
           }
         });
-      this.init();
     });
   }
 }
