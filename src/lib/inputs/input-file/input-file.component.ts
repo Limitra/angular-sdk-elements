@@ -2,6 +2,8 @@ import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angul
 import {InputExtend} from '../../extends/input-extend';
 import {SdkProviders} from '@limitra/sdk-core';
 
+declare let $: any;
+
 @Component({
   selector: 'lim-input-file',
   templateUrl: './input-file.component.html',
@@ -51,6 +53,7 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
 
   private fileProvider: any = {};
 
+  public dragover: boolean;
   public preview: any;
   public canUpload: boolean;
   public canClear: boolean;
@@ -106,6 +109,8 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
       this.videoMaxLength = this.videoMaxLength || this.fileProvider.Settings.MaxLength.Video;
       this.documentMaxLength = this.documentMaxLength || this.fileProvider.Settings.MaxLength.Document;
       this.preInit(true);
+
+      this.setDropZone();
     });
   }
 
@@ -247,12 +252,29 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
     return message;
   }
 
-  public fileChange(file: any, input: any) {
+  public setDropZone() {
+    const $form = $('.drop-zone');
+    $form.on('drag dragstart dragend dragover dragenter dragleave drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    }).on('dragover dragenter', () => {
+      this.dragover = true;
+    }).on('dragleave dragend drop', () => {
+      this.dragover = false;
+    }).on('drop', (e) => {
+      this.removeFiles();
+      const files = e.originalEvent.dataTransfer.files;
+      this.fileChange({}, files);
+    });
+  }
+
+  public fileChange(file: any, files: any) {
     if (!this.progress) {
       clearInterval(file.Interval);
-      const index = this.files.indexOf(file);
-      if (input.files && input.files.length > 0) {
-        Array.from(input.files).forEach((inFile, subIndex) => {
+      let index = this.files.indexOf(file);
+      index = index < 0 ? 0 : index;
+      if (files && files.length > 0) {
+        Array.from(files).forEach((inFile, subIndex) => {
           const selected: any = inFile;
           if (selected.name) {
             const obj = {
@@ -339,6 +361,7 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
 
   public removeFiles() {
     if (!this.progress && this.canClear) {
+      this.files.map(x => clearInterval(x.Interval));
       this.files = [{}];
       this.validate();
     }
@@ -556,27 +579,31 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
   }
 
   public onDrag(file: any, event: any) {
-    this.dragging = file;
-    event.dataTransfer.setData('...', event.target.id);
+    if (this.sortable) {
+      this.dragging = file;
+      event.dataTransfer.setData('...', event.target.id);
+    }
   }
 
   public onDrop(file: any) {
-    const oldIndex = this.dragging.Index;
-    const targetIndex = file.Index;
-    if (this.dragging.Index > file.Index) {
-      this.files.filter(x => x.Index >= file.Index && x.Index < oldIndex).forEach(sort => {
-        sort.Index++;
-      });
-    } else {
-      this.files.filter(x => x.Index > oldIndex && x.Index <= file.Index).forEach(sort => {
-        sort.Index--;
-      });
-    }
-    this.dragging.Index = targetIndex;
-    this.files = this.files.sort((x, y) => x.Index - y.Index);
-    this.validate();
-    if (!this.hasError) {
-      this.forceValue();
+    if (this.sortable) {
+      const oldIndex = this.dragging.Index;
+      const targetIndex = file.Index;
+      if (this.dragging.Index > file.Index) {
+        this.files.filter(x => x.Index >= file.Index && x.Index < oldIndex).forEach(sort => {
+          sort.Index++;
+        });
+      } else {
+        this.files.filter(x => x.Index > oldIndex && x.Index <= file.Index).forEach(sort => {
+          sort.Index--;
+        });
+      }
+      this.dragging.Index = targetIndex;
+      this.files = this.files.sort((x, y) => x.Index - y.Index);
+      this.validate();
+      if (!this.hasError) {
+        this.forceValue();
+      }
     }
   }
 
