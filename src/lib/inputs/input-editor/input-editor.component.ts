@@ -16,7 +16,7 @@ export class InputEditorComponent extends InputExtend implements AfterViewInit, 
   charCount = 0;
   maximized = false;
 
-  private ckeditor;
+  ckeditor;
 
   constructor(public providers: SdkProviders) { super(providers); }
 
@@ -29,7 +29,7 @@ export class InputEditorComponent extends InputExtend implements AfterViewInit, 
 
   preInit(changed?: boolean) {
     if (changed && this.ckeditor) {
-      this.ckeditor.setData(this.value);
+      setTimeout(() => { this.ckeditor.setData(this.value); }, 100);
     }
   }
 
@@ -65,80 +65,82 @@ export class InputEditorComponent extends InputExtend implements AfterViewInit, 
       return editor.destroy();
     } );
 
-    watchdog
-      .create(document.querySelector('.editor'), {
-        removePlugins: ['Title'],
-        placeholder: this.placeholder,
-        toolbar: {
-          items: [
-            'undo',
-            'redo',
-            'removeFormat',
-            '|',
-            'heading',
-            '|',
-            'fontSize',
-            'fontFamily',
-            '|',
-            'bold',
-            'italic',
-            'underline',
-            'strikethrough',
-            'highlight',
-            'fontColor',
-            'fontBackgroundColor',
-            'link',
-            '|',
-            'alignment',
-            'indent',
-            'outdent',
-            'horizontalLine',
-            'pageBreak',
-            '|',
-            'numberedList',
-            'bulletedList',
-            'todoList',
-            '|',
-            'imageUpload',
-            'imageInsert',
-            'insertTable',
-            'mediaEmbed',
-            'blockQuote',
-            'codeBlock',
-            '|',
-            'superscript',
-            'subscript',
-            'MathType',
-            'ChemType',
-            'specialCharacters',
-            '|',
-            'code'
-          ]
-        },
-        language: 'tr',
-        image: {
-          toolbar: [
-            'imageTextAlternative',
-            'imageStyle:full',
-            'imageStyle:side'
-          ]
-        },
-        table: {
-          contentToolbar: [
-            'tableColumn',
-            'tableRow',
-            'mergeTableCells',
-            'tableCellProperties',
-            'tableProperties'
-          ]
-        },
-        wordCount: {
-          onUpdate: stats => {
-            this.charCount = stats.characters;
-            this.wordCount = stats.words;
+    setTimeout(() => {
+      watchdog
+        .create(document.querySelector('.editor'), {
+          removePlugins: ['Title'],
+          placeholder: this.placeholder,
+          toolbar: {
+            items: [
+              'undo',
+              'redo',
+              'removeFormat',
+              '|',
+              'heading',
+              '|',
+              'fontSize',
+              'fontFamily',
+              '|',
+              'bold',
+              'italic',
+              'underline',
+              'strikethrough',
+              'highlight',
+              'fontColor',
+              'fontBackgroundColor',
+              'link',
+              '|',
+              'alignment',
+              'indent',
+              'outdent',
+              'horizontalLine',
+              'pageBreak',
+              '|',
+              'numberedList',
+              'bulletedList',
+              'todoList',
+              '|',
+              'imageUpload',
+              'imageInsert',
+              'insertTable',
+              'mediaEmbed',
+              'blockQuote',
+              'codeBlock',
+              '|',
+              'superscript',
+              'subscript',
+              'MathType',
+              'ChemType',
+              'specialCharacters',
+              '|',
+              'code'
+            ]
+          },
+          language: 'tr',
+          image: {
+            toolbar: [
+              'imageTextAlternative',
+              'imageStyle:full',
+              'imageStyle:side'
+            ]
+          },
+          table: {
+            contentToolbar: [
+              'tableColumn',
+              'tableRow',
+              'mergeTableCells',
+              'tableCellProperties',
+              'tableProperties'
+            ]
+          },
+          wordCount: {
+            onUpdate: stats => {
+              this.charCount = stats.characters;
+              this.wordCount = stats.words;
+            }
           }
-        }
-      });
-    this.init();
+        });
+      this.init();
+    });
   }
 }

@@ -8,14 +8,14 @@
         <i class="fa fa-compress-arrows-alt icon-minimize" (click)="maximized=false"></i>
         <div class="document-editor__toolbar"></div>
         <div class="editor"></div>
-        <div class="editor-counter">{{wordCount}}/{{charCount}}</div>
+        <div *ngIf="ckeditor" class="editor-counter">{{wordCount}}/{{charCount}}</div>
       </div>
       <div *ngIf="focus&&form&&errors.length>0" class="validation-messages" [style.marginTop.px]="wrapper.offsetHeight+2">
         <div *ngFor="let error of errors" class="validation-message">
           <small class="text-nowrap {{error.Solved?'text-success':'text-danger'}}"><i class="fa fa-{{error.Solved?'check-circle':'exclamation-triangle'}}"></i> {{error.Message}}</small>
         </div>
       </div>
-      <div class="input-group-append">
+      <div *ngIf="ckeditor" class="input-group-append">
         <div class="input-group-text" (click)="maximized=true">
           <i class="fa fa-expand-arrows-alt"></i>
         </div>
