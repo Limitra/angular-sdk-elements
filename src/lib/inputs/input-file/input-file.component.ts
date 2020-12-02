@@ -252,6 +252,23 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
     return message;
   }
 
+  public initInterval(file) {
+    if (file.Path) {
+      clearInterval(file.Interval);
+      file.Interval = setInterval(() => {
+        this.downloadFile(file.Path, true, (download) => {
+          if (download.status === 200) {
+            file.Uploaded = true;
+          } else {
+            this.uploadFile(file, () => {
+            });
+          }
+          this.validate();
+        });
+      }, 10000);
+    }
+  }
+
   public setDropZone() {
     const $form = $('.drop-zone');
     $form.on('drag dragstart dragend dragover dragenter dragleave drop', (e) => {
@@ -515,17 +532,7 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
           file.Name = xhr.response.Name;
           file.Size = xhr.response.Size;
           file.Text = xhr.response.Name + ' (' + this.formatBytes(file.Size) + ')' + ' ' + file.Type;
-          clearInterval(file.Interval);
-          file.Interval = setInterval(() => {
-            this.downloadFile(xhr.response.Path, true, (download) => {
-              if (download.status === 200) {
-                file.Uploaded = true;
-              } else {
-                this.uploadFile(file, () => {});
-              }
-              this.validate();
-            });
-          }, 10000);
+          this.initInterval(file);
         }
         this.progress = false;
         this.validate();
