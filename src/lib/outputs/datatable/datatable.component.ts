@@ -398,8 +398,7 @@ export class DatatableComponent implements OnInit {
       column.Direction = column.Direction || '';
       column.Direction = column.Direction === 'asc' ? 'desc' : (column.Direction === 'desc' ? '' : 'asc');
 
-      const removes = this.settings.Params.Sort.filter(x => x.split(',')[0] === column.Field ||
-        (column.Field !== this.settings.PrimaryKey && x.split(',')[0] === this.settings.PrimaryKey));
+      const removes = this.settings.Params.Sort.filter(x => x.split(',')[0] === column.Field);
       if (removes.length > 0) {
         removes.forEach(current => {
           const index = this.settings.Params.Sort.indexOf(current);
@@ -407,8 +406,9 @@ export class DatatableComponent implements OnInit {
         });
       }
 
-      if (column.Direction === 'asc' || column.Direction === 'desc') {
-        this.settings.Params.Sort.push(column.Field + ',' + column.Direction);
+      if ((column.Direction === 'asc' || column.Direction === 'desc') ||
+        (this.settings.Params.Sort.length === 0 && column.Field === this.settings.PrimaryKey)) {
+        this.settings.Params.Sort.push(column.Field + ',' + (column.Direction || 'asc'));
       }
 
       if (this.settings.Params.Sort) {
