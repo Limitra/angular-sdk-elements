@@ -161,7 +161,7 @@ export class InputExtend implements OnDestroy {
 
   // If value masked and completed => Check, If, Rewrite
   public forceValue() {
-    this.value = this.input.nativeElement.value;
+    this.value = this.input.nativeElement.value.trim();
     this.valueChange.emit(this.value);
   }
 
