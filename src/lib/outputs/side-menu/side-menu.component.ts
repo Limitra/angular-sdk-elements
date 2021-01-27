@@ -71,7 +71,8 @@ export class SideMenuComponent implements OnInit {
 
   parentIsActive(menu: any): boolean {
     if (menu && menu.Children && menu.Children.length > 0) {
-      return menu.Children.filter(x => this.window.location.pathname.includes(x.Route)).length > 0;
+      return menu.Children.filter(x => this.window.location.pathname === x.Route
+      || this.window.location.pathname.includes(x.Route + '/')).length > 0;
     } else {
       return false;
     }
