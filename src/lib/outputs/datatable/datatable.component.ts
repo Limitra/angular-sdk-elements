@@ -221,7 +221,7 @@ export class DatatableComponent implements OnInit {
             colObj.Button = column.RenderButton(data);
 
             this.pushColumnLen(column, column.Title.toString());
-            const nowValue = this.valOfObj(data, column) || (((colObj.Button||{}).Text || '') + '--');
+            const nowValue = this.valOfObj(data, column);
             colObj.Position = column.Position;
             if (column.Render) {
               colObj.Value = column.Render(nowValue, data);
@@ -229,6 +229,7 @@ export class DatatableComponent implements OnInit {
               colObj.Value = nowValue;
             }
             this.pushColumnLen(column, colObj.Value || '');
+            this.pushColumnLen(column, (((colObj.Button||{}).Text || '') + '--'));
 
             if (column.Badge) {
               const badge = column.Badge(colObj.Value, data);
