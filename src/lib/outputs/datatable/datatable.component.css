@@ -1,3 +1,8 @@
+table.dataTable .btn-row {
+  position: relative;
+  z-index: 1;
+}
+
 table.dataTable {
   clear: both;
   margin-top: 6px !important;
