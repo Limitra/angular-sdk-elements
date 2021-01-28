@@ -215,11 +215,13 @@ export class DatatableComponent implements OnInit {
           data.PrimaryKey = this.valOfObj(data, {Field: this.settings.PrimaryKey}, false);
           data.Columns = [];
           this.settings.Columns.forEach(column => {
+            column.RenderButton = column.RenderButton || (() => {});
             const colObj: any = {Nested: []};
             colObj.Button = column.Button;
+            colObj.Button = column.RenderButton(data);
 
             this.pushColumnLen(column, column.Title.toString());
-            const nowValue = this.valOfObj(data, column);
+            const nowValue = this.valOfObj(data, column) || (((colObj.Button||{}).Text || '') + '--');
             colObj.Position = column.Position;
             if (column.Render) {
               colObj.Value = column.Render(nowValue, data);
