@@ -33,7 +33,7 @@
   </div>
 </div>
 
-<div *ngIf="!(!search&&settings&&settings.HasProcess)" class="table-responsive position-relative">
+<div *ngIf="!(!search&&settings&&settings.HasProcess)" class="table-responsive">
   <table class="table table-sm table-striped table-bordered dataTable">
     <thead class="tpart" *ngIf="settings&&settings.Columns">
       <tr>
@@ -66,10 +66,10 @@
         <div *ngIf="column.Button">
           <button title="{{column.Button.Title}}" class="btn-row {{column.Button.Class}} row-column-button {{column.Button.Nested&&column.Button.Nested.length>0?'dropdown-toggle':''}}" type="button" [attr.data-toggle]="column.Button.Nested&&column.Button.Nested.length>0?'dropdown':''" [routerLink]="(column.Button.Link?column.Button.Link+data[settings.PrimaryKey]:null)" (click)="column.Button.Action&&!(column.Button.Nested&&column.Button.Nested.length>0)?($event.preventDefault()||$event.stopPropagation()||column.Button.Action(data[settings.PrimaryKey])):null"><i class="{{column.Button.Icon}}"></i> {{column.Button.Text}}</button>
           <div *ngIf="column.Button.Nested&&column.Button.Nested.length>0" class="dropdown-menu dropdown-menu-right">
-            <h6 class="dropdown-header">{{settings && settings.Texts ? settings.Texts.FixedOperations : ''}}</h6>
             <ng-container *ngFor="let nested of column.Button.Nested">
               <div *ngIf="nested.Divider" class="dropdown-divider"></div>
-              <a *ngIf="!nested.Divider" title="{{nested.Title}}" class="btn-row dropdown-item {{nested.Class}}" [routerLink]="(nested.Link?nested.Link+data[settings.PrimaryKey]:null)" (click)="nested.Action&&!($event.preventDefault()||$event.stopPropagation())?nested.Action(data[settings.PrimaryKey]):null"><i class="{{nested.Icon}}"></i> {{nested.Text}}</a>
+              <h6 *ngIf="nested.Header" class="dropdown-header">{{nested.Text}}</h6>
+              <a *ngIf="!nested.Divider&&!nested.Header" title="{{nested.Title}}" class="btn-row dropdown-item {{nested.Class}}" [routerLink]="(nested.Link?nested.Link+data[settings.PrimaryKey]:null)" (click)="nested.Action&&!($event.preventDefault()||$event.stopPropagation())?nested.Action(data[settings.PrimaryKey]):null"><i class="{{nested.Icon}}"></i> {{nested.Text}}</a>
             </ng-container>
           </div>
         </div>
