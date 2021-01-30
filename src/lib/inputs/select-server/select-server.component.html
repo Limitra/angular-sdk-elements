@@ -5,7 +5,7 @@
       <i *ngIf="validationMessages" class="fa fa-{{hasError?'exclamation-triangle text-danger':'check-circle text-success'}} valid-status"></i>
       <input #input type="hidden">
       <input class="form-control form-control-sm show" attr.placeholder="{{placeholder||(validationMessages?validationMessages.SelectDefaultText:'')}}" (mousedown)="focus?focus=false:''"
-             [value]="(multiple?this.selecteds&&this.selecteds.length>0:true)?textPreview:(placeholder||textPreview)" (keyup)="$event.stopPropagation();" (click)="search?search.nativeElement.focus():''" (focusin)="focus=true;beginSource()" readonly>
+             [value]="(multiple?this.selecteds&&this.selecteds.length>0:true)?textPreview:(textPreview||'')" (keyup)="$event.stopPropagation();" (click)="search?search.nativeElement.focus():''" (focusin)="focus=true;beginSource()" readonly>
       <i *ngIf="value" class="fa fa-times remove-value" (click)="removeValue()"></i>
       <div *ngIf="focus" class="select-focus-wrapper">
         <div class="select-search">
