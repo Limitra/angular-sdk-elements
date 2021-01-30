@@ -56,8 +56,13 @@ export class InputExtend implements OnDestroy {
       this.form.modelChange.subscribe(model => {
         if (this.property) {
           let changed = false;
-          if (this.value !== model[this.property]) {
-            this.value = model[this.property];
+          let localValue = model;
+          const properties = this.property.split('.');
+          properties.forEach((property, index) => {
+            localValue = localValue[property];
+          });
+          if (this.value !== localValue) {
+            this.value = localValue;
             this.valueChange.emit(this.value);
             changed = true;
           }
