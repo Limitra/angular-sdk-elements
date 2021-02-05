@@ -70,7 +70,7 @@ export class InputFileComponent extends InputExtend implements OnInit, OnDestroy
     const apiSettings = this.providers.Storage.Get('API_Settings') || {};
     const fileProvider = apiSettings.File ? apiSettings.File : {};
     this.fileProvider = {
-      Domain: apiSettings.Domain,
+      Domain: fileProvider.Domain || apiSettings.Domain,
       Upload: fileProvider.Upload,
       Download: fileProvider.Download,
       Settings: {
