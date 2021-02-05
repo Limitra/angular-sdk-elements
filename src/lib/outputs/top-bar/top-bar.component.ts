@@ -43,7 +43,7 @@ export class TopBarComponent implements OnInit, OnDestroy {
         this.providers.Http.Get(api.Domain + '/' + this.profile).subscribe(response => {
           this.profileObj.DisplayName = response.DisplayName;
           if (api.File && api.File.Download && response.Picture) {
-            this.profileObj.Picture = api.Domain + '/' + api.File.Download + response.Picture;
+            this.profileObj.Picture = (api.File.Domain || api.Domain) + '/' + api.File.Download + response.Picture;
           }
         });
       };
