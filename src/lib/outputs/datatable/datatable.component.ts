@@ -185,6 +185,7 @@ export class DatatableComponent implements OnInit {
       this.setDefaultSort();
       this.settings.Params.Search = stored.Search || this.settings.Params.Search;
       this.settings.Params.Domain = this.settings.Params.Domain || (this.api ? this.api.Domain : undefined);
+      this.settings.Params.File = this.settings.Params.File || (this.api ? (this.api.File || {}) : undefined);
 
       this.resetColumns();
       const params: any = {};
@@ -242,8 +243,9 @@ export class DatatableComponent implements OnInit {
               this.pushColumnLen(column, colObj.Badge.Value || '');
             }
             if (column.Image) {
+              const domain = (this.settings.Params.File.Domain || this.settings.Params.Domain);
               colObj.Image = {
-                Source: this.settings.Params.Domain + '/' + (this.api && this.api.File ? this.api.File.Download : '') + '/' + nowValue,
+                Source: domain + '/' + (this.api && this.api.File ? this.api.File.Download : '') + nowValue,
                 Width: column.Image.Width,
                 Height: column.Image.Height,
                 Circle: column.Image.Circle
