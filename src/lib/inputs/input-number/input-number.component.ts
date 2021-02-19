@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
+import {Component, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import {InputExtend} from '../../extends/input-extend';
 import {SdkProviders} from '@limitra/sdk-core';
 
@@ -7,7 +7,7 @@ import {SdkProviders} from '@limitra/sdk-core';
   templateUrl: './input-number.component.html',
   styleUrls: ['./input-number.component.css']
 })
-export class InputNumberComponent extends InputExtend implements AfterViewInit {
+export class InputNumberComponent extends InputExtend implements OnInit, OnDestroy {
   constructor(public providers: SdkProviders) {
     super(providers);
   }
@@ -19,7 +19,7 @@ export class InputNumberComponent extends InputExtend implements AfterViewInit {
   private decimalSeperator: string;
   private thousandSeperator: string;
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.init(() => {
       this.decimalSeperator = this.validationMessages.DecimalSeperator || '.';
       this.thousandSeperator = this.validationMessages.ThousandSeperator || ',';
@@ -28,6 +28,14 @@ export class InputNumberComponent extends InputExtend implements AfterViewInit {
 
   overrideHasValue(): boolean {
     return this.value || this.value == 0;
+  }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
+  }
+
+  destroy() {
+    this.ngOnDestroy();
   }
 
   validation(value: number) {
