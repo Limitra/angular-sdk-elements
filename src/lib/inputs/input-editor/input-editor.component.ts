@@ -1,4 +1,4 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SdkProviders} from '@limitra/sdk-core';
 import {InputExtend} from '../../extends/input-extend';
 import {BeforeOnDestroy} from '../../definitions/before-destroy';
@@ -11,7 +11,7 @@ declare let window: any;
   templateUrl: './input-editor.component.html',
   styleUrls: ['./input-editor.component.css']
 })
-export class InputEditorComponent extends InputExtend implements AfterViewInit, BeforeOnDestroy {
+export class InputEditorComponent extends InputExtend implements OnInit, BeforeOnDestroy {
   wordCount = 0;
   charCount = 0;
   maximized = false;
@@ -37,7 +37,7 @@ export class InputEditorComponent extends InputExtend implements AfterViewInit, 
     window.watchdog.destroy();
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.init();
     const watchdog = new CKSource.Watchdog();
     window.watchdog = watchdog;
