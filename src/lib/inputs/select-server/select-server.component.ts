@@ -1,14 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-  ViewChild
-} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {InputExtend} from '../../extends/input-extend';
 import {SdkProviders} from '@limitra/sdk-core';
 
@@ -17,7 +7,7 @@ import {SdkProviders} from '@limitra/sdk-core';
   templateUrl: './select-server.component.html',
   styleUrls: ['./select-server.component.css']
 })
-export class SelectServerComponent extends InputExtend implements AfterViewInit {
+export class SelectServerComponent extends InputExtend implements OnDestroy, OnInit {
   constructor(public providers: SdkProviders) { super(providers); }
 
   @Input() domain: string;
@@ -26,12 +16,12 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   @Input() minlength: number;
   @Input() maxlength: number;
 
-  @Input() length: number = 10;
+  @Input() length = 10;
 
-  @Input() textkey: string = 'Text';
-  @Input() valuekey: string = 'Value';
+  @Input() textkey = 'Text';
+  @Input() valuekey = 'Value';
 
-  @Input() early: boolean = false;
+  @Input() early = false;
 
   @ViewChild('search', {static: false}) search: ElementRef;
   private page = 1;
@@ -42,10 +32,10 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   public selected: any = {};
   public selecteds: Array<any> = [];
 
-  public textPreview: string = '';
-  public canRemove: boolean = false;
+  public textPreview = '';
+  public canRemove = false;
 
-  ngAfterViewInit() {
+  ngOnInit() {
     const api = this.providers.Storage.Get('API_Settings');
     this.domain = this.domain || (api ? api.Domain : '');
     let canInit = true;
@@ -86,7 +76,7 @@ export class SelectServerComponent extends InputExtend implements AfterViewInit 
   }
 
   textInit() {
-    if (this.multiple ? this.value.length > 0 : this.value) {
+    if (this.multiple ? this.value && this.value.length > 0 : this.value) {
       const params: any = {
         type: 'text',
         length: this.length,
