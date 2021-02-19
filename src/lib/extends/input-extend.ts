@@ -1,10 +1,18 @@
-import {ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild} from '@angular/core';
+import {
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnDestroy,
+  Output,
+  ViewChild
+} from '@angular/core';
+
 import {SdkProviders} from '@limitra/sdk-core';
 import {ScreenSize} from '@limitra/sdk-core';
 
 export class InputExtend implements OnDestroy {
-  constructor(public providers: SdkProviders) {
-  }
+  constructor(public providers: SdkProviders) { }
 
   @Input() fontSize = .875;
   @Input() padding = '';
@@ -22,7 +30,6 @@ export class InputExtend implements OnDestroy {
   @Input() property: any;
 
   @Output() valueChange = new EventEmitter();
-  @Output() formChange = new EventEmitter();
 
   @Input() required: boolean;
 
@@ -37,6 +44,10 @@ export class InputExtend implements OnDestroy {
   public screenSize: number;
   public screenSizes = ScreenSize;
 
+  private modelSubs;
+  private valueSubs;
+  private initSubs;
+
   preInit(changed: boolean = false) {
 
   }
@@ -46,23 +57,34 @@ export class InputExtend implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.removeFormError(null, true);
-    this.checkState();
+    delete this.value;
+    this.valueChange.emit(this.value);
+
+    this.errors = [];
+    this.hasError = false;
+
+    if (this.form && this.form.errors) {
+      this.form.errors = this.form.errors.filter(x => x.Name != this.name);
+      this.form.change.emit(this.form);
+    }
+
+    if (this.modelSubs) { this.modelSubs.unsubscribe(); }
+    if (this.valueSubs) { this.valueSubs.unsubscribe(); }
+    if (this.initSubs) { this.initSubs.unsubscribe(); }
   }
 
   init(call: () => void = null) {
+    this.generateName();
+
     if (this.form) {
       this.form.errors = this.form.errors || [];
-      this.form.modelChange.subscribe(model => {
+
+      this.modelSubs = this.form.modelChange.subscribe(model => {
         if (this.property) {
           let changed = false;
-          let localValue = model;
-          const properties = this.property.split('.');
-          properties.forEach((property, index) => {
-            localValue = localValue[property];
-          });
-          if (this.value !== localValue) {
-            this.value = localValue;
+          const propValue = this.readProperty(model);
+          if (this.value !== propValue) {
+            this.value = propValue;
             this.valueChange.emit(this.value);
             changed = true;
           }
@@ -72,20 +94,15 @@ export class InputExtend implements OnDestroy {
         }
       });
 
-      this.valueChange.subscribe(value => {
-        if (this.property) {
-          if (value !== this.form.model[this.property]) {
-            this.form.model[this.property] = value;
-            this.form.modelChange.emit(this.form.model);
-          }
-        }
+      this.initSubs = this.form.modelInit.subscribe(() => {
+        this.initValueChange();
       });
+
+      this.initValueChange();
     }
 
     this.screenSize = this.providers.Screen.GetSize();
     const lang = this.providers.Storage.Get('Localization_Settings', 'Language');
-
-    this.generateName();
 
     const maskCall = () => {
       if (this.overrideHasValue(this.value) && this.input) {
@@ -325,14 +342,12 @@ export class InputExtend implements OnDestroy {
   public checkState(value: any = null) {
     if (this.form) {
       if (!value) {
-        this.form.errors.filter(x => x.Name === this.name && x.Solved).forEach(error => {
-          this.form.errors.splice(this.form.errors.indexOf(error), 1);
-        });
+        this.form.errors = this.form.errors.filter(x => x.Name === this.name && !x.Solved);
       }
 
       this.errors = this.form.errors.filter(x => x.Name === this.name);
       this.hasError = this.errors.filter(x => !x.Solved).length > 0;
-      this.form.onFormChange();
+      this.form.change.emit(this.form);
     }
   }
 
@@ -353,7 +368,7 @@ export class InputExtend implements OnDestroy {
         message = this.localizeReplace(message) || message;
 
         this.form.errors.push({Name: this.name, Key: key, Message: message, Solved: false});
-        this.formChange.emit(this.form);
+        this.form.change.emit(this.form);
       }
     }
   }
@@ -367,7 +382,7 @@ export class InputExtend implements OnDestroy {
           } else {
             error.Solved = true;
           }
-          this.formChange.emit(this.form);
+          this.form.change.emit(this.form);
         }
       });
     }
@@ -381,5 +396,39 @@ export class InputExtend implements OnDestroy {
     return (this.value
       || this.value === 0
       || this.value === false) ? this.value.toString().length === 0 || !this.value.toString().trim() : true;
+  }
+
+  private assignToForm(value) {
+    const properties = this.property.split('.');
+    const lastKeyIndex = properties.length - 1;
+    for (let i = 0; i < lastKeyIndex; ++ i) {
+      const key = properties[i];
+      if (!(key in this.form.model)){
+        this.form.model[key] = {}
+      }
+      this.form.model = this.form.model[key];
+    }
+    this.form.model[properties[lastKeyIndex]] = value;
+  }
+
+  private readProperty(model: any) {
+    let localValue: any = model;
+    if (this.property && model) {
+      const properties = this.property.split('.');
+      properties.forEach((property, index) => {
+         localValue = localValue[property];
+      });
+    }
+    return localValue;
+  }
+
+  private initValueChange = () => {
+    if (this.valueSubs) { this.valueSubs.unsubscribe(); }
+    this.valueSubs = this.valueChange.subscribe(value => {
+      if (this.property) {
+        this.assignToForm(value);
+        this.form.modelChange.emit(this.form.model);
+      }
+    });
   }
 }
