@@ -41,15 +41,33 @@ export class FormComponent implements OnInit, OnDestroy {
   @ViewChild('notification', {static: false}) notification: NotificationComponent;
 
   private subscribe: any;
+  private changeSub: any;
+  private changeTimeout: any;
 
   constructor(private route: ActivatedRoute, private providers: SdkProviders) {
   }
 
   ngOnDestroy() {
     this.subscribe.unsubscribe();
+    this.changeSub.unsubscribe();
   }
 
   ngOnInit() {
+    this.changeSub = this.change.subscribe(form => {
+      clearTimeout(this.changeTimeout);
+
+      this.errors = form.errors;
+      this.isValid = this.errors.filter(x => !x.Solved).length === 0;
+
+      if (this.isValid) {
+        this.changeTimeout = setTimeout(() => {
+          this.initButton();
+        }, 500);
+      } else {
+        this.initButton();
+      }
+    });
+
     if (this.route && this.model) {
       this.subscribe = this.route.params.subscribe(param => {
         if (param.id) {
@@ -76,12 +94,6 @@ export class FormComponent implements OnInit, OnDestroy {
       };
       this.init();
     }
-  }
-
-  onFormChange() {
-    this.isValid = this.errors.filter(x => !x.Solved).length === 0;
-    this.initButton();
-    this.change.emit();
   }
 
   private init() {
