@@ -35,6 +35,7 @@ export class InputExtend implements OnDestroy {
 
   @Input() inline = false;
   @Input() disabled: boolean;
+  @Input() reset = true;
 
   public focus: boolean;
   public name: string;
@@ -44,12 +45,11 @@ export class InputExtend implements OnDestroy {
   public screenSize: number;
   public screenSizes = ScreenSize;
 
-  private modelSubs;
+  private preInited: boolean;
   private valueSubs;
-  private initSubs;
+  private modelSubs;
 
   preInit(changed: boolean = false) {
-
   }
 
   overrideHasValue(value: any): boolean {
@@ -57,110 +57,125 @@ export class InputExtend implements OnDestroy {
   }
 
   ngOnDestroy() {
-    delete this.value;
-    this.valueChange.emit(this.value);
-
-    this.errors = [];
-    this.hasError = false;
-
-    if (this.form && this.form.errors) {
-      this.form.errors = this.form.errors.filter(x => x.Name != this.name);
-      this.form.change.emit(this.form);
-    }
-
     if (this.modelSubs) { this.modelSubs.unsubscribe(); }
+    if (this.reset) {
+      delete this.value;
+      this.valueChange.emit(this.value);
+    }
     if (this.valueSubs) { this.valueSubs.unsubscribe(); }
-    if (this.initSubs) { this.initSubs.unsubscribe(); }
+
+    if (this.reset) {
+      this.errors = [];
+      this.hasError = false;
+
+      if (this.form) {
+        this.form.errorChange.emit(this.errors);
+      }
+    }
   }
 
   init(call: () => void = null) {
     this.generateName();
 
-    if (this.form) {
-      this.form.errors = this.form.errors || [];
-
-      this.modelSubs = this.form.modelChange.subscribe(model => {
-        if (this.property) {
-          let changed = false;
-          const propValue = this.readProperty(model);
-          if (this.value !== propValue) {
-            this.value = propValue;
-            this.valueChange.emit(this.value);
-            changed = true;
-          }
-          this.input.nativeElement.value = this.formatValue(this.value);
-          this.preInit(changed);
-          this.validate(false);
-        }
-      });
-
-      this.initSubs = this.form.modelInit.subscribe(() => {
-        this.initValueChange();
-      });
-
-      this.initValueChange();
+    if (this.property) {
+      this.value = this.readProperty(this.form.model);
     }
 
-    this.screenSize = this.providers.Screen.GetSize();
-    const lang = this.providers.Storage.Get('Localization_Settings', 'Language');
+    const implement = () => {
+      this.screenSize = this.providers.Screen.GetSize();
+      const lang = this.providers.Storage.Get('Localization_Settings', 'Language');
 
-    const maskCall = () => {
-      if (this.overrideHasValue(this.value) && this.input) {
-        this.input.nativeElement.value = this.formatValue(this.value);
+      const maskCall = () => {
+        if (this.overrideHasValue(this.value) && this.input) {
+          this.input.nativeElement.value = this.formatValue(this.value);
+        }
+      };
+
+      if (lang) {
+        this.providers.Http.Get('assets/locale/validation/' + lang + '.json').subscribe(response => {
+          this.validationMessages = response;
+          if (call) {
+            call();
+          }
+          maskCall();
+          this.validate();
+        });
+      } else {
+        setTimeout(() => {
+          this.validationMessages = {
+            Required: 'You must fill in this field.',
+            ValidError: 'You must enter data in a valid format.',
+            RegExpError: 'You must enter data in a valid format. [$DataFormat]',
+            GreaterThan: 'You must enter a value greater than or equal to [$Min].',
+            LessThan: 'You must enter a value less than or equal to [$Max].',
+            MinLength: 'You must enter at least [$MinLength] characters.',
+            MaxLength: 'You can enter up to [$MaxLength] characters.',
+            Digit: 'You must enter at least [$Digit] digits.',
+            Special: 'You must enter at least [$Special] special characters.',
+            UpperCase: 'You must enter at least [$Uppercase] uppercase characters.',
+            LowerCase: 'You must enter at least [$Lowercase] lowercase characters.',
+            DateMask: 'dd.mm.yyyy',
+            TimeMask: 'hh:mm',
+            PhoneMask: '+(XX) XXX XXX XX XX',
+            ImageMaxLength: 'Image files must be less than or equal to [$ImageMaxLength].',
+            AudioMaxLength: 'Audio files must be less than or equal to [$AudioMaxLength].',
+            VideoMaxLength: 'Video files must be less than or equal to [$VideoMaxLength].',
+            DocumentMaxLength: 'Document files must be less than or equal to [$DocumentMaxLength].',
+            FileMinLength: 'You must select at least [$MinLength] file.',
+            FileMaxLength: 'You can select up to [$MaxLength] file.',
+            FileTypeError: 'You must remove unsupported file types.',
+            FileReadyError: 'Your upload process not completed yet.',
+            FileDefaultText: 'Choose File.',
+            SelectDefaultText: 'Choose.',
+            SelectSearchText: 'Search.',
+            SelectEmptyText: 'No data found.',
+            SelectMultiText: 'You have selected [$Length] data.',
+            SelectMinLength: 'You must select at least [$MinLength] data.',
+            SelectMaxLength: 'You can select up to [$MaxLength] data.',
+            DecimalSeperator: '.',
+            ThousandSeperator: ','
+          };
+          if (call) {
+            call();
+          }
+          maskCall();
+          this.validate();
+        });
       }
     };
 
-    if (lang) {
-      this.providers.Http.Get('assets/locale/validation/' + lang + '.json').subscribe(response => {
-        this.validationMessages = response;
-        if (call) {
-          call();
+    if (this.form) {
+      this.errors = this.form.errors.filter(x => x.Name === this.name);
+
+      this.valueSubs = this.valueChange.subscribe(value => {
+        this.value = value;
+        if (this.property) {
+            this.assignToForm(value);
         }
-        maskCall();
-        this.validate();
+        this.form.modelChange.emit(this.form.model);
       });
-    } else {
-      setTimeout(() => {
-        this.validationMessages = {
-          Required: 'You must fill in this field.',
-          ValidError: 'You must enter data in a valid format.',
-          RegExpError: 'You must enter data in a valid format. [$DataFormat]',
-          GreaterThan: 'You must enter a value greater than or equal to [$Min].',
-          LessThan: 'You must enter a value less than or equal to [$Max].',
-          MinLength: 'You must enter at least [$MinLength] characters.',
-          MaxLength: 'You can enter up to [$MaxLength] characters.',
-          Digit: 'You must enter at least [$Digit] digits.',
-          Special: 'You must enter at least [$Special] special characters.',
-          UpperCase: 'You must enter at least [$Uppercase] uppercase characters.',
-          LowerCase: 'You must enter at least [$Lowercase] lowercase characters.',
-          DateMask: 'dd.mm.yyyy',
-          TimeMask: 'hh:mm',
-          PhoneMask: '+(XX) XXX XXX XX XX',
-          ImageMaxLength: 'Image files must be less than or equal to [$ImageMaxLength].',
-          AudioMaxLength: 'Audio files must be less than or equal to [$AudioMaxLength].',
-          VideoMaxLength: 'Video files must be less than or equal to [$VideoMaxLength].',
-          DocumentMaxLength: 'Document files must be less than or equal to [$DocumentMaxLength].',
-          FileMinLength: 'You must select at least [$MinLength] file.',
-          FileMaxLength: 'You can select up to [$MaxLength] file.',
-          FileTypeError: 'You must remove unsupported file types.',
-          FileReadyError: 'Your upload process not completed yet.',
-          FileDefaultText: 'Choose File.',
-          SelectDefaultText: 'Choose.',
-          SelectSearchText: 'Search.',
-          SelectEmptyText: 'No data found.',
-          SelectMultiText: 'You have selected [$Length] data.',
-          SelectMinLength: 'You must select at least [$MinLength] data.',
-          SelectMaxLength: 'You can select up to [$MaxLength] data.',
-          DecimalSeperator: '.',
-          ThousandSeperator: ','
-        };
-        if (call) {
-          call();
+
+      this.modelSubs = this.form.modelChange.subscribe(model => {
+        let changed = false;
+        if (this.property) {
+          const value = this.readProperty(model);
+          changed = this.value != value;
+          if (changed) {
+            this.value = value;
+            this.valueChange.emit(this.value);
+          }
         }
-        maskCall();
-        this.validate();
+
+        if (changed || !this.preInited) {
+          this.preInited = true;
+          this.input.nativeElement.value = this.formatValue(this.value);
+          this.preInit(true);
+          this.validate(false);
+        }
       });
     }
+
+    implement();
   }
 
   public keyboardQuery(event: KeyboardEvent): boolean {
@@ -188,7 +203,7 @@ export class InputExtend implements OnDestroy {
   }
 
   public formatValue(value: any): string {
-    return this.value === undefined ? '' : this.value;
+    return value === null || value === undefined ? '' : value;
   }
 
   public localizeReplace(message: string): string {
@@ -228,7 +243,6 @@ export class InputExtend implements OnDestroy {
   }
 
   @HostListener('input', ['$event'])
-  @HostListener('keydown', ['$event'])
   public setMask(event: any) {
     if (this.mask) {
       event.stopPropagation();
@@ -302,9 +316,9 @@ export class InputExtend implements OnDestroy {
   }
 
   public validate(forceValue: boolean = true) {
-    let value = this.input.nativeElement.value || '';
+    let value = this.input.nativeElement.value.trim() || '';
     let mask = this.mask;
-    if (this.mask) {
+    if (mask) {
       this.findMaskSeperator().forEach(maskChar => {
         mask = this.providers.String.Replace(mask, maskChar, '');
         value = this.providers.String.Replace(value, maskChar, '');
@@ -342,12 +356,10 @@ export class InputExtend implements OnDestroy {
   public checkState(value: any = null) {
     if (this.form) {
       if (!value) {
-        this.form.errors = this.form.errors.filter(x => x.Name === this.name && !x.Solved);
+        this.errors = this.errors.filter(x => !x.Solved);
       }
-
-      this.errors = this.form.errors.filter(x => x.Name === this.name);
       this.hasError = this.errors.filter(x => !x.Solved).length > 0;
-      this.form.change.emit(this.form);
+      this.form.errorChange.emit(this.errors);
     }
   }
 
@@ -357,34 +369,30 @@ export class InputExtend implements OnDestroy {
 
   public addFormError(key: string) {
     if (this.form) {
-      const error = this.form.errors.filter(x => x.Name === this.name && x.Key === key && !x.Solved)[0];
+      const error = this.errors.filter(x => x.Key === key && !x.Solved)[0];
       if (this.form && this.validationMessages && !error) {
-        const solved = this.form.errors.filter(x => x.Name === this.name && x.Key === key)[0];
+        const solved = this.errors.filter(x => x.Key === key)[0];
         if (solved) {
-          this.form.errors.splice(this.form.errors.indexOf(solved), 1);
+          this.errors.splice(this.errors.indexOf(solved), 1);
         }
 
         let message = this.validationMessages[key];
         message = this.localizeReplace(message) || message;
 
-        this.form.errors.push({Name: this.name, Key: key, Message: message, Solved: false});
-        this.form.change.emit(this.form);
+        this.errors.push({Name: this.name, Key: key, Message: message, Solved: false});
       }
     }
   }
 
   public removeFormError(key: string, remove: boolean = false) {
     if (this.form) {
-      this.form.errors.filter(x => x.Name === this.name && (key ? x.Key === key : true)).forEach(error => {
-        if (error) {
-          if (remove) {
-            this.form.errors.splice(this.form.errors.indexOf(error), 1);
-          } else {
-            error.Solved = true;
-          }
-          this.form.change.emit(this.form);
-        }
-      });
+      if (remove) {
+        this.errors = this.errors.filter(x => x.Key !== key);
+      } else {
+        this.errors.filter(x => x.Key === key).forEach(error => {
+          error.Solved = error.Key === key;
+        });
+      }
     }
   }
 
@@ -398,37 +406,29 @@ export class InputExtend implements OnDestroy {
       || this.value === false) ? this.value.toString().length === 0 || !this.value.toString().trim() : true;
   }
 
-  private assignToForm(value) {
-    const properties = this.property.split('.');
-    const lastKeyIndex = properties.length - 1;
-    for (let i = 0; i < lastKeyIndex; ++ i) {
-      const key = properties[i];
-      if (!(key in this.form.model)){
-        this.form.model[key] = {}
+  protected assignToForm(value) {
+    if (this.property) {
+      const properties = this.property.split('.');
+      if (properties.length > 1) {
+        let localValue = this.form.model;
+        properties.forEach((property, index) => {
+          localValue = localValue[property];
+        });
+        localValue = value;
+      } else {
+        this.form.model[this.property] = value;
       }
-      this.form.model = this.form.model[key];
     }
-    this.form.model[properties[lastKeyIndex]] = value;
   }
 
-  private readProperty(model: any) {
+  protected readProperty(model: any) {
     let localValue: any = model;
     if (this.property && model) {
       const properties = this.property.split('.');
       properties.forEach((property, index) => {
          localValue = localValue[property];
       });
-    }
+    } else { localValue = this.value; }
     return localValue;
-  }
-
-  private initValueChange = () => {
-    if (this.valueSubs) { this.valueSubs.unsubscribe(); }
-    this.valueSubs = this.valueChange.subscribe(value => {
-      if (this.property) {
-        this.assignToForm(value);
-        this.form.modelChange.emit(this.form.model);
-      }
-    });
   }
 }
